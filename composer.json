@@ -1,0 +1,41 @@
+{
+    "name": "ilbronza/warehouse",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Author Name",
+            "email": "author@email.com",
+            "homepage": "http://author.com"
+        }
+    ],
+    "homepage": "https://github.com/ilbronza/warehouse",
+    "keywords": ["Laravel", "Warehouse"],
+    "require": {
+        "illuminate/support": "~9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "IlBronza\\Warehouse\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IlBronza\\Warehouse\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IlBronza\\Warehouse\\WarehouseServiceProvider"
+            ],
+            "aliases": {
+                "Warehouse": "IlBronza\\Warehouse\\Facades\\Warehouse"
+            }
+        }
+    }
+}
