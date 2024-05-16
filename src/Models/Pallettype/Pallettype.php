@@ -12,11 +12,12 @@ class Pallettype extends BaseWarehouseModel
 
 	static $modelConfigPrefix = 'pallettype';
 
-	static $defaultId = "3155906a-fc96-4e35-af6b-406d25bbab93";
+	// static $defaultId = "3155906a-fc96-4e35-af6b-406d25bbab93";
 
 	static function getDefault()
 	{
-		return static::findCached(static::$defaultId);
+		return static::where('name', 'TIPO EUR')->first();
+		// return static::findCached(static::$defaultId);
 	}
 
 }

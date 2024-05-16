@@ -2,7 +2,9 @@
 
 namespace IlBronza\Warehouse\Helpers;
 
+use Auth;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Support\Collection;
 
@@ -31,19 +33,30 @@ class UnitloadPrinterHelper
 		return $this->unitloads;
 	}
 
+	public function setUnitloadPrinted(Unitload $unitload)
+	{
+		$unitload->printed_at = Carbon::now();
+		$unitload->printed_by = Auth::id();
+		$unitload->save();
+	}
+
+	public function setUnitloadsPrinted()
+	{
+		foreach($this->getUnitloads() as $unitload)
+			$this->setUnitloadPrinted($unitload);
+	}
+
+	static function resetUnitloadPrintedAt(Unitload $unitload)
+	{
+		$unitload->printed_at = null;
+		$unitload->printed_by = null;
+		$unitload->save();
+	}
+
 	public function createPDF()
 	{
-		// $username = Auth::user()->getShortPrivacyName();
+		$this->setUnitloadsPrinted();
 
-		// $this->managePelletIdStoring($orderProduct, $params);
-
-		// if(\Auth::id() == 1)
-		// 	return view('pdf.bindello', $params);
-
-		// if($pallettypeId = $params['pallettype_id'])
-		// 	Pallettype::lowerQuantity($pallettypeId, $params['colli']);
-
-		// $pdf = PDF::loadView('pdf.bindello', $params);
 		$pdf = PDF::loadView('warehouse::pdf.unitloads.unitloads', ['unitloads' => $this->getUnitloads()]);
 
 		$pdf->setPaper('a4', 'portrait');
@@ -58,8 +71,14 @@ class UnitloadPrinterHelper
 		$helper->setUnitloads($unitloads);
 
 		return $helper->createPDF();
-
-		$helper->stream();
 	}
 
+	static function printUnitload(Unitload $unitload)
+	{
+		$helper = new static();
+
+		$helper->addUnitload($unitload);
+
+		return $helper->createPDF();
+	}
 }

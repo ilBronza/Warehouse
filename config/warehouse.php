@@ -10,7 +10,9 @@ use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\PallettypeCreateSto
 use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\UnitloadBulkCreateStoreFieldsetsParameters;
 use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\UnitloadCrudFieldsetsParameters;
 use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\PallettypeFieldsGroupParametersFile;
+use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadDestroyController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadEditUpdateController;
+use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadPrintController;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 
@@ -26,8 +28,11 @@ return [
                 'crud' => UnitloadCrudFieldsetsParameters::class
             ],
             'controllers' => [
+                'print' => UnitloadPrintController::class,
+                'resetPrintedAt' => UnitloadPrintController::class,
                 'edit' => UnitloadEditUpdateController::class,
                 'update' => UnitloadEditUpdateController::class,
+                'destroy' => UnitloadDestroyController::class,
             ]
         ],
         'pallet' => [

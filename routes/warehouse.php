@@ -31,6 +31,12 @@ Route::group([
 		{
 			Route::get('{unitload}/edit', [Warehouse::getController('unitload', 'edit'), 'edit'])->name('unitloads.edit');
 			Route::put('{unitload}', [Warehouse::getController('unitload', 'edit'), 'update'])->name('unitloads.update');
+
+			// UnitloadPrintController
+			Route::get('{unitload}/print', [Warehouse::getController('unitload', 'print'), 'print'])->name('unitloads.print');
+			Route::get('{unitload}/reset-printed-at', [Warehouse::getController('unitload', 'resetPrintedAt'), 'resetPrintedAt'])->name('unitloads.resetPrintedAt');
+
+			Route::get('{unitload}/delete', [Warehouse::getController('unitload', 'destroy'), 'destroy'])->name('unitloads.destroy');
 		});
 
 	});

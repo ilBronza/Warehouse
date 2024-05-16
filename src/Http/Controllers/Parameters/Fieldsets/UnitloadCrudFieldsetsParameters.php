@@ -14,7 +14,10 @@ class UnitloadCrudFieldsetsParameters extends FieldsetParametersFile
         return [
             'base' => [
                 'fields' => [
+
                     'quantity' => ['number' => 'numeric|nullable|min:0'],
+                    // 'quantity_capacity' => ['number' => 'numeric|nullable|min:0'],
+                    // 'quantity_expected' => ['number' => 'numeric|nullable|min:0'],
                     'pallettype_id' => [
                         'type' => 'select',
                         'value' => $this->getModel()?->getPallettype()?->getKey(),

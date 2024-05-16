@@ -10,6 +10,7 @@ class UnitloadEditUpdateController extends UnitloadsCRUDController
 {
     use CRUDEditUpdateTrait;
 
+    public $returnBack = true;
     public $allowedMethods = ['edit', 'update'];
 
     public function getGenericParametersFile() : ? string

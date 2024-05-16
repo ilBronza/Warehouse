@@ -119,8 +119,21 @@ class UnitloadCreatorHelper
 			$unitload->$name = $value;
 	}
 
+	static function validateParameters(array $parameters) : array
+	{
+		if(($parameters['quantity_expected'] ?? 0) < 0)
+			$parameters['quantity_expected'] = null;
+
+		if(($parameters['quantity'] ?? 0) < 0)
+			$parameters['quantity'] = null;
+
+		return $parameters;
+	}
+
 	static function createByArray(array $parameters) : Unitload
 	{
+		$parameters = static::validateParameters($parameters);
+
 		$helper = new static();
 
 		$helper->setParameters($parameters);

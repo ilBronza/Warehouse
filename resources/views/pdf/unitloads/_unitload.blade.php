@@ -20,7 +20,7 @@
 			</td>
 			<td rowspan="4" style="text-align:center;">
 				<span class="zone">
-					{{ $unitload->getDestination()?->getName() }}
+					{{ $unitload->getDestination()?->getZone() }}
 				</span>
 			</td>
 		</tr>
@@ -43,7 +43,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" class="cliente">
-				{{-- {{ $description }} --}}
+				{{ $unitload->production?->getProduct()?->getShortDescription() }}
 			</td>
 		</tr>
 		<tr>
@@ -72,7 +72,7 @@
 		</tr>
 		<tr>
 			<th class="intestazione"> QTA COLLO / QTA ORD.</th>
-			<td class="cliente">{{ $unitload->getQuantity() }}/{{ $unitload->getQuantityCapacity() }}
+			<td class="cliente">{{ $unitload->getQuantity() }}/{{ $unitload->production?->getQuantityRequired() }}
 			</td>
 		</tr>
 	</table>

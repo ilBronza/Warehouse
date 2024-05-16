@@ -77,6 +77,13 @@ class CreateUnitloadsTable extends Migration
                 ->on('users')
                 ->nullable();
 
+            $table->timestamp('printed_at')->nullable();
+
+            $table->uuid('printed_by')
+                ->references('id')
+                ->on('users')
+                ->nullable();
+
             $table->uuid('product_id')
                 ->references('id')
                 ->on(config('products.models.product.table'))

@@ -26,7 +26,7 @@ class Warehouse implements RoutedObjectInterface
         $warehouseManagerButton = $menu->createButton([
             'name' => 'warehouseManager',
             'icon' => 'warehouse',
-            'text' => 'warehouse::warehouse'
+            'text' => 'warehouse::warehouse.warehouseManager',
         ]);
 
         $pallettypesButton = $menu->createButton([

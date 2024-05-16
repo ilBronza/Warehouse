@@ -5,6 +5,7 @@ namespace IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets;
 use Carbon\Carbon;
 use IlBronza\Form\Helpers\FieldsetsProvider\FieldsetParametersFile;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
+use Illuminate\Support\Str;
 
 class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 {
@@ -22,6 +23,11 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
             'order' => [
                 'translationPrefix' => 'warehouse::fields',
                 'fields' => [
+                    'unitloads_rand_check' => [
+                        'type' => 'hidden',
+                        'value' => Str::random(16),
+                        'rules' => 'string|required'
+                    ],
                     'client' => [
                         'type' => 'text',
                         'value' => $client?->getName(),
@@ -118,10 +124,26 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                         'list' => $palletArray,
                         'rules' => 'string|required|in:' . implode(",", array_keys($palletArray))
                     ],
+                    'save_pallettype_id_on' => [
+                        'closed' => true,
+                        'label' => 'Salva bancale su',
+                        'type' => 'radio',
+                        'required' => false,
+                        'list' => [
+                            'product' => 'Prodotto',
+                            'client' => 'Cliente',
+                            'nothing' => 'Niente, è solo per questa volta',
+                        ],
+                        'rules' => 'string|nullable|in:product,client,nothing',
+                        'value' => [],
+                    ],
+
+
                     'valid_pieces_done' => [
                         'type' => 'number',
-                        'label' => trans('warehouse::unitloads.piecesToPack'),
-                        'rules' => 'integer|nullable|min:1|max:65535'
+                        // 'value' => ($quantity = $orderProduct?->getOrderedQuantity() - $orderProduct->getPiecesDone()) > 0 ? $quantity : 0,
+                        // 'label' => trans('warehouse::fields.piecesToPack'),
+                        'rules' => 'integer|nullable|min:0|max:65535'
                     ],
                     'ordered_quantity' => [
                         'type' => 'number',
@@ -130,12 +152,66 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                     ],
                     'quantity_per_packing' => [
                         'type' => 'number',
-                        'value' => $product?->getQuantityPerPacking(),
+                        'value' => $product?->getQuantityPerPacking() ?? $orderProductPhase->productionUnitloads()->first()?->quantity_capacity,
                         'rules' => 'integer|required|min:1|max:65535'
                     ],
                     'packings_quantity' => [
                         'type' => 'number',
                         'rules' => 'integer|required|min:0|max:65535'
+                    ],
+                    'save' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-large', 'uk-button-primary'],
+                        'label' => trans('warehouse::unitloads.createUnitloads'),
+                        'fasIcon' => 'plus',
+                        'rules' => []
+                    ],
+                ],
+                'width' => ["1-3@l", '1-2@m']
+            ],
+            'selection' => [
+                'translationPrefix' => 'warehouse::fields',
+                'fields' => [
+                    'from' => [
+                        'type' => 'number',
+                        'label' => trans('warehouse::fields.select_from'),
+                        'rules' => []
+                    ],
+                    'to' => [
+                        'type' => 'number',
+                        'label' => trans('warehouse::fields.select_to'),
+                        'rules' => []
+                    ],
+                    'all' => [
+                        'type' => 'radio',
+                        'default' => false,
+                        'label' => trans('warehouse::fields.selection'),
+                        'list' => [
+                            'true' => 'Seleziona tutti',
+                            'false' => 'Deseleziona tutti'
+                        ],
+                        'rules' => ['nullable']
+                    ],
+                    'print' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+                        'label' => trans('warehouse::unitloads.printSelected'),
+                        'fasIcon' => 'file-pdf',
+                        'rules' => []
+                    ],
+                    'reset' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-large'],
+                        'label' => trans('warehouse::unitloads.resetSelected'),
+                        'fasIcon' => 'refresh',
+                        'rules' => []
+                    ],
+                    'delete' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-danger', 'uk-button-large'],
+                        'label' => trans('warehouse::unitloads.deleteSelected'),
+                        'fasIcon' => 'trash',
+                        'rules' => []
                     ],
                 ],
                 'width' => ["1-3@l", '1-2@m']
