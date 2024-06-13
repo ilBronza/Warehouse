@@ -9,7 +9,8 @@ use IlBronza\CRUD\Models\BaseModel;
 use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
-use IlBronza\Clients\Models\Destination;
+
+use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ class Unitload extends BaseModel
     use CRUDUseUuidTrait;
     use PackagedModelsTrait;
     use CRUDParentingTrait;
+    use InteractsWithDestinationTrait;
 
     public ? string $translationFolderPrefix = 'warehouse';
     static $packageConfigPrefix = 'warehouse';
@@ -29,16 +31,6 @@ class Unitload extends BaseModel
     protected $dates = ['printed_at'];
 
     static $deletingRelationships = [];
-
-    public function destination()
-    {
-        return $this->belongsTo(Destination::getProjectClassName());
-    }
-
-    public function getDestination() : ? Destination
-    {
-        return $this->destination;
-    }
 
     public function processing()
     {
