@@ -6,6 +6,7 @@
 		<tr>
 			<th class="intestazione">
 				COMMESSA:
+				<span class="small">{{ $unitload->production?->getOrder()?->getName() }}</span>
 			</th>
 			<td class="printdate">{{ $unitload->created_at->format('d/m/Y') }}</td>
 			<th class="uk-text-left">
@@ -13,27 +14,16 @@
 			</th>
 		</tr>
 		<tr>
-			<td>
-				<span class="small">{{ $unitload->production?->getOrder()?->getName() }}</span>
-			</td>
+			<th class="intestazione">
+				SK:
+				<span class="small">{{ $unitload->production?->getProduct()?->getName() }}</span>
+			</th>
 			<td rowspan="4">					
 			</td>
 			<td rowspan="4" style="text-align:center;">
 				<span class="zone">
 					{{ $unitload->getDestination()?->getZone() }}
 				</span>
-			</td>
-		</tr>
-
-		<tr>
-			<th class="intestazione">
-				SK:
-			</th>
-		</tr>
-
-		<tr>
-			<td>
-				<span class="small">{{ $unitload->production?->getProduct()?->getName() }}</span>
 			</td>
 		</tr>
 	</table>
@@ -82,7 +72,7 @@
 		</tr>
 		@if($pallettype = $unitload->getPallettype())
 		<tr class="bancale">
-			<td colspan="2" style="font-size: @if(strlen($pallettype->getName()) > 18) 60px; @else 64px; @endif ">{{ $pallettype->getName() }}</td>
+			<td colspan="2" style="line-height: 0.7em; font-size: @if(strlen($pallettype->getName()) > 18) 60px; @else 64px; @endif ">{{ $pallettype->getName() }}</td>
 		</tr>
 		@endif
 		<tr>

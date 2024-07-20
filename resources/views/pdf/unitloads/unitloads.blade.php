@@ -70,7 +70,7 @@ tr td.cliente
 
 .separatore
 {
-	height: 260px;
+	height: 300px;
 	border-bottom-width: 1px;
 	border-bottom-style: dashed;
 	border-bottom-color: #000;
@@ -86,7 +86,7 @@ th.intestazione
 {
 	font-size: 96px;
 	margin: 0px;
-	line-height: 1em;
+	line-height: 0.6em;
 }
 
 .colli
