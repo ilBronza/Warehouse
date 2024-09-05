@@ -13,12 +13,12 @@ class UnitloadCreatorHelper
 
 	public function __construct()
 	{
-		$this->makeUnitload();		
+		$this->makeUnitload();
 	}
 
 	public function makeUnitload()
 	{
-		$this->unitload = Unitload::getProjectClassname()::make();
+		$this->unitload = Unitload::getProjectClassName()::make();
 	}
 
 	public function saveUnitload()
@@ -53,55 +53,51 @@ class UnitloadCreatorHelper
 
 	public function getParameter(string $parameterName) : mixed
 	{
-		if(! isset($this->parameters[$parameterName]))
+		if (! isset($this->parameters[$parameterName]))
 			return null;
 
 		return $this->parameters[$parameterName];
 	}
 
 	public function associateProductionRelationship()
-	{		
-		if(! $production = $this->getParameter('production'))
-			return ;
+	{
+		if (! $production = $this->getParameter('production'))
+			return;
 
 		$this->unsetParameter('production');
 
-		$this->getUnitload()
-			->production()
-			->associate($production);
+		$this->getUnitload()->production()->associate($production);
 
-		if($this->getParameter('order_product_id'))
-			return ;
-		
-		if(! $production instanceof Model)
-			return ;
+		if ($this->getParameter('order_product_id'))
+			return;
 
-		if(! method_exists($production, 'getOrderProduct'))
-			return ;
+		if (! $production instanceof Model)
+			return;
 
-		if(! $orderProduct = $production->getOrderProduct())
-			return ;
+		if (! method_exists($production, 'getOrderProduct'))
+			return;
+
+		if (! $orderProduct = $production->getOrderProduct())
+			return;
 
 		$this->setParameter('order_product_id', $orderProduct->getKey());
 	}
 
 	public function associateLoadableRelationship()
-	{		
-		if(! $loadable = $this->getParameter('loadable'))
-			return ;
+	{
+		if (! $loadable = $this->getParameter('loadable'))
+			return;
 
-		$this->getUnitload()
-			->loadable()
-			->associate($loadable);
+		$this->getUnitload()->loadable()->associate($loadable);
 
 		$this->unsetParameter('loadable');
 
-		if(! $loadable instanceof Product)
-			return ;
-		
-		if($this->getParameter('product_id'))
-			return ;
-		
+		if (! $loadable instanceof Product)
+			return;
+
+		if ($this->getParameter('product_id'))
+			return;
+
 		$this->setParameter('product_id', $loadable->getKey());
 	}
 
@@ -115,16 +111,16 @@ class UnitloadCreatorHelper
 	{
 		$unitload = $this->getUnitload();
 
-		foreach($this->getParameters() as $name => $value)
+		foreach ($this->getParameters() as $name => $value)
 			$unitload->$name = $value;
 	}
 
 	static function validateParameters(array $parameters) : array
 	{
-		if(($parameters['quantity_expected'] ?? 0) < 0)
+		if (($parameters['quantity_expected'] ?? 0) < 0)
 			$parameters['quantity_expected'] = null;
 
-		if(($parameters['quantity'] ?? 0) < 0)
+		if (($parameters['quantity'] ?? 0) < 0)
 			$parameters['quantity'] = null;
 
 		return $parameters;

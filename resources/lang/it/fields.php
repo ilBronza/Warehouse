@@ -2,7 +2,7 @@
 
 return [
 	'order' => 'Ordine',
-	'client' => 'Cliente',
+	'client' => 'Azienda',
 	'valid_pieces_done' => 'Pezzi prodotti',
 	'newUnitloads' => 'Nuovi bindelli',
 	'clientOrder' => 'Ordine del cliente',
