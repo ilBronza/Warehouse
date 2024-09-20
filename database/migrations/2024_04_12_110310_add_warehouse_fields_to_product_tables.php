@@ -14,18 +14,18 @@ class AddWarehouseFieldsToProductTables extends Migration
     public function up()
     {
         Schema::table(config('clients.models.client.table'), function (Blueprint $table) {
-            $table->uuid('pallettype_id')->nullable();
-            $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
+            // $table->uuid('pallettype_id')->nullable();
+            // $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
         });
 
         Schema::table(config('products.models.order.table'), function (Blueprint $table) {
-            $table->uuid('pallettype_id')->nullable();
-            $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
+            // $table->uuid('pallettype_id')->nullable();
+            // $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
         });
 
         Schema::table(config('products.models.packing.table'), function (Blueprint $table) {
-            $table->uuid('pallettype_id')->nullable();
-            $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
+            // $table->uuid('pallettype_id')->nullable();
+            // $table->foreign('pallettype_id')->references('id')->on(config('warehouse.models.pallettype.table'));
         });
     }
 
