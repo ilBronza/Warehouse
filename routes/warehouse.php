@@ -29,6 +29,7 @@ Route::group([
 
 		Route::group(['prefix' => 'unitloads'], function()
 		{
+			//UnitloadEditUpdateController
 			Route::get('{unitload}/edit', [Warehouse::getController('unitload', 'edit'), 'edit'])->name('unitloads.edit');
 			Route::put('{unitload}', [Warehouse::getController('unitload', 'edit'), 'update'])->name('unitloads.update');
 
