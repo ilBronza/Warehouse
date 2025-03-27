@@ -28,6 +28,7 @@ return [
                 'crud' => UnitloadCrudFieldsetsParameters::class
             ],
             'controllers' => [
+                'index' => UnitloadPrintController::class,
                 'print' => UnitloadPrintController::class,
                 'resetPrintedAt' => UnitloadPrintController::class,
                 'edit' => UnitloadEditUpdateController::class,

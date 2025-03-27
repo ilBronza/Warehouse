@@ -28,7 +28,10 @@ class Unitload extends BaseModel
 	static $deletingRelationships = [];
 	public ?string $translationFolderPrefix = 'warehouse';
 	protected $keyType = 'string';
-	protected $dates = ['printed_at'];
+
+	protected $casts = [
+		'printed_at' => 'datetime'
+	];
 
 	protected static function booted()
 	{

@@ -107,84 +107,84 @@ th.intestazione
 
 @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-Bold.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-Bold.ttf") }}) format("truetype");
                 font-weight: 700;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-BoldItalic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-BoldItalic.ttf") }}) format("truetype");
                 font-weight: 700;
                 font-style: italic;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-ExtraBold.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-ExtraBold.ttf") }}) format("truetype");
                 font-weight: 800;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-ExtraBoldItalic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-ExtraBoldItalic.ttf") }}) format("truetype");
                 font-weight: 800;
                 font-style: italic;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-Light.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-Light.ttf") }}) format("truetype");
                 font-weight: 300;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-LightItalic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-LightItalic.ttf") }}) format("truetype");
                 font-weight: 300;
                 font-style: italic;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-Medium.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-Medium.ttf") }}) format("truetype");
                 font-weight: 500;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-MediumItalic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-MediumItalic.ttf") }}) format("truetype");
                 font-weight: 500;
                 font-style: italic;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-Regular.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-Regular.ttf") }}) format("truetype");
                 font-weight: 400;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-SemiBold.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-SemiBold.ttf") }}) format("truetype");
                 font-weight: 600;
                 font-style: normal;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-SemiBoldItalic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-SemiBoldItalic.ttf") }}) format("truetype");
                 font-weight: 600;
                 font-style: italic;
             }
     
             @font-face {
                 font-family: 'Roboto';
-                src: url({{ storage_path("fonts/Roboto/Roboto-Italic.ttf") }}) format("truetype");
+                src: url({{ storage_path("fonts/roboto/Roboto-Italic.ttf") }}) format("truetype");
                 font-weight: 400;
                 font-style: italic;
             }

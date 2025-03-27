@@ -3,7 +3,7 @@
 namespace IlBronza\Warehouse\Helpers;
 
 use Auth;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Support\Collection;

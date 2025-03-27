@@ -2,10 +2,12 @@
 
 namespace IlBronza\Warehouse;
 
+use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaServiceProviderPackagesTrait;
 use Illuminate\Support\ServiceProvider;
 
 class WarehouseServiceProvider extends ServiceProvider
 {
+    use IlBronzaServiceProviderPackagesTrait;
     /**
      * Perform post-registration booting of services.
      *

@@ -29,6 +29,8 @@ Route::group([
 
 		Route::group(['prefix' => 'unitloads'], function()
 		{
+			Route::get('', [Warehouse::getController('unitload', 'index'), 'index'])->name('unitloads.index');
+
 			//UnitloadEditUpdateController
 			Route::get('{unitload}/edit', [Warehouse::getController('unitload', 'edit'), 'edit'])->name('unitloads.edit');
 			Route::put('{unitload}', [Warehouse::getController('unitload', 'edit'), 'update'])->name('unitloads.update');
