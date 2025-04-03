@@ -16,7 +16,7 @@ class Pallettype extends BaseWarehouseModel
 
 	static function getDefault()
 	{
-		return static::where('name', 'TIPO EUR')->first();
+		return static::where('slug', 'tipo-eur')->first();
 		// return static::findCached(static::$defaultId);
 	}
 
