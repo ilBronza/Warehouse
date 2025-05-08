@@ -23,7 +23,7 @@
 		</div>
 		<div class="uk-card-body">
 			<span class="uk-h2 uk-text-bold">
-			{{ $unitload->getQuantity() }}/{{ $unitload->getProduction()?->getQuantityRequired() }}
+			{{ $unitload->getQuantity() }}/{{ $unitload->production?->getOrderProduct()?->getClientQuantity() }}
 			</span>
 
 			<dl class="uk-description-list ib-horizontal-description-list">

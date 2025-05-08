@@ -62,7 +62,7 @@
 		</tr>
 		<tr>
 			<th class="intestazione"> QTA COLLO / QTA ORD.</th>
-			<td class="cliente">{{ $unitload->getQuantity() }}/{{ $unitload->production?->getQuantityRequired() }}
+			<td class="cliente">{{ $unitload->getQuantity() }}/{{ $unitload->production?->getOrderProduct()->getClientQuantity() }}
 			</td>
 		</tr>
 	</table>

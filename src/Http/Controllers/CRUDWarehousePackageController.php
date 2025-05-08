@@ -3,9 +3,14 @@
 namespace IlBronza\Warehouse\Http\Controllers;
 
 use IlBronza\CRUD\CRUD;
+use IlBronza\CRUD\Http\Controllers\BasePackageTrait;
 
 class CRUDWarehousePackageController extends CRUD
 {
+	use BasePackageTrait;
+
+	static $packageConfigPrefix = 'warehouse';
+
     public function getRouteBaseNamePrefix() : ? string
     {
         return config('warehouse.routePrefix');

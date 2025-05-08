@@ -11,6 +11,7 @@ use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
 use IlBronza\Products\Models\OrderProductPhase;
+use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -72,6 +73,11 @@ class Unitload extends BaseModel
 	public function loadable() : MorphTo
 	{
 		return $this->morphTo();
+	}
+
+	public function getLoadable()
+	{
+		return $this->loadable;
 	}
 
 	public function user()
@@ -156,7 +162,7 @@ class Unitload extends BaseModel
 
 	public function scopeCompleted($query)
 	{
-		return $query->whereNotNull('quantity')->whereNotNull('printed_at');
+		return $query->whereNotNull('quantity')->where('placeholder', '!=', true);
 	}
 
 	public function getCreatedBy() : ?User
@@ -187,5 +193,18 @@ class Unitload extends BaseModel
 	public function getSequence() : ?int
 	{
 		return $this->sequence;
+	}
+
+	public function contentDelivery()
+	{
+		return $this->belongsTo(ContentDelivery::gpc());
+	}
+
+	public function getVolumeCubicMeters()
+	{
+		if(! $loadable = $this->getLoadable())
+			dd('manca loadable');
+
+		return $loadable->getVolumeCubicMeters();
 	}
 }

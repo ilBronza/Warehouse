@@ -5,11 +5,26 @@ namespace IlBronza\Warehouse;
 use IlBronza\CRUD\Providers\RouterProvider\RoutedObjectInterface;
 use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaPackagesTrait;
 
+use function config;
+use function ff;
+
 class Warehouse implements RoutedObjectInterface
 {
     use IlBronzaPackagesTrait;
 
     static $packageConfigPrefix = 'warehouse';
+
+	public function getOrderDeliveryHelperClass() : string
+	{
+		return config('warehouse.models.delivery.helpers.orderDelivery');
+	}
+
+	public function getOrderDeliveryHelper()
+	{
+		$helperClass = $this->getOrderDeliveryHelperClass();
+
+		return new $helperClass();
+	}
 
     public function manageMenuButtons()
     {

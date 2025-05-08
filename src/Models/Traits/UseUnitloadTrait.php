@@ -21,6 +21,6 @@ trait UseUnitloadTrait
 
 	public function productionUnitloads() : MorphMany
 	{
-		return $this->morphMany(Unitload::getProjectClassName(), 'production')->orderBy('sequence');
+		return $this->morphMany(Unitload::gpc(), 'production')->orderBy('sequence');
 	}
 }

@@ -202,6 +202,10 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
                 'pallettype_id' => $parameters['pallettype_id'],
             ];
 
+
+            // if(\Auth::id()==1)
+            //     dd($unitloadParameters);
+
             UnitloadCreatorHelper::createByArray($unitloadParameters);
         }
 

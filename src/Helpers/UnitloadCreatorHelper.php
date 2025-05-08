@@ -18,7 +18,7 @@ class UnitloadCreatorHelper
 
 	public function makeUnitload()
 	{
-		$this->unitload = Unitload::getProjectClassName()::make();
+		$this->unitload = Unitload::gpc()::make();
 	}
 
 	public function saveUnitload()
@@ -140,5 +140,13 @@ class UnitloadCreatorHelper
 		$helper->saveUnitload();
 
 		return $helper->getUnitload();
+	}
+
+
+	static function createPlaceholder(array $parameters = []) : Unitload
+	{
+		$parameters['placeholder'] = true;
+
+		return static::createByArray($parameters);
 	}
 }

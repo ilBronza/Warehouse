@@ -10,6 +10,26 @@ Route::group([
 	],
 	function()
 	{
+		Route::group([
+			'prefix' => 'deliveries-management',
+			'as' => 'deliveries.'
+		], function()
+		{
+			Route::get('{delivery}/edit', [Warehouse::getController('delivery', 'edit'), 'edit'])->name('edit');
+			Route::put('{delivery}', [Warehouse::getController('delivery', 'update'), 'update'])->name('update');
+
+			//DeliveryIndexController
+			Route::get('', [Warehouse::getController('delivery', 'index'), 'index'])->name('index');
+			Route::get('create', [Warehouse::getController('delivery', 'create'), 'create'])->name('create');
+			Route::post('', [Warehouse::getController('delivery', 'store'), 'store'])->name('store');
+
+			//DeliveryAddOrdersIndexController
+			Route::post('add-orders-index', [Warehouse::getController('delivery', 'addOrdersIndex'), 'index'])->name('addOrdersIndex');
+
+			Route::post('{delivery}/add-orders', [Warehouse::getController('delivery', 'addOrders'), 'addOrders'])->name('addOrders');
+		});
+
+
 		Route::group(['prefix' => 'pallettypes'], function()
 		{
 			Route::get('', [Warehouse::getController('pallettype', 'index'), 'index'])->name('pallettypes.index');
