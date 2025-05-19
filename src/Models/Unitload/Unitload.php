@@ -162,7 +162,10 @@ class Unitload extends BaseModel
 
 	public function scopeCompleted($query)
 	{
-		return $query->whereNotNull('quantity')->where('placeholder', '!=', true);
+		return $query->whereNotNull('quantity')->where(function($_query)
+			{
+    			$_query->where('placeholder', false)->orWhereNull('placeholder');
+			});
 	}
 
 	public function getCreatedBy() : ?User

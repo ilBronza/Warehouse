@@ -19,7 +19,7 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 
         $palletArray = Pallettype::all()->pluck('name', 'id')->toArray();
 
-        return [
+        $result = [
             'order' => [
                 'translationPrefix' => 'warehouse::fields',
                 'fields' => [
@@ -199,6 +199,15 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                         'fasIcon' => 'file-pdf',
                         'rules' => []
                     ],
+	                
+	                //this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
+                    'printClientCustomUnitload' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+                        'label' => trans('warehouse::unitloads.printSelectedCustom'),
+                        'fasIcon' => 'file-pdf',
+                        'rules' => []
+                    ],
                     'reset' => [
                         'type' => 'button',
                         'htmlClasses' => ['uk-button-large'],
@@ -217,5 +226,10 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                 'width' => ["1-3@l", '1-2@m']
             ],
         ];
+
+        if(! $client->hasCustomUnitloadPdf())
+            unset($result['selection']['fields']['printClientCustomUnitload']);
+
+        return $result;
     }
 }

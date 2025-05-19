@@ -12,6 +12,8 @@ class UnitloadPrinterHelper
 {
 	public Collection $unitloads;
 
+	public string $viewName = 'warehouse::pdf.unitloads.unitloads';
+
 	public function __construct()
 	{
 		$this->unitloads = collect();
@@ -53,11 +55,16 @@ class UnitloadPrinterHelper
 		$unitload->save();
 	}
 
+	public function getView()
+	{
+		return $this->viewName;
+	}
+
 	public function createPDF()
 	{
 		$this->setUnitloadsPrinted();
 
-		$pdf = PDF::loadView('warehouse::pdf.unitloads.unitloads', ['unitloads' => $this->getUnitloads()]);
+		$pdf = PDF::loadView($this->getView(), ['unitloads' => $this->getUnitloads()]);
 
 		$pdf->setPaper('a4', 'portrait');
 

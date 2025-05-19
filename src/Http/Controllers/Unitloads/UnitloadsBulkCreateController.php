@@ -2,20 +2,20 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Unitloads;
 
-use App\Processing;
 use App\Providers\Helpers\Processings\ProcessingCreatorHelper;
 use Auth;
 use Carbon\Carbon;
-use IlBronza\Buttons\Button;
 use IlBronza\CRUD\Helpers\ModelManagers\CrudModelStorer;
 use IlBronza\CRUD\Traits\CRUDCreateStoreTrait;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Ukn\Ukn;
 use IlBronza\Warehouse\Helpers\UnitloadCreatorHelper;
 use IlBronza\Warehouse\Helpers\UnitloadPrinterHelper;
-use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadsCRUDController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
+use function ucfirst;
 
 class UnitloadsBulkCreateController extends UnitloadsCRUDController
 {
@@ -103,6 +103,26 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         return UnitloadPrinterHelper::printUnitloads($selectedUnitloads);
     }
 
+	public function getCustomUnitloadPrinterHelper($selectedUnitloads) : string
+	{
+		$clientString = ucfirst(
+			Str::camel(
+				$selectedUnitloads->first()->getProduction()->getclient()->getSlug()
+			)
+		);
+
+		return 'App\Providers\Helpers\Warehouse\CustomUnitloadsHelpers\\' . $clientString . 'UnitloadPrinterHelper';
+	}
+
+	public function bulkPrintCustom()
+	{
+		$selectedUnitloads = $this->getSelectedUnitloads();
+
+		$helper = $this->getCustomUnitloadPrinterHelper($selectedUnitloads);
+
+		return $helper::printUnitloads($selectedUnitloads);
+	}
+
     public function isDoubleCall() : bool
     {
         $currentRandCheck = $this->request->input('unitloads_rand_check');
@@ -149,10 +169,13 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         if($request->input('reset', false))
             return $this->bulkReset();
 
-        if($request->input('print', false))
-            return $this->bulkPrint();
+	    if($request->input('print', false))
+		    return $this->bulkPrint();
 
-        if($this->isDoubleCall())
+	    if($request->input('printClientCustomUnitload', false))
+		    return $this->bulkPrintCustom();
+
+	    if($this->isDoubleCall())
             return back();
 
         $request->validate([
