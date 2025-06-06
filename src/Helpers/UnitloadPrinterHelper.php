@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class UnitloadPrinterHelper
 {
@@ -60,13 +61,56 @@ class UnitloadPrinterHelper
 		return $this->viewName;
 	}
 
-	public function createPDF()
+	public function createPdf()
 	{
 		$this->setUnitloadsPrinted();
 
 		$pdf = PDF::loadView($this->getView(), ['unitloads' => $this->getUnitloads()]);
 
 		$pdf->setPaper('a4', 'portrait');
+
+		return $pdf;
+	}
+
+	public function getFilePath() : string
+	{
+		$orderProduct = $this->getUnitloads()->first()->getProduction()?->getOrderProduct();
+
+		$sequence = $orderProduct->getProduct()->getComponentSequence();
+
+		$orderName = $orderProduct->getOrder()->getName() . $sequence;
+
+		return $orderName . '.pdf';
+	}
+
+	public function getTempFilePath() : string
+	{
+		return '/temp/' . $this->getFilePath();		
+	}
+
+	public function createAndGetTempFile() : string
+	{
+		return storage_path(
+			$this->saveTempPdf()
+		);
+	}
+
+	public function saveTempPdf() : string
+	{
+		$pdf = $this->createPdf();
+
+		$path = $this->getTempFilePath();
+
+		$pdf->save(
+			storage_path($path)
+		);
+
+		return $path;
+	}
+
+	public function streamPdf()
+	{
+		$pdf = $this->createPdf();
 
 		return $pdf->stream();
 	}
@@ -77,7 +121,7 @@ class UnitloadPrinterHelper
 
 		$helper->setUnitloads($unitloads);
 
-		return $helper->createPDF();
+		return $helper->streamPdf();
 	}
 
 	static function printUnitload(Unitload $unitload)
@@ -86,6 +130,6 @@ class UnitloadPrinterHelper
 
 		$helper->addUnitload($unitload);
 
-		return $helper->createPDF();
+		return $helper->streamPdf();
 	}
 }

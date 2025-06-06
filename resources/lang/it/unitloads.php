@@ -7,6 +7,8 @@ return [
 	'printSelected' => 'Crea PDF',
 	'createUnitloads' => 'Crea bindelli',
 
+	'printSelectedCustom' => 'Bindello cliente',
+
 	'createWithoutPrint' => 'Crea nuovi bindelli',
 	'unitloadsHaveBeenCreatedReprintThemIfYouNeed' => 'I bindelli sono stati già creati, questa pagina non è attualmente a disposizione. Ristampali o ricomincia la procedura se necessario'
 ];

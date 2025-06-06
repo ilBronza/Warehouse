@@ -114,6 +114,15 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 		return 'App\Providers\Helpers\Warehouse\CustomUnitloadsHelpers\\' . $clientString . 'UnitloadPrinterHelper';
 	}
 
+    public function bulkPrintTotal()
+    {
+        $selectedUnitloads = $this->getSelectedUnitloads();
+
+        $helper = $this->getCustomUnitloadPrinterHelper($selectedUnitloads);
+
+        return $helper::printTotalUnitloads($selectedUnitloads);        
+    }
+
 	public function bulkPrintCustom()
 	{
 		$selectedUnitloads = $this->getSelectedUnitloads();
@@ -172,8 +181,11 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 	    if($request->input('print', false))
 		    return $this->bulkPrint();
 
-	    if($request->input('printClientCustomUnitload', false))
-		    return $this->bulkPrintCustom();
+        if($request->input('printClientCustomUnitload', false))
+            return $this->bulkPrintCustom();
+
+        if($request->input('printTotalUnitloads', false))
+            return $this->bulkPrintTotal();
 
 	    if($this->isDoubleCall())
             return back();

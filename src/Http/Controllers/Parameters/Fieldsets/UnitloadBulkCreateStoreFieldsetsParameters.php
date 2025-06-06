@@ -200,7 +200,7 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                         'rules' => []
                     ],
 	                
-	                //this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
+                    //this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
                     'printClientCustomUnitload' => [
                         'type' => 'button',
                         'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
@@ -208,6 +208,16 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
                         'fasIcon' => 'file-pdf',
                         'rules' => []
                     ],
+
+                    //this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
+                    'printTotalUnitloads' => [
+                        'type' => 'button',
+                        'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+                        'label' => trans('warehouse::unitloads.printTotal'),
+                        'fasIcon' => 'file-pdf',
+                        'rules' => []
+                    ],
+
                     'reset' => [
                         'type' => 'button',
                         'htmlClasses' => ['uk-button-large'],
@@ -228,7 +238,10 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
         ];
 
         if(! $client->hasCustomUnitloadPdf())
+        {
             unset($result['selection']['fields']['printClientCustomUnitload']);
+            unset($result['selection']['fields']['printTotalUnitloads']);
+        }
 
         return $result;
     }
