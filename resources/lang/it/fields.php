@@ -24,5 +24,6 @@ return [
 	'selection' => 'Selezione bindelli',
 	'select_from' => 'Seleziona da',
 	'select_to' => 'Seleziona a',
-	'select_all' => 'Seleziona tutti'
+	'select_all' => 'Seleziona tutti',
+	'finishing_id' => 'Finitura'
 ];

@@ -6,6 +6,7 @@ use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddOrdersIndexControl
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryCreateStoreController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryEditUpdateController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryIndexController;
+use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryShowController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCreateStoreController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeDestroyController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeEditUpdateController;
@@ -42,7 +43,8 @@ return [
 		    ],
 		    'controllers' => [
 			    'index' => DeliveryIndexController::class,
-			    'edit' => DeliveryEditUpdateController::class,
+                'show' => DeliveryShowController::class,
+                'edit' => DeliveryEditUpdateController::class,
 			    'update' => DeliveryEditUpdateController::class,
 			    'create' => DeliveryCreateStoreController::class,
 			    'store' => DeliveryCreateStoreController::class,

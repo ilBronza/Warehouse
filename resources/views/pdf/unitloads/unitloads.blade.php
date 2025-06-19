@@ -37,6 +37,14 @@ tr, td
 	line-height: 1.1em;
 }
 
+.finitura td
+{
+    line-height: 0.8em;
+    font-size: 54px!important;
+
+    text-transform: uppercase;
+}
+
 .pagina
 {
 	page-break-after: auto;

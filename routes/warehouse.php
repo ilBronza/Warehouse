@@ -15,6 +15,7 @@ Route::group([
 			'as' => 'deliveries.'
 		], function()
 		{
+			Route::get('{delivery}', [Warehouse::getController('delivery', 'show'), 'show'])->name('show');
 			Route::get('{delivery}/edit', [Warehouse::getController('delivery', 'edit'), 'edit'])->name('edit');
 			Route::put('{delivery}', [Warehouse::getController('delivery', 'update'), 'update'])->name('update');
 

@@ -49,8 +49,21 @@
 
 					<input class="uk-checkbox unitload" id="unitload{{ $unitload->getKey() }}" type="checkbox" name="unitloads[]" value="{{ $unitload->getKey() }}">
 				</div>
+			</div>
 
-				
+			<div class="delivery">
+				@if($delivery = $unitload->delivery)
+				<div>
+					<a href="{{ $delivery->getShowUrl() }}">
+						{!! FaIcon::link() !!} {{ $delivery->getName() }}
+					</a>
+				</div>
+				@else
+				<div class="uk-alert-danger" uk-alert>
+					<a href class="uk-alert-close" uk-close></a>
+					<p>Spedizione mancante</p>
+				</div>
+				@endif
 			</div>
 
 			@if($printedAt = $unitload->getPrintedAt())

@@ -58,6 +58,7 @@ class DeliveryOrderHelper extends DeliveryAttacherHelper
 
 	public function checkOrderProductShippingTotalQuantity(OrderProduct $orderProduct)
 	{
+		dd($orderProduct->deliveries);
 		if($orderProduct->deliveries->where('pivot.partial', false)->count() > 1)
 			dd('troppe intere');
 

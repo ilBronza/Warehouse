@@ -148,24 +148,45 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         return false;
     }
 
-    private function managePelletIdStoring(array $params)
-    {
-        if(! isset($params['save_pallettype_id_on']))
-            return ;
+	private function managePelletIdStoring(array $params)
+	{
+		if(! isset($params['save_pallettype_id_on']))
+			return ;
 
-        if($params['save_pallettype_id_on'] == 'nothing')
-            return ;
+		if($params['save_pallettype_id_on'] == 'nothing')
+			return ;
 
-        if($params['save_pallettype_id_on'] == 'product')
-            return $this->orderProductPhase->getProduct()->update(['pallettype_id' => $params['pallettype_id']]);
+		if($params['save_pallettype_id_on'] == 'product')
+			return $this->orderProductPhase->getProduct()->update(['pallettype_id' => $params['pallettype_id']]);
 
-        if($params['save_pallettype_id_on'] == 'client')
-            return $this->orderProductPhase->getOrder()->getClient()->update(['pallettype_id' => $params['pallettype_id']]);
+		if($params['save_pallettype_id_on'] == 'client')
+			return $this->orderProductPhase->getOrder()->getClient()->update(['pallettype_id' => $params['pallettype_id']]);
 
-        return null;
-    }
+		return null;
+	}
 
-    public function bulkStore(Request $request, $orderProductPhase)
+	private function manageFinishingIdStoring(array $params)
+	{
+		if(! isset($params['save_finishing_id_on']))
+			return ;
+
+		if($params['save_finishing_id_on'] == 'nothing')
+			return ;
+
+		if($params['save_finishing_id_on'] == 'product')
+			return $this->orderProductPhase->getProduct()->update(['finishing_id' => $params['finishing_id']]);
+
+		if($params['save_finishing_id_on'] == 'client')
+		{
+			$client = $this->orderProductPhase->getOrder()->getClient();
+			$client->finishing_id = $params['finishing_id'];
+			return $client->save();
+		}
+
+		return null;
+	}
+
+	public function bulkStore(Request $request, $orderProductPhase)
     {
         $this->request = $request;
         $this->orderProductPhase = OrderProductPhase::getProjectClassName()::findOrFail($orderProductPhase);
@@ -204,7 +225,8 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 
         $parameters = $helper->getValidatedRequestParameters();
 
-        $this->managePelletIdStoring($parameters);
+	    $this->managePelletIdStoring($parameters);
+	    $this->manageFinishingIdStoring($parameters);
 
         $processingParameters = [
             'processing_type' => 'packing',
@@ -235,8 +257,8 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
                 'processing_id' => $processing->getKey(),
                 'destination_id' => $parameters['destination_id'],
                 'pallettype_id' => $parameters['pallettype_id'],
+                'finishing_id' => $parameters['finishing_id'],
             ];
-
 
             // if(\Auth::id()==1)
             //     dd($unitloadParameters);
@@ -254,6 +276,7 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
             'processing_id' => $processing->getKey(),
             'destination_id' => $parameters['destination_id'],
             'pallettype_id' => $parameters['pallettype_id'],
+            'finishing_id' => $parameters['finishing_id'],
         ];
 
         if(($totalQuantity))

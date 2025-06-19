@@ -5,13 +5,15 @@ namespace IlBronza\Warehouse\Models\Unitload;
 use App\Processing;
 use Carbon\Carbon;
 use IlBronza\AccountManager\Models\User;
-use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\CRUD\Models\BaseModel;
 use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
+use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
+use IlBronza\Products\Models\Finishing;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
+use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -95,9 +97,19 @@ class Unitload extends BaseModel
 		return $this->quantity_capacity;
 	}
 
+	public function finishing()
+	{
+		return $this->belongsTo(Finishing::gpc());
+	}
+
+	public function getFinishing() : ?Finishing
+	{
+		return $this->finishing;
+	}
+
 	public function pallettype()
 	{
-		return $this->belongsTo(Pallettype::getProjectClassName());
+		return $this->belongsTo(Pallettype::gpc());
 	}
 
 	public function getPallettype() : ?Pallettype
@@ -202,6 +214,19 @@ class Unitload extends BaseModel
 	{
 		return $this->belongsTo(ContentDelivery::gpc());
 	}
+
+	public function delivery()
+    {
+        return $this->hasOneThrough(
+            Delivery::gpc(),
+            ContentDelivery::class,
+            'id', # foreign key on intermediary -- categories
+            'id', # foreign key on target -- projects
+            'content_delivery_id', # local key on this -- properties
+            'delivery_id' # local key on intermediary -- categories
+        );
+    }
+
 
 	public function getVolumeCubicMeters()
 	{
