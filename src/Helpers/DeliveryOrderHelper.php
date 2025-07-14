@@ -6,6 +6,8 @@ use IlBronza\Products\Models\Order;
 use IlBronza\Products\Models\OrderProduct;
 use Illuminate\Support\Collection;
 
+use function dd;
+
 class DeliveryOrderHelper extends DeliveryAttacherHelper
 {
 	public array|Collection $orders = [];
@@ -58,7 +60,6 @@ class DeliveryOrderHelper extends DeliveryAttacherHelper
 
 	public function checkOrderProductShippingTotalQuantity(OrderProduct $orderProduct)
 	{
-		dd($orderProduct->deliveries);
 		if($orderProduct->deliveries->where('pivot.partial', false)->count() > 1)
 			dd('troppe intere');
 

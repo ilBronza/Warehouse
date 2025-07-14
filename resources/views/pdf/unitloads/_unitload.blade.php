@@ -82,14 +82,14 @@
 		</tr>
 		@endif
 
-		@if(($finishing = $unitload->getFinishing()))
+{{-- 		@if(($finishing = $unitload->getFinishing()))
 			<tr class="finitura">
 				<td colspan="2" style="font-size: @if(strlen($finishing->getName()) > 18) 60px; @else 64px; @endif ">
 					{{ $finishing->getName() }}
 				</td>
 			</tr>
 		@endif
-
+ --}}
 	</table>
 
 </div>
