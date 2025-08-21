@@ -10,28 +10,20 @@
 				{{ $unitload->getSequence() }}/{{ $unitload->getBrotherNumbers() }}
 			</span>
 			<span class="uk-float-right">
-				<a target="_blank" title="@lang('warehouse::unitloads.printUnitloadQuantity')" href="{{ $unitload->getPrintUrl() }}">
-					<i class="fa-solid fa-print"></i>
-				</a>
-				<a class="uk-margin-left" title="@lang('warehouse::unitloads.editUnitloadQuantity')" href="{{ $unitload->getEditUrl() }}">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</a>
-				<a class="uk-margin-left" onclick="return confirm('Sei sicuro?');" title="@lang('warehouse::unitloads.deleteUnitloadQuantity')" href="{{ $unitload->getDeleteUrl() }}">
-					<i class="fa-solid fa-trash"></i>
-				</a>
+				@include('warehouse::unitloads.buttons._printButton')
+				@include('warehouse::unitloads.buttons._editButton')
+				@include('warehouse::unitloads.buttons._splitButton')
+				@include('warehouse::unitloads.buttons._deleteButton')
 			</span>
 		</div>
 		<div class="uk-card-body">
 			<span class="uk-h2 uk-text-bold">
-			{{ $unitload->getQuantity() }}/{{ $unitload->production?->getOrderProduct()?->getClientQuantity() }}
+				{{ $unitload->getQuantity() }}/{{ $unitload->production?->getOrderProduct()?->getClientQuantity() }}
 			</span>
 
-			<dl class="uk-description-list ib-horizontal-description-list">
-				<dt>Creato da</dt>
-				<dd>{{ $unitload->getCreatedBy()?->getShortName() }}</dd>
-				<dt>Creato il</dt>
-				<dd>{{ $unitload->getCreatedAt()?->format(trans('dates.date')) }}</dd>
-			</dl>
+			<div>
+				{{ $unitload->getCreatedBy()?->getShortName() }}, {{ $unitload->getCreatedAt()?->format(trans('dates.datetime')) }}
+			</div>
 		</div>
 		<div class="uk-card-footer">
 			<div uk-grid>
@@ -51,11 +43,12 @@
 				</div>
 			</div>
 
+			@if(is_null($showDelivery) || $showDelivery)
 			<div class="delivery">
 				@if($delivery = $unitload->delivery)
 				<div>
 					<a href="{{ $delivery->getShowUrl() }}">
-						{!! FaIcon::link() !!} {{ $delivery->getName() }}
+						{!! FaIcon::inline('truck') !!} {{ $delivery->getName() }}
 					</a>
 				</div>
 				@else
@@ -65,6 +58,7 @@
 				</div>
 				@endif
 			</div>
+			@endif
 
 			@if($printedAt = $unitload->getPrintedAt())
 			<dl class="uk-description-list ib-horizontal-description-list">
@@ -72,14 +66,10 @@
 				<dd>{{ $unitload->getPrintedBy()?->getShortName() }}</dd>
 				<dt>Stampato il</dt>
 				<dd>{{ $unitload->getPrintedAt()?->format(trans('dates.date')) }}</dd>
-			@else
-			<dl class="uk-description-list">
-				<dt>Non ancora stampato</dt>
-				<dd></dd>
-				<dt></dt>
-				<dd></dd>
-			@endif
 			</dl>
+			@else
+				<div>Non ancora stampato</div>
+			@endif
 
 		</div>
 	</div>

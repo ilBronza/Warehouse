@@ -5,11 +5,11 @@ namespace IlBronza\Warehouse\Models\Unitload;
 use App\Processing;
 use Carbon\Carbon;
 use IlBronza\AccountManager\Models\User;
+use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\CRUD\Models\BaseModel;
 use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
-use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\Products\Models\Finishing;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
@@ -17,6 +17,9 @@ use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Collection;
+
+use function dd;
 
 class Unitload extends BaseModel
 {
@@ -40,11 +43,14 @@ class Unitload extends BaseModel
 	{
 		static::saved(function ($unitload)
 		{
-			if ($processing = $unitload->processing)
-				$processing->calculateValidPiecesDone();
+			if(! $unitload->isSplitted())
+			{
+				if ($processing = $unitload->processing)
+					$processing->calculateValidPiecesDone();
 
-			if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
-				$production->checkCompletion();
+				if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
+					$production->checkCompletion();
+			}
 		});
 
 		static::deleted(function ($unitload)
@@ -125,11 +131,29 @@ class Unitload extends BaseModel
 	public function getBrotherNumbers() : int
 	{
 		return cache()->remember(
-			$this->cacheKey('brotherNumbers'), 5, function ()
+			$this->cacheKey('getTwins'), 5, function ()
 		{
-			return static::where('production_id', $this->getProductionId())->count();
+//			return static::where('production_id', $this->getProductionId())->count();
+
+			return $this->twins()->count();
 		}
 		);
+	}
+
+	public function twins()
+	{
+		return $this->hasMany(static::class, 'production_id', 'production_id')
+		->where('production_type', $this->production_type);
+	}
+
+	public function outherTwins()
+	{
+		return $this->twins()->where('id', '!=', $this->getKey());
+	}
+
+	public function getTwins() : Collection
+	{
+		return $this->twins;
 	}
 
 	public function getProductionId() : string
@@ -152,14 +176,19 @@ class Unitload extends BaseModel
 		return $this->getKeyedRoute('print');
 	}
 
+	public function getSplitFormUrl()
+	{
+		return $this->getKeyedRoute('splitForm');
+	}
+
+	public function getStoreSplitUrl()
+	{
+		return $this->getKeyedRoute('split');
+	}
+
 	public function isCompleted() : bool
 	{
 		return (! ! $this->getQuantity()) && $this->hasBeenPrinted();
-	}
-
-	public function getQuantity() : ?int
-	{
-		return $this->quantity;
 	}
 
 	public function hasBeenPrinted() : bool
@@ -219,7 +248,7 @@ class Unitload extends BaseModel
     {
         return $this->hasOneThrough(
             Delivery::gpc(),
-            ContentDelivery::class,
+            ContentDelivery::gpc(),
             'id', # foreign key on intermediary -- categories
             'id', # foreign key on target -- projects
             'content_delivery_id', # local key on this -- properties
@@ -227,6 +256,20 @@ class Unitload extends BaseModel
         );
     }
 
+	public function getContendDeliveryId() : ?string
+	{
+		return $this->contend_delivery_id;
+	}
+
+	public function getDelivery() : ?Delivery
+	{
+		return $this->delivery;
+	}
+
+	public function hasDelivery() : bool
+	{
+		return !! $this->getContendDeliveryId();
+	}
 
 	public function getVolumeCubicMeters()
 	{
@@ -234,5 +277,86 @@ class Unitload extends BaseModel
 			dd('manca loadable');
 
 		return $loadable->getVolumeCubicMeters();
+	}
+
+	public function setQuantityExpected(float $quantityExpected) : self
+	{
+		$this->quantity_expected = $quantityExpected;
+
+		return $this;
+	}
+
+	public function getQuantityExpected() : ?float
+	{
+		return $this->quantity_expected;
+	}
+
+	public function setQuantity(float $quantity) : self
+	{
+		$this->quantity = $quantity;
+
+		return $this;
+	}
+
+	public function getQuantity() : ?float
+	{
+		return $this->quantity;
+	}
+
+	public function setSplitted(bool $splitted = true) : self
+	{
+		$this->splitted = $splitted;
+
+		return $this;
+	}
+
+	public function isSplitted() : bool
+	{
+		return !! $this->splitted;
+	}
+
+	public function setSequence(int $sequence = null) : self
+	{
+		$this->sequence = $sequence ?? static::where('production_id', $this->getProductionId())->where('production_type', $this->getProductionType())->max('sequence') + 1;
+
+		return $this;
+	}
+
+	public function getSequenceString() : string
+	{
+		return "{$this->getSequence()}/{$this->getBrotherNumbers()}";
+	}
+
+	public function resetSequence() : self
+	{
+		$this->sequence = null;
+
+		return $this;
+	}
+
+	public function getName() : string
+	{
+		if($this->exists)
+			return $this->getLoadable()?->getName() . ' - ' . $this->getSequenceString();
+
+		return $this->getLoadable()?->getName() ?? trans('warehouse::unitloads.unitload');
+	}
+
+	public function getProductionType() : ?string
+	{
+		return $this->production_type;
+	}
+
+	public function getVolumeMcAttribute() : float
+	{
+		if($result = ($this->width_mm * $this->length_mm * $this->height_mm))
+			return $result;
+
+		return $this->getLoadable()?->getVolumeMc();
+	}
+
+	public function getDeliveryDateAttribute() : ? Carbon
+	{
+		return $this->getDelivery()?->getDateTime();
 	}
 }

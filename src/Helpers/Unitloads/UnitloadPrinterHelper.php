@@ -1,6 +1,6 @@
 <?php
 
-namespace IlBronza\Warehouse\Helpers;
+namespace IlBronza\Warehouse\Helpers\Unitloads;
 
 use Auth;
 use Barryvdh\DomPDF\Facade\Pdf;

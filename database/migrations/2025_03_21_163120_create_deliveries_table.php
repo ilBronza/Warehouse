@@ -43,6 +43,7 @@ return new class extends Migration
 
             $table->decimal('quantity_required', 8, 2)->nullable();
 	        $table->boolean('partial')->nullable();
+	        $table->integer('sorting_index')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

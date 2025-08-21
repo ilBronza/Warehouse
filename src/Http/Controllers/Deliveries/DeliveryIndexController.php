@@ -2,7 +2,7 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Deliveries;
 
-use IlBronza\CRUD\Http\Controllers\Traits\PackageStandardIndexTrait;
+use IlBronza\CRUD\Http\Controllers\Traits\StandardTraits\PackageStandardIndexTrait;
 use IlBronza\CRUD\Traits\CRUDIndexTrait;
 use IlBronza\CRUD\Traits\CRUDPlainIndexTrait;
 
@@ -13,8 +13,6 @@ class DeliveryIndexController extends DeliveryCRUD
 	public $scopes = ['current'];
 
 	use PackageStandardIndexTrait;
-	use CRUDPlainIndexTrait;
-	use CRUDIndexTrait;
 
 	function getIndexElementsRelationsArray() : array
 	{

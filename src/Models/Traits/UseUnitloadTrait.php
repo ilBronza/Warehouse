@@ -19,6 +19,11 @@ trait UseUnitloadTrait
 		return $this->productionUnitloads;
 	}
 
+	public function getProductionUnitloadsQuantity() : float
+	{
+		return $this->getProductionUnitloads()->sum('quantity');
+	}
+
 	public function productionUnitloads() : MorphMany
 	{
 		return $this->morphMany(Unitload::gpc(), 'production')->orderBy('sequence');

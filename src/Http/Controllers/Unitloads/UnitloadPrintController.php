@@ -2,7 +2,7 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Unitloads;
 
-use IlBronza\Warehouse\Helpers\UnitloadPrinterHelper;
+use IlBronza\Warehouse\Helpers\Unitloads\UnitloadPrinterHelper;
 
 class UnitloadPrintController extends UnitloadsCRUDController
 {

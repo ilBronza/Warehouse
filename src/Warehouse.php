@@ -19,9 +19,21 @@ class Warehouse implements RoutedObjectInterface
 		return config('warehouse.models.delivery.helpers.orderDelivery');
 	}
 
+	public function getUnitloadDeliveryHelperClass() : string
+	{
+		return config('warehouse.models.delivery.helpers.unitloadDelivery');
+	}
+
 	public function getOrderDeliveryHelper()
 	{
 		$helperClass = $this->getOrderDeliveryHelperClass();
+
+		return new $helperClass();
+	}
+
+	public function getUnitloadDeliveryHelper()
+	{
+		$helperClass = $this->getUnitloadDeliveryHelperClass();
 
 		return new $helperClass();
 	}
@@ -51,7 +63,15 @@ class Warehouse implements RoutedObjectInterface
             'href' => $this->route('pallettypes.index')
         ]);
 
+        $deliveriesButton = $menu->createButton([
+            'name' => 'warehousedeliveries',
+            'icon' => 'pallet',
+            'text' => 'warehouse::warehouse.deliveries',
+            'href' => $this->route('deliveries.index')
+        ]);
+
         $warehouseManagerButton->addChild($pallettypesButton);
+        $warehouseManagerButton->addChild($deliveriesButton);
 
 
         // $productsButton = $menu->createButton([
