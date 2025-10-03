@@ -1,7 +1,17 @@
 <?php
 
 return [
+	'datetime' => 'Data',
+	'name' => 'Nome',
+	'mySelfNotesLink' => 'Note',
 	'order' => 'Ordine',
+	'mySelfOrdersCompletion' => 'Stato ordini',
+	'weight_kg' => 'Peso',
+	'volume_mc' => 'Volume',
+	'assigned_loading_percentage' => '% assegnata',
+	'contentDeliveries' => 'Contenuto',
+	'mySelfClients.contentDeliveries' => 'Clienti',
+	'vehicle' => 'Veicolo',
 	'client' => 'Azienda',
 	'valid_pieces_done' => 'Pezzi prodotti',
 	'newUnitloads' => 'Nuovi bindelli',

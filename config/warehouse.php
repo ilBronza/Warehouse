@@ -49,6 +49,13 @@ use IlBronza\Warehouse\Providers\RelationshipsManagers\DeliveryRelationshipsMana
 return [
     'routePrefix' => 'ibWarehouse',
 
+
+    'datatableFieldWidths' => [
+    	'deliveries' => [
+    		'datatableFieldOrderDelivery' => '10em'
+    	]
+    ],
+
     'models' => [
 	    'delivery' => [
 		    'class' => Delivery::class,

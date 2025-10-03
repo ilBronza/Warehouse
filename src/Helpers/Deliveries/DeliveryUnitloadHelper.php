@@ -15,7 +15,7 @@ class DeliveryUnitloadHelper extends DeliveryAttacherHelper
 		return $this->attachUnitload($unitload);
 	}
 
-	public function attach() : self
+	public function attach() : static
 	{
 		$distinctProductions = $this->getElements()
 			->unique('production_id')->pluck('production_id');

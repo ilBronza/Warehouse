@@ -10,9 +10,9 @@ use function config;
 
 class DeliveryIndexController extends DeliveryCRUD
 {
-	public $scopes = ['current'];
-
 	use PackageStandardIndexTrait;
+
+	public array $scopes = ['current'];
 
 	function getIndexElementsRelationsArray() : array
 	{

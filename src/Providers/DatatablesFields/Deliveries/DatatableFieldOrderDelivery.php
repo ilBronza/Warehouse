@@ -13,6 +13,7 @@ class DatatableFieldOrderDelivery extends DatatableFieldFetcher
 
 	public $fetcherData = [
 		'urlMethod' => 'getDeliveriesPopup',
+		'mode' => 'iframe'
 	];
 
 	public function getShippingIcon() : string
