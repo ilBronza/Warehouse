@@ -3,13 +3,15 @@
 namespace IlBronza\Warehouse\Models\Unitload;
 
 use App\Processing;
+use App\Providers\Helpers\Processings\ProcessingCreatorHelper;
+use Auth;
 use Carbon\Carbon;
 use IlBronza\AccountManager\Models\User;
-use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\CRUD\Models\BaseModel;
 use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
+use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\Products\Models\Finishing;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
@@ -18,7 +20,6 @@ use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
-
 use function dd;
 
 class Unitload extends BaseModel
@@ -45,8 +46,35 @@ class Unitload extends BaseModel
 		{
 			if(! $unitload->isSplitted())
 			{
-				if ($processing = $unitload->processing)
-					$processing->calculateValidPiecesDone();
+				if (! $processing = $unitload->processing)
+				{
+					$production = $unitload->production;
+
+					if(! $processing = Processing::where('user_id', Auth::id())->orderByDesc('ended_at')->where('ended_at', '>', Carbon::now()->subMinutes(15))->first())
+					{
+						$processingParameters = [
+							'processing_type' => 'packing',
+							'order_product_phase_id' => $production->getKey(),
+							'started_at' => Carbon::now(),
+							'ended_at' => Carbon::now(),
+							'workstation_alias' => $production->getWorkstationId(),
+							'user_id' => Auth::id()
+						];
+
+						$processing = ProcessingCreatorHelper::createByParameters($processingParameters);
+						$processing->terminate();
+					}
+
+					$unitloads = $unitload->twins()->whereNull('processing_id')->get();
+
+					foreach($unitloads as $unitload)
+					{
+						$unitload->processing_id = $processing->getKey();
+						$unitload->save();
+					}
+				}
+
+				$processing->calculateValidPiecesDone();
 
 				if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
 					$production->checkCompletion();
@@ -242,6 +270,16 @@ class Unitload extends BaseModel
 	public function contentDelivery()
 	{
 		return $this->belongsTo(ContentDelivery::gpc());
+	}
+
+	public function scopeNotDelivering($query)
+	{
+		$query->whereNull('content_delivery_id');
+	}
+
+	public function scopeDelivering($query)
+	{
+		$query->whereNotNull('content_delivery_id');
 	}
 
 	public function delivery()

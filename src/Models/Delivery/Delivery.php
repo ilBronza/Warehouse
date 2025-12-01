@@ -7,11 +7,9 @@ use IlBronza\Buttons\Button;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\Vehicles\Models\Vehicle;
 use IlBronza\Warehouse\Models\BaseWarehouseModel;
-
 use IlBronza\Warehouse\Models\Unitload\Unitload;
-
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\Log;
 use function __;
 use function app;
 use function implode;
@@ -156,9 +154,27 @@ class Delivery extends BaseWarehouseModel
 		return $result;
 	}
 
+	public function getOtherUnitloadsByProduction($model)
+	{
+		// if($this->relationLoaded('unitloads'))
+		// 	return $this->unitloads->filter(function($item) use($model)
+		// 	{
+		// 		return ($item->production_type != $model->getMorphClass()) || ($item->production_id != $model->getKey());
+		// 	})->sortBy('content_delivery_id');
+
+		return $this->unitloads()->with('delivery')->where('production_type', '!=', $model->getMorphClass())->orWhere('production_id', '!=', $model->getKey())->orderBy('content_delivery_id')->get();
+
+	}
+
 	public function getUnitloadsByProduction($model) : Collection
 	{
-		return $this->unitloads;
+		if($this->relationLoaded('unitloads'))
+			return $this->unitloads->filter(function($item) use($model)
+			{
+				return ($item->production_type == $model->getMorphClass()) && ($item->production_id == $model->getKey());
+			});
+
+		return $this->unitloads()->where('production_type', $model->getMorphClass())->where('production_id', $model->getKey())->get();
 	}
 
 	public function vehicle()

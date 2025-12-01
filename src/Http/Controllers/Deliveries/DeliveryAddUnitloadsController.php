@@ -22,6 +22,8 @@ class DeliveryAddUnitloadsController extends DeliveryCRUD
 
 		$unitloads = Unitload::gpc()::whereIn('id', $request->unitloads)->get();
 
-		return DeliveryUnitloadHelper::attachUnitloadsToDelivery($delivery, $unitloads);
+		$view = DeliveryUnitloadHelper::attachUnitloadsToDelivery($delivery, $unitloads);
+
+		return $view->render();
 	}
 }

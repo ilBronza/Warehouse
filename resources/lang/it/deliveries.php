@@ -1,5 +1,6 @@
 <?php
 
 return [
-	'deliveriesFor' => 'Spedizioni per :model'
+	'deliveriesFor' => 'Spedizioni per :model',
+	'associateDelivery' => 'Associa a spedizione',
 ];

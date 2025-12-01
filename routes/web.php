@@ -94,6 +94,7 @@ Route::group([
 
 		Route::group(['prefix' => 'unitloads'], function()
 		{
+			//UnitloadAssociateToDeliveryController
 			Route::post('associate-to-delivery-table', [Warehouse::getController('unitload', 'associateToDelivery'), 'index'])->name('unitloads.associateToDeliveryTable');
 			Route::post('associate-to-delivery', [Warehouse::getController('unitload', 'associateToDelivery'), 'store'])->name('unitloads.associateToDelivery');
 

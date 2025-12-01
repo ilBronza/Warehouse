@@ -1,14 +1,26 @@
 <div id="content-delivery{{ $contentDelivery->getKey() }}" class="uk-card uk-card-small uk-card-default content-delivery">
 	<div class="uk-card-header">
-		@include('warehouse::deliveries._miniHeader', [
-			'delivery' => $contentDelivery->delivery,
-			'unitloads' => ($unitloads = $contentDelivery->delivery->getUnitloadsByProduction($contentDelivery->content))
-			])
 
-		<div class="uk-float-right">
-			@include('warehouse::contentDeliveries.__selectAllButtons', [
-				'selector' => '#content-delivery' . $contentDelivery->getKey()
+		<div uk-grid>
+			<div class="uk-expand">
+			@include('warehouse::deliveries._miniHeader', [
+				'delivery' => $contentDelivery->delivery,
+				'unitloads' => ($unitloads = $contentDelivery->delivery->getUnitloadsByProduction($contentDelivery->content))
 				])
+			</div>
+
+			@if($other = $contentDelivery->delivery->getOtherUnitloadsByProduction($contentDelivery->content))
+				<div class="uk-width-large">
+
+					@foreach($other as $_other)
+						@include('warehouse::unitloads._micro', [
+								'unitload' => $_other
+							])
+					@endforeach
+
+				</div>
+			@endif
+
 		</div>
 	</div>
 	<div class="uk-card-body">

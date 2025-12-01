@@ -20,6 +20,8 @@ class DeliveryUnitloadHelper extends DeliveryAttacherHelper
 		$distinctProductions = $this->getElements()
 			->unique('production_id')->pluck('production_id');
 
+		$contentDeliveries = $this->getElements()->pluck('content_delivery_id')->unique()->values();
+
 		foreach($distinctProductions as $distinctProduction)
 		{
 			$unitloads = $this->getElements()
@@ -34,6 +36,10 @@ class DeliveryUnitloadHelper extends DeliveryAttacherHelper
 				$unitloads
 			);
 		}
+
+		ContentDeliveryUnitloadsHelper::removeContentDeliveriesIfEmpty(
+			$contentDeliveries
+		);
 
 		return $this;
 	}

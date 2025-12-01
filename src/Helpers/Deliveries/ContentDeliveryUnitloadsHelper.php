@@ -10,6 +10,19 @@ use function is_string;
 
 class ContentDeliveryUnitloadsHelper
 {
+	static function removeContentDeliveriesIfEmpty(Collection $contentDeliveries)
+	{
+		foreach($contentDeliveries as $contentDelivery)
+		{
+			if(is_string($contentDelivery))
+				$contentDelivery = ContentDelivery::gpc()::find($contentDelivery);
+
+			if($contentDelivery)
+				if($contentDelivery->unitloads()->count() == 0)
+					$contentDelivery->delete();
+		}
+	}
+
 	static function addUnitloadsToContentDelivery(string|ContentDelivery $contentDelivery, Collection $unitloads)
 	{
 		if(is_string($contentDelivery))

@@ -14,8 +14,35 @@ trait InteractsWithDeliveryTrait
 			'id',
 			'quantity',
 			'quantity_required',
-			'partial'
+			'partial',
+			'loaded_at'
 		])->withTimestamps();
+	}
+
+	public function hasUndeliveringUnitloads() : bool
+	{
+		if(isset($this->attributes['unitloads_without_delivery_count']))
+		{
+			if($this->unitloads_without_delivery_count)
+				return true;
+		}
+
+		if ($this->unitloads()->notDelivering()->first())
+			return true;
+
+		return false;
+	}
+
+	public function hasBeenCompletelyDelivered() : bool
+	{
+		if ($this->hasUndeliveringUnitloads())
+			return false;
+
+		foreach($this->getDeliveries() as $delivery)
+			if(! $delivery->pivot->loaded_at)
+				return false;
+
+		return true;
 	}
 
 	public function contentDeliveries()
