@@ -13,7 +13,7 @@
 				<div class="uk-width-large">
 
 					@foreach($other as $_other)
-						@include('warehouse::unitloads._micro', [
+						@include('warehouse::unitloads._title', [
 								'unitload' => $_other
 							])
 					@endforeach

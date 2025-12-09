@@ -23,6 +23,9 @@ class DeliveryByOrderController extends DeliveryCRUD
 
 		$children = $model->getDeliveringChildren();
 
+		foreach($children as $child)
+			$child->load('deliveries.contentDeliveries.unitloads');
+
 		return view('warehouse::deliveries.allDeliveriesBy', compact('model', 'children'));
 	}
 }

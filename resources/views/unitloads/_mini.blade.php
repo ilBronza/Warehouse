@@ -1,4 +1,8 @@
-<div id="{{ $unitload->getHtmlId() }}" class="uk-width-medium unitload teaser">
+<div
+	id="{{ $unitload->getHtmlId() }}" 
+	class="uk-width-medium unitload teaser"
+	data-piecesremaining="{{ $unitload->getPiecesSpaceRemaining() }}"
+	>
 	<div class="uk-card uk-card-small @if($unitload->hasBeenPrinted()) uk-card-primary @else uk-card-default @endif">
 		<div class="uk-card-header uk-text-center">
 			<span class="label uk-h3">

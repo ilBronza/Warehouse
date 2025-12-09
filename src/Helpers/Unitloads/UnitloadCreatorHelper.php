@@ -257,8 +257,8 @@ class UnitloadCreatorHelper
 
 		$productionUnitloads = $productionModel->getProductionUnitloads();
 
-		if(! $productionModel->isCompleted())
-		{
+		// if(! $productionModel->isCompleted())
+		// {
 			if($productionUnitloads->sum('quantity') > $quantityRequired)
 				return static::removeQuantityOnExistingUnitloads($productionUnitloads, $quantityRequired);
 
@@ -288,7 +288,7 @@ class UnitloadCreatorHelper
 			}
 
 			UnitloadDeliveryCheckerHelper::gpc()::checkForDeliveryAutoAttaching($created);
-		}
+		// }
 
 		return $productionUnitloads;
 	}

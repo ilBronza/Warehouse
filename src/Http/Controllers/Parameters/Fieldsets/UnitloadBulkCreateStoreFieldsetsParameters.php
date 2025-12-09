@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use IlBronza\Form\Helpers\FieldsetsProvider\FieldsetParametersFile;
 use IlBronza\Products\Models\Finishing;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
+use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Support\Str;
-
 use function array_keys;
 use function implode;
 
@@ -23,6 +23,9 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 
 		$palletArray = Pallettype::gpc()::all()->pluck('name', 'id')->toArray();
 		$finishingArray = Finishing::gpc()::all()->pluck('name', 'id')->toArray();
+
+
+		$calculatedTotalPieces = Unitload::gpc()::where('production_type', 'OrderProductPhase')->where('production_id', $orderProductPhase->getKey())->sum('quantity');
 
 		$result = [
 			'order' => [
@@ -169,10 +172,21 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'value' => [],
 					],
 
+					'calculated_total_pieces' => [
+						'type' => 'number',
+						'value' => $calculatedTotalPieces,
+						'label' => 'pezzi nei bancali attuali',
+						'readOnly' => true,
+						'rules' => 'integer|nullable|min:0|max:65535'
+					],
+					'total_valid_pieces_done' => [
+						'type' => 'number',
+						'label' => 'pezzi prodotti TOTALI',
+						'rules' => 'integer|nullable|min:0|max:65535'
+					],
 					'valid_pieces_done' => [
 						'type' => 'number',
-						// 'value' => ($quantity = $orderProduct?->getOrderedQuantity() - $orderProduct->getPiecesDone()) > 0 ? $quantity : 0,
-						// 'label' => trans('warehouse::fields.piecesToPack'),
+						'label' => 'pezzi prodotti AGGIUNTI',
 						'rules' => 'integer|nullable|min:0|max:65535'
 					],
 					'ordered_quantity' => [
@@ -196,6 +210,9 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'fasIcon' => 'plus',
 						'rules' => []
 					],
+				],
+				'view' => [
+					'name' => 'unitloads.creationScripts'
 				],
 				'width' => ["1-3@l", '1-2@m']
 			],

@@ -14,6 +14,7 @@ use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
 use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\Products\Models\Finishing;
 use IlBronza\Products\Models\OrderProductPhase;
+use IlBronza\Products\Providers\Helpers\OrderProductPhases\OrderProductPhaseCompletionHelper;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
@@ -77,7 +78,7 @@ class Unitload extends BaseModel
 				$processing->calculateValidPiecesDone();
 
 				if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
-					$production->checkCompletion();
+					OrderProductPhaseCompletionHelper::gpc()::checkCompletion($production);
 			}
 		});
 
@@ -87,7 +88,7 @@ class Unitload extends BaseModel
 				$processing->calculateValidPiecesDone();
 
 			if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
-				$production->checkCompletion();
+				OrderProductPhaseCompletionHelper::gpc()::checkCompletion($production);
 		});
 	}
 
@@ -232,9 +233,22 @@ class Unitload extends BaseModel
 	public function scopeCompleted($query)
 	{
 		return $query->whereNotNull('quantity')->where(function($_query)
-			{
-    			$_query->where('placeholder', false)->orWhereNull('placeholder');
-			});
+		{
+			$_query->where('placeholder', false)->orWhereNull('placeholder');
+		});
+	}
+
+	public function scopeNotCompleted($query)
+	{
+		$query->where(function($_query)
+		{
+			$_query->whereNull('quantity')->orWhere('placeholder', true);
+		});
+	}
+
+	public function scopeUnCompleted($query)
+	{
+		$query->notCompleted();
 	}
 
 	public function getCreatedBy() : ?User
@@ -396,5 +410,16 @@ class Unitload extends BaseModel
 	public function getDeliveryDateAttribute() : ? Carbon
 	{
 		return $this->getDelivery()?->getDateTime();
+	}
+
+	public function getPiecesSpaceRemaining() : float
+	{
+		if($this->isCompleted())
+			return 0;
+
+		if(($result = $this->quantity_capacity - $this->quantity) > 0)
+			return $result;
+
+		return 0;
 	}
 }

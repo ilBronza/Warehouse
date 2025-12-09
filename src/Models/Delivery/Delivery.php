@@ -162,7 +162,7 @@ class Delivery extends BaseWarehouseModel
 		// 		return ($item->production_type != $model->getMorphClass()) || ($item->production_id != $model->getKey());
 		// 	})->sortBy('content_delivery_id');
 
-		return $this->unitloads()->with('delivery')->where('production_type', '!=', $model->getMorphClass())->orWhere('production_id', '!=', $model->getKey())->orderBy('content_delivery_id')->get();
+		return $this->unitloads()->with('delivery')->where('production_type', '!=', $model->getMorphClass())->where('production_id', '!=', $model->getKey())->orderBy('content_delivery_id')->get();
 
 	}
 

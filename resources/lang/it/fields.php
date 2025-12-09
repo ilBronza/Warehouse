@@ -35,5 +35,9 @@ return [
 	'select_from' => 'Seleziona da',
 	'select_to' => 'Seleziona a',
 	'select_all' => 'Seleziona tutti',
-	'finishing_id' => 'Finitura'
+	'finishing_id' => 'Finitura',
+	'contentList' => 'Contenuto',
+	'destinationsList' => 'Destinazioni',
+	'zones' => 'Zone',
+	'partial' => 'Parziale'
 ];

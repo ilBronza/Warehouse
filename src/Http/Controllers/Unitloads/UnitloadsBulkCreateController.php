@@ -10,12 +10,11 @@ use IlBronza\CRUD\Traits\CRUDCreateStoreTrait;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Ukn\Ukn;
 use IlBronza\Warehouse\Helpers\Unitloads\UnitloadCreatorHelper;
+use IlBronza\Warehouse\Helpers\Unitloads\UnitloadPrinterHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-
 use Log;
-
 use function dd;
 use function ucfirst;
 
@@ -64,6 +63,17 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
     public function validateUnitloads()
     {
         $previousUnitloads = $this->orderProductPhase->getProductionUnitloads();
+
+        foreach($previousUnitloads as $previousUnitload)
+        {
+            if($this->request->pallettype_id)
+                $previousUnitload->pallettype_id = $this->request->pallettype_id;
+
+            if($this->request->finishing_id)
+                $previousUnitload->finishing_id = $this->request->finishing_id;
+
+            $previousUnitload->save();
+        }
 
         $this->request->validate([
             'unitloads' => 'array|in:' . $previousUnitloads->pluck('id')->implode(",")

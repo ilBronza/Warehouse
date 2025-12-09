@@ -12,23 +12,5 @@
 				{{ $unitload->getQuantity() }}
 			</span>
 		</div>
-{{-- 		<div class="uk-card-footer">
-			<div uk-grid>
-
-				<a class="uk-width-auto" href="javascript:void(0);">
-					<label for="unitload{{ $unitload->getKey() }}">
-						{{ $unitload->getPallettype()?->getName() }}
-					</label>
-				</a>
-
-				<div class="uk-width-expand uk-text-right">
-					<label for="unitload{{ $unitload->getKey() }}">
-						<i class="fa-solid fa-print"></i>
-					</label>
-
-					<input class="uk-checkbox unitload" id="unitload{{ $unitload->getKey() }}" type="checkbox" name="unitloads[]" value="{{ $unitload->getKey() }}">
-				</div>
-			</div>
-		</div> --}}
 	</div>
 </div>

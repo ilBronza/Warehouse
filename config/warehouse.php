@@ -52,11 +52,22 @@ return [
 
     'datatableFieldWidths' => [
     	'deliveries' => [
-    		'datatableFieldOrderDelivery' => '10em'
-    	]
+    		'datatableFieldName' => '20em',
+		    'datatableFieldOrderDelivery' => '10em',
+    		'datatableFieldOrderProductPhaseDelivery' => '6em',
+    		'datatableFieldAddUnitloads' => '2em'
+    	],
+	    'contentDeliveries' => [
+		    'datatableFieldContentList' => '12em',
+		    'datatableFieldContent' => '10em',
+		    'datatableFieldClientsList' => '20em',
+		    'datatableFieldDestinationsList' => '12em',
+		    'datatableFieldZonesList' => '2em',
+		    'datatableFieldUnitloadsCountList' => '2em'
+	    ]
     ],
 
-    'models' => [
+	'models' => [
 	    'delivery' => [
 		    'class' => Delivery::class,
 		    'table' => 'warehouse__deliveries',
@@ -64,10 +75,10 @@ return [
 			    'create' => DeliveryCreateStoreFieldsetsParameters::class,
 			    'edit' => DeliveryCreateStoreFieldsetsParameters::class
 		    ],
-		    'helpers' => [
-			    'orderDelivery' => DeliveryOrderHelper::class,
-			    'unitloadDelivery' => DeliveryUnitloadHelper::class,
-		    ],
+			'helpers' => [
+				'orderDelivery' => DeliveryOrderHelper::class,
+				'unitloadDelivery' => DeliveryUnitloadHelper::class,
+			],
 		    'relationshipsManagerClasses' => [
 			    'show' => DeliveryRelationshipsManager::class
 		    ],
