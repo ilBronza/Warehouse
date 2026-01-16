@@ -2,8 +2,13 @@
 
 return [
 	'ibWarehousedeliveries' => [
-		'index' => 'Lista spedizioni',
-	]
+		'index' => 'Lista Spedizioni',
+	],
+
+	'ibWarehousepallettypes' => [
+		'index' => 'Lista Tipi',
+	],
+
 
 
 ];
