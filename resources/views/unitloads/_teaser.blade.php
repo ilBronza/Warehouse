@@ -1,4 +1,9 @@
-<div id="{{ $unitload->getHtmlId() }}" class="uk-width-medium unitload teaser">
+<div
+	id="{{ $unitload->getHtmlId() }}"
+	class="uk-width-medium unitload teaser"
+	data-id="{{ $unitload->getKey() }}"
+	{{-- data-piecesremaining="{{ $unitload->getPiecesSpaceRemaining() }}" --}}
+	>
 	<div class="uk-card uk-card-small @if($unitload->hasBeenPrinted()) uk-card-primary @else uk-card-default @endif">
 		<div class="uk-card-header uk-text-center">
 			<span class="uk-float-left">
@@ -12,7 +17,7 @@
 			<span class="uk-float-right">
 				@include('warehouse::unitloads.buttons._printButton')
 				@include('warehouse::unitloads.buttons._editButton')
-				@include('warehouse::unitloads.buttons._splitButton')
+				{{-- @include('warehouse::unitloads.buttons._splitButton') --}}
 				@include('warehouse::unitloads.buttons._deleteButton')
 			</span>
 		</div>
@@ -22,7 +27,7 @@
 			</span>
 
 			<div>
-				{{ $unitload->getCreatedBy()?->getShortName() }}, {{ $unitload->getCreatedAt()?->format(trans('dates.datetime')) }}
+				{{ $unitload->processing?->getKey() }}
 			</div>
 		</div>
 		<div class="uk-card-footer">
@@ -43,7 +48,7 @@
 				</div>
 			</div>
 
-			@if(is_null($showDelivery) || $showDelivery)
+{{-- 			@if(is_null($showDelivery) || $showDelivery)
 			<div class="delivery">
 				@if($delivery = $unitload->delivery)
 				<div>
@@ -58,7 +63,7 @@
 				</div>
 				@endif
 			</div>
-			@endif
+			@endif --}}
 
 			@if($printedAt = $unitload->getPrintedAt())
 			<dl class="uk-description-list ib-horizontal-description-list">

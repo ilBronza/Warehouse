@@ -40,6 +40,7 @@ class UnitloadPrinterHelper
 	{
 		$unitload->printed_at = Carbon::now();
 		$unitload->printed_by = Auth::id();
+		$unitload->placeholder = false;
 		$unitload->save();
 	}
 

@@ -3,23 +3,28 @@
 namespace IlBronza\Warehouse\Models\Unitload;
 
 use App\Processing;
+use App\Providers\Helpers\Processings\ProcessingCreatorHelper;
+use Auth;
 use Carbon\Carbon;
 use IlBronza\AccountManager\Models\User;
-use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\CRUD\Models\BaseModel;
 use IlBronza\CRUD\Traits\Model\CRUDParentingTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
+use IlBronza\Clients\Models\Traits\InteractsWithDestinationTrait;
 use IlBronza\Products\Models\Finishing;
 use IlBronza\Products\Models\OrderProductPhase;
+use IlBronza\Products\Providers\Helpers\OrderProductPhases\OrderProductPhaseCheckCompletionHelper;
+use IlBronza\Warehouse\Helpers\Unitloads\UnitloadMeasuresCalculatorHelper;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
-
+use const STR_PAD_LEFT;
 use function dd;
+use function str_pad;
 
 class Unitload extends BaseModel
 {
@@ -36,20 +41,54 @@ class Unitload extends BaseModel
 	protected $keyType = 'string';
 
 	protected $casts = [
-		'printed_at' => 'datetime'
+		'printed_at' => 'datetime',
+		'loaded_at' => 'datetime',
 	];
 
 	protected static function booted()
 	{
+		static::saving(function ($unitload)
+		{
+			if($unitload->isDirty(['quantity']))
+				UnitloadMeasuresCalculatorHelper::gpc()::setMeasuresFromQuantity($unitload, false);
+		});
+
 		static::saved(function ($unitload)
 		{
 			if(! $unitload->isSplitted())
 			{
-				if ($processing = $unitload->processing)
-					$processing->calculateValidPiecesDone();
+				if (! $processing = $unitload->processing)
+				{
+					$production = $unitload->production;
+
+					if(! $processing = Processing::where('user_id', Auth::id())->orderByDesc('ended_at')->where('ended_at', '>', Carbon::now()->subMinutes(15))->first())
+					{
+						$processingParameters = [
+							'processing_type' => 'packing',
+							'order_product_phase_id' => $production->getKey(),
+							'started_at' => Carbon::now(),
+							'ended_at' => Carbon::now(),
+							'workstation_alias' => $production->getWorkstationId(),
+							'user_id' => Auth::id()
+						];
+
+						$processing = ProcessingCreatorHelper::createByParameters($processingParameters);
+						$processing->terminate();
+					}
+
+					$unitloads = $unitload->twins()->whereNull('processing_id')->get();
+
+					foreach($unitloads as $unitload)
+					{
+						$unitload->processing_id = $processing->getKey();
+						$unitload->save();
+					}
+				}
+
+				$processing->calculateValidPiecesDone();
 
 				if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
-					$production->checkCompletion();
+					OrderProductPhaseCheckCompletionHelper::gpc()::execute($production);
 			}
 		});
 
@@ -59,7 +98,7 @@ class Unitload extends BaseModel
 				$processing->calculateValidPiecesDone();
 
 			if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
-				$production->checkCompletion();
+				OrderProductPhaseCheckCompletionHelper::gpc()::execute($production);
 		});
 	}
 
@@ -204,9 +243,22 @@ class Unitload extends BaseModel
 	public function scopeCompleted($query)
 	{
 		return $query->whereNotNull('quantity')->where(function($_query)
-			{
-    			$_query->where('placeholder', false)->orWhereNull('placeholder');
-			});
+		{
+			$_query->where('placeholder', false)->orWhereNull('placeholder');
+		});
+	}
+
+	public function scopeNotCompleted($query)
+	{
+		$query->where(function($_query)
+		{
+			$_query->whereNull('quantity')->orWhere('placeholder', true);
+		});
+	}
+
+	public function scopeUnCompleted($query)
+	{
+		$query->notCompleted();
 	}
 
 	public function getCreatedBy() : ?User
@@ -242,6 +294,16 @@ class Unitload extends BaseModel
 	public function contentDelivery()
 	{
 		return $this->belongsTo(ContentDelivery::gpc());
+	}
+
+	public function scopeNotDelivering($query)
+	{
+		$query->whereNull('content_delivery_id');
+	}
+
+	public function scopeDelivering($query)
+	{
+		$query->whereNotNull('content_delivery_id');
 	}
 
 	public function delivery()
@@ -327,6 +389,11 @@ class Unitload extends BaseModel
 		return "{$this->getSequence()}/{$this->getBrotherNumbers()}";
 	}
 
+	public function getPaddedSequenceString(int $pad = 2) : string
+	{
+		return str_pad($this->getSequence(), $pad, "0", STR_PAD_LEFT) . "/{$this->getBrotherNumbers()}";
+	}
+
 	public function resetSequence() : self
 	{
 		$this->sequence = null;
@@ -347,9 +414,14 @@ class Unitload extends BaseModel
 		return $this->production_type;
 	}
 
-	public function getVolumeMcAttribute() : float
+	public function getVolumeMcAttribute($value) : float
 	{
-		if($result = ($this->width_mm * $this->length_mm * $this->height_mm))
+		if(! is_null($value))
+			return $value;
+
+		UnitloadMeasuresCalculatorHelper::setMeasuresFromQuantity($this, false);
+
+		if($result = $this->getAttributes()['volume_mc'])
 			return $result;
 
 		return $this->getLoadable()?->getVolumeMc();
@@ -358,5 +430,36 @@ class Unitload extends BaseModel
 	public function getDeliveryDateAttribute() : ? Carbon
 	{
 		return $this->getDelivery()?->getDateTime();
+	}
+
+	public function getPiecesSpaceRemaining() : float
+	{
+		if($this->isCompleted())
+			return 0;
+
+		if(($result = $this->quantity_capacity - $this->quantity) > 0)
+			return $result;
+
+		return 0;
+	}
+
+	public function getLoadedat() : ?Carbon
+	{
+		return $this->loaded_at;
+	}
+
+	public function isLoaded() : bool
+	{
+		return ! ! $this->getLoadedAt();
+	}
+
+	public function setLoadedAt(? Carbon $loadedAt, bool $save = false) : self
+	{
+		$this->loaded_at = $loadedAt;
+
+		if($save)
+			$this->save();
+
+		return $this;
 	}
 }

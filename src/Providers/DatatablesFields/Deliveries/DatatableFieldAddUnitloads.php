@@ -10,4 +10,5 @@ class DatatableFieldAddUnitloads extends DatatableFieldSubmit
 {
 	public $function = 'getAddUnitloadsToDeliveryUrl';
 	public ?string $translationPrefix = 'warehouse::datatableFields';
+	public $faIcon = 'plus';
 }

@@ -9,14 +9,12 @@ use IlBronza\CRUD\Helpers\ModelManagers\CrudModelStorer;
 use IlBronza\CRUD\Traits\CRUDCreateStoreTrait;
 use IlBronza\Products\Models\OrderProductPhase;
 use IlBronza\Ukn\Ukn;
-use IlBronza\Warehouse\Helpers\UnitloadPrinterHelper;
 use IlBronza\Warehouse\Helpers\Unitloads\UnitloadCreatorHelper;
+use IlBronza\Warehouse\Helpers\Unitloads\UnitloadPrinterHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-
 use Log;
-
 use function dd;
 use function ucfirst;
 
@@ -65,6 +63,17 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
     public function validateUnitloads()
     {
         $previousUnitloads = $this->orderProductPhase->getProductionUnitloads();
+
+        foreach($previousUnitloads as $previousUnitload)
+        {
+            if($this->request->pallettype_id)
+                $previousUnitload->pallettype_id = $this->request->pallettype_id;
+
+            if($this->request->finishing_id)
+                $previousUnitload->finishing_id = $this->request->finishing_id;
+
+            $previousUnitload->save();
+        }
 
         $this->request->validate([
             'unitloads' => 'array|in:' . $previousUnitloads->pluck('id')->implode(",")
@@ -261,49 +270,6 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 		    $processing
 	    );
 
-//	    for($i = 1; $i < $parameters['packings_quantity']; $i++)
-//        {
-//            $remaining = $totalQuantity - ($parameters['quantity_per_packing'] * count($previousUnitloads));
-//
-//            $quantity = $remaining > $parameters['quantity_per_packing']? $parameters['quantity_per_packing'] : $remaining;
-//
-//            $unitloadParameters = [
-//                'production' => $this->orderProductPhase,
-//                'loadable' => $this->orderProductPhase->getProduct(),
-//                'sequence' => $i + $previousUnitloads->count(),
-//                'quantity_capacity' => $parameters['quantity_per_packing'],
-//                'quantity_expected' => $parameters['quantity_per_packing'],
-//                'quantity' => $quantity,
-//                'user_id' => \Auth::id(),
-//                'processing_id' => $processing->getKey(),
-//                'destination_id' => $parameters['destination_id'],
-//                'pallettype_id' => $parameters['pallettype_id'],
-//                'finishing_id' => $parameters['finishing_id'],
-//            ];
-//
-//            // if(\Auth::id()==1)
-//            //     dd($unitloadParameters);
-//
-//            UnitloadCreatorHelper::createByArray($unitloadParameters);
-//        }
-//
-//        $unitloadParameters = [
-//            'production' => $this->orderProductPhase,
-//            'loadable' => $this->orderProductPhase->getProduct(),
-//            'quantity_capacity' => $parameters['quantity_per_packing'],
-//            'quantity_expected' => $parameters['ordered_quantity'] - $this->orderProductPhase->productionUnitloads()->sum('quantity'),
-//            'user_id' => \Auth::id(),
-//            'sequence' => $i + $previousUnitloads->count(),
-//            'processing_id' => $processing->getKey(),
-//            'destination_id' => $parameters['destination_id'],
-//            'pallettype_id' => $parameters['pallettype_id'],
-//            'finishing_id' => $parameters['finishing_id'],
-//        ];
-//
-//        if(($totalQuantity))
-//            $unitloadParameters['quantity'] = $totalQuantity - ($parameters['quantity_per_packing'] * (count($previousUnitloads) + $parameters['packings_quantity'] - 1));
-//
-//        UnitloadCreatorHelper::createByArray($unitloadParameters);
 
         return back();
     }

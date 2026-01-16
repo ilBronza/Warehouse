@@ -35,10 +35,16 @@ return [
 	'select_from' => 'Seleziona da',
 	'select_to' => 'Seleziona a',
 	'select_all' => 'Seleziona tutti',
-	'finishing_id' => 'Finitura'
-
+	'finishing_id' => 'Finitura',
 	'mySelfWeekday' => 'Feriale',
 	'hypothetical' => 'Ipotetica',
 	'mySelfIsFip' => 'FIP',
 	'mySelfTime.datetime' => 'Orario',
+	'contentList' => 'Contenuto',
+	'destinationsList' => 'Destinazioni',
+	'zones' => 'Zone',
+	'partial' => 'Parziale',
+	'entire' => 'Intera',
+	'entires' => 'Intere',
+	'mySelfPartial.contentDeliveries' => 'Parziali',
 ];

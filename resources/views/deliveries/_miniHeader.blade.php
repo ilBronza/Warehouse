@@ -3,5 +3,5 @@
 </a>
 - {{ $unitloads->sum('quantity') }}
 
-<br />Volume {{ $delivery->getVolumeMc() }}mc su {{ $delivery->getVolumeMcAvailable() }}mc disponibili
+<br />Volume {{ $delivery->getVolumeMc() }}mc su {{ $delivery->getSuggestedMaximumVolumeMc() }}mc disponibili
 

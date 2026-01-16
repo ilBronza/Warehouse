@@ -12,7 +12,7 @@ class DeliveryIndexController extends DeliveryCRUD
 {
 	use PackageStandardIndexTrait;
 
-	public array $scopes = ['current'];
+	public array $scopes = [];
 
 	function getIndexElementsRelationsArray() : array
 	{

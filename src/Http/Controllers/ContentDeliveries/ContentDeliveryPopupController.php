@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 
 use function compact;
 use function dd;
+use function request;
 use function view;
 
 class ContentDeliveryPopupController extends ContentDeliveriesCRUDController

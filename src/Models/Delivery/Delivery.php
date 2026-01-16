@@ -7,25 +7,26 @@ use IlBronza\Buttons\Button;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\Vehicles\Models\Vehicle;
 use IlBronza\Warehouse\Models\BaseWarehouseModel;
-
+use IlBronza\Warehouse\Models\Delivery\GroupedContentDelivery;
+use IlBronza\Warehouse\Models\Traits\DeliveryMeasuresTrait;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
-
 use Illuminate\Support\Collection;
-
-use function __;
-use function app;
-use function implode;
-use function route;
+use Illuminate\Support\Facades\Log;
 
 class Delivery extends BaseWarehouseModel
 {
 	use CRUDUseUuidTrait;
+
+	use DeliveryMeasuresTrait;
 
 	static $modelConfigPrefix = 'delivery';
 	protected $keyType = 'string';
 
 	protected $casts = [
 		'datetime' => 'datetime',
+		'shipped_at' => 'datetime',
+		'loaded_at' => 'datetime',
+		'deleted_at' => 'datetime'
 	];
 
 	public function scopePickables($query)
@@ -42,13 +43,15 @@ class Delivery extends BaseWarehouseModel
 	{
 		$button = Button::create([
 			'href' => static::getAddOrdersToDeliveryIndexUrl(),
-			'text' => 'deliveries.showDeliveries' . 'CON SUBIOTTI',
+			'text' => 'warehouse::deliveries.associateDelivery',
 			'icon' => 'plus'
 		]);
 
 		$button->setAjaxTableButton('order', [
 			'openIframe' => true
 		]);
+
+		$button->setPrimary();
 
 		return $button;
 	}
@@ -77,24 +80,64 @@ class Delivery extends BaseWarehouseModel
 		return $this->hasMany(ContentDelivery::gpc());
 	}
 
-	public function getVolumeMc() : float
+	public function getClientsContentDeliveriesAttribute()
 	{
-		return $this->volume_mc;
+		return cache()->remember(
+			$this->cacheKey('getClientsContentDeliveriesAttribute'),
+			3600,
+			function()
+			{
+				return $this->contentDeliveries->sortBy(function($item)
+				{
+					return $item->getContent()->getOrder()->getClient()->getName();
+				})->values();
+			}
+		);
 	}
 
-	public function getVolumeMcAttribute() : float
+	public function getGroupedClientsContentDeliveriesAttribute()
 	{
-		return $this->getContentDeliveries()->sum('volume_mc');
+		return $this->contentDeliveries->groupBy(function ($item)
+		{
+			return $item->getClientDestinationKey();
+		})->values();
 	}
 
-	public function getVolumeMcAvailable() : ? float
+	public function getGroupedClientsContentDeliveriesModels()
 	{
-		return $this->getVehicle()?->getVolumeMc();
+		$result = $this->getGroupedClientsContentDeliveriesAttribute();
+
+		$collection = collect();
+
+		foreach($result as $_result)
+		{
+			$groupedContentDelivery = GroupedContentDelivery::make($this->getAttributes());
+
+			$groupedContentDelivery->setRelation('contentDeliveries', $_result);
+
+			$groupedContentDelivery->setRelation('client', $_result->first()->getClient());
+			$groupedContentDelivery->setRelation('destination', $_result->first()->getDestination());
+
+			foreach($_result as $__result)
+				if($__result->getContent()?->getOrder()?->getDestination()?->getName() != $__result->getContent()?->getOrder()?->getClient()?->getName())
+					$groupedContentDelivery->destination_alert = true;
+
+			$groupedContentDelivery->client_destination_key = $_result->first()->getClientDestinationKey();
+
+			$collection->push($groupedContentDelivery);
+		}
+
+		return $collection;
 	}
 
 	public function getContentDeliveries() : Collection
 	{
 		return $this->contentDeliveries;
+	}
+
+	public function getRelatedContentDeliveries()
+	{
+		return $this->contentDeliveries()->with('content.client', 'content.order.destination', 'unitloads')->get();
 	}
 
 	public function getVehicle() : ? Vehicle
@@ -132,18 +175,13 @@ class Delivery extends BaseWarehouseModel
 		if(! $vehicle = $this->getVehicle())
 			return null;
 
-		if(! $loadingVolume = $vehicle->getLoadingVolumeCubicMeters())
+		if(! $loadingVolume = $vehicle->getMaximumVolumeMc())
 			return null;
 
 		if(! $assignedVolume = $this->getAssignedVolumeCubicMeters())
 			return 0;
 
 		return $assignedVolume / $loadingVolume * 100;
-	}
-
-	public function getWeightKgAttribute() : ? float
-	{
-		return $this->unitloads->sum('weight_kg');
 	}
 
 	public function getAssignedVolumeCubicMeters() : ? float
@@ -158,12 +196,30 @@ class Delivery extends BaseWarehouseModel
 
 	public function getUnitloadsByProduction($model) : Collection
 	{
-		return $this->unitloads;
+		if($this->relationLoaded('unitloads'))
+			return $this->unitloads->filter(function($item) use($model)
+			{
+				return ($item->production_type == $model->getMorphClass()) && ($item->production_id == $model->getKey());
+			});
+
+		return $this->unitloads()->where('production_type', $model->getMorphClass())->where('production_id', $model->getKey())->get();
 	}
 
 	public function vehicle()
 	{
 		return $this->belongsTo(Vehicle::gpc());
+	}
+
+	public function getVehicleSelectPossibleValues()
+	{
+		return cache()->remember(
+			'getVehicleSelectPossibleValues',
+			3600,
+			function()
+			{
+				return Vehicle::gpc()::pluck('name', 'id')->toArray();
+			}
+		);
 	}
 
 	public function getDateTimeString() : ? string
@@ -176,24 +232,153 @@ class Delivery extends BaseWarehouseModel
 		return $this->datetime;
 	}
 
-	public function TODO_DOGODO_GRAVE_getShippingStatus()
+	public function getShippingStatusColorAttribute()
 	{
-		if($this->shipped_at === null)
-		{
-			if($this->loaded_at !== null)
-				$color = '#ffff00';
-			else
-				$color = '#ff0000';
-		}
-		else
-			$color = '#00ff00';
+		if($this->shipped_at)
+			return '#00ff00';
 
-		return __('deliveries.shippingStatus', ['color' => $color]);
+		foreach($this->contentDeliveries as $contentDelivery)
+			if($contentDelivery->isLoaded())
+				return '#ffff00';
+
+		return '#ff0000';
+	}
+
+	public function getOrders()
+	{
+		return $this->contentDeliveries->filter(function($contentDelivery)
+		{
+			return $contentDelivery->getContent()->getOrder();
+		})->unique();
 	}
 
 	public function getOrdersByClient(string|Client $client) : Collection
 	{
 		return $this->getOrders()->where('client_id', $client instanceof Client ? $client->getKey() : $client);
+	}
+
+	public function hasBeenShipped() : bool
+	{
+		return !! $this->shipped_at;
+	}
+
+	public function hasBeenLoaded() : bool
+	{
+		return !! $this->loaded_at;
+	}
+
+	public function getShipButtonUrl() : string
+	{
+		return $this->getKeyedRoute('ship');
+	}
+
+	public function getUnshipButtonUrl() : string
+	{
+		return $this->getKeyedRoute('unship');
+	}
+
+	public function getShippedAt() : ? Carbon
+	{
+		return $this->shipped_at;
+	}
+
+	public function setShippedAt(? Carbon $shippedAt, bool $save = false) : void
+	{
+		$this->shipped_at = $shippedAt;
+
+		if($save)
+			$this->save();
+	}
+
+	public function isShipped() : bool
+	{
+		return !! $this->getShippedAt();
+	}
+
+	private function getHourString($datetime)
+	{
+		if (($hour = $datetime->hour) < 8)
+			return ' - mat1';
+
+		if (($hour = $datetime->hour) < 13)
+			return ' - mat2';
+
+		if (($hour = $datetime->hour) < 15)
+			return ' - pom1';
+
+		if (($hour = $datetime->hour) < 16)
+			return ' - pom2';
+
+		return ' - pom3';
+	}
+
+	public function getShortName() : string
+	{
+		if (! $datetime = $this->datetime)
+			return $this->name;
+
+		$pieces = [
+			strtoupper($datetime->locale('it')->shortDayName),
+			$datetime->day,
+			$datetime->locale('it')->shortMonthName,
+			$this->getHourString($datetime),
+		];
+
+		if (strpos($this->name, 'FIP') !== false)
+			$pieces[] = 'FIP';
+
+		return implode(' ', $pieces);
+
+	}
+
+    public function getClients() : ? Collection
+    {
+		return $this->contentDeliveries->map(function ($item)
+		{
+			return $item->getClient();
+		})->unique();
+    }
+
+	public function getSendWarnEmailButton()
+	{
+		return Button::create([
+			'href' => route('deliveries.sendBulkWarnEmail', [$this]),
+			'text' => 'deliveries.sendWarnEmail',
+			'icon' => 'envelope'
+		]);
+	}
+
+	public function downloadLoadingList()
+	{
+		return Button::create([
+			'href' => route('deliveries.printFullLoadingList', [$this]),
+			// 'target' => '_blank',
+			'text' => 'deliveries.printFullLoadingList',
+			'icon' => 'pdf'
+		]);
+	}
+
+	public function getUnshipButton() : Button
+	{
+		return Button::create([
+			'href' => $this->getUnshipButtonUrl(),
+			'text' => 'warehouse::delivery.forceUnshipping',
+			'icon' => 'download'
+		]);
+	}
+
+	public function getShipButton() : Button
+	{
+		return Button::create([
+			'href' => $this->getShipButtonUrl(),
+			'text' => 'warehouse::delivery.forceShipping',
+			'icon' => 'truck-ramp-box'
+		]);
+	}
+
+	public function getClientDescription()
+	{
+		return $this->getName();
 	}
 
 }

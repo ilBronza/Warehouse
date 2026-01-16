@@ -4,12 +4,12 @@ namespace IlBronza\Warehouse\Helpers\Unitloads;
 
 use App\Processing;
 use IlBronza\Products\Models\Product\Product;
+use IlBronza\Ukn\Ukn;
 use IlBronza\Warehouse\Models\Interfaces\UnitloadableInterface;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-
 use function array_merge;
 use function collect;
 
@@ -194,6 +194,54 @@ class UnitloadCreatorHelper
 	);
 	}
 
+	static function removeQuantityOnExistingUnitloads(Collection $productionUnitloads, float $quantityRequired)
+	{
+		$removingQuantity = $productionUnitloads->sum('quantity') - $quantityRequired;
+
+		$removable = $productionUnitloads->filter(function($item)
+		{
+			return ! $item->isCompleted();
+		});
+
+		$removableQuantity = $removable->sum('quantity');
+
+		if($removingQuantity > $removableQuantity)
+		{
+			Ukn::e('Impossibile rimuovere ' . $removingQuantity . ' pezzi dalla produzione avvenuta (' . $removingQuantity - $removableQuantity . ' pezzi prodotti non rimuovibili)');
+
+			return $productionUnitloads;
+		}
+
+		while ($removingQuantity > 0)
+		{
+			if(! ($first = $removable->whereNull('content_delivery_id')->sortBy('quantity')->first()))
+			{
+				if(! $contentDelivery = $removable->pluck('contentDelivery')->unique()->filter()->sortByDesc('delivery.datetime')->first())
+					dd($removable);
+
+				if(! ($first = $removable->where('content_delivery_id', $contentDelivery->getKey())->sortBy('quantity')->first()))
+					dd('problema');
+			}
+
+			if($removingQuantity >= $first->getQuantity())
+			{
+				$removingQuantity -= $first->getQuantity();
+				$removable = $removable->reject(fn($item) => $item->id === $first->id);
+				$productionUnitloads = $productionUnitloads->reject(fn($item) => $item->id === $first->id);
+				$first->delete();
+
+				continue;
+			}
+
+			$first->quantity -= $removingQuantity;
+			$first->save();
+
+			$removingQuantity = 0;
+		}
+
+		return $productionUnitloads;
+	}
+
 	static function provideByModelsQuantity(UnitloadableInterface $loadable, $productionModel, float $quantityRequired = null, array $parameters = [], Processing $processing = null) : Collection
 	{
 		if(! $quantityRequired)
@@ -209,8 +257,11 @@ class UnitloadCreatorHelper
 
 		$productionUnitloads = $productionModel->getProductionUnitloads();
 
-		if(! $productionModel->isCompleted())
-		{
+		// if(! $productionModel->isCompleted())
+		// {
+			if($productionUnitloads->sum('quantity') > $quantityRequired)
+				return static::removeQuantityOnExistingUnitloads($productionUnitloads, $quantityRequired);
+
 			$parameters['sequence'] = $productionUnitloads->max('sequence') + 1;
 
 			$created = collect();
@@ -237,7 +288,7 @@ class UnitloadCreatorHelper
 			}
 
 			UnitloadDeliveryCheckerHelper::gpc()::checkForDeliveryAutoAttaching($created);
-		}
+		// }
 
 		return $productionUnitloads;
 	}

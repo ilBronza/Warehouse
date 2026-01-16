@@ -13,7 +13,11 @@ use function trans;
 
 class UnitloadAssociateToDeliveryController extends DeliveryIndexController
 {
+	public $avoidCreateButton = true;
+
 	protected string $indexFieldsArraySuffix = 'associateUnitloadToDeliveryIndex';
+
+	public array $scopes = ['current'];
 
 	public function addPostFieldsToTable()
 	{
@@ -30,10 +34,10 @@ class UnitloadAssociateToDeliveryController extends DeliveryIndexController
 				])
 			);
 
-		$this->getTable()->createPostButton([
-			'href' => app('warehouse')->route('unitloads.associateToDelivery'),
-			'text' => 'warehouse::unitloads.associateToDelivery',
-			'icon' => 'plus'
-		]);
+//		$this->getTable()->createPostButton([
+//			'href' => app('warehouse')->route('unitloads.associateToDelivery'),
+//			'text' => 'warehouse::unitloads.associateToDelivery',
+//			'icon' => 'plus'
+//		]);
 	}
 }

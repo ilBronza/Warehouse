@@ -17,18 +17,18 @@ class DeliveryIndexFieldsGroupParametersFile extends FieldsGroupParametersFile
                 'name' => 'flat',
 	            'datetime' => 'dates.date',
 	            'vehicle' => 'vehicles::vehicle',
-	            'assigned_loading_percentage' => 'utilities.milestone',
-	            'contentDeliveries' => 'warehouse::contentDeliveries.contentList',
-	            'mySelfClients.contentDeliveries' => 'warehouse::contentDeliveries.clientsList',
-	            'mySelfDestinations.contentDeliveries' => 'warehouse::contentDeliveries.destinationsList',
-	            'mySelfUnitloads.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsCountList',
-	            'mySelfPartial.contentDeliveries' => [
-					'type' => 'iterators.each',
-		            'childParameters' => [
-						'type' => 'boolean',
-			            'property' => 'partial'
-		            ]
-	            ]
+	            // 'assigned_loading_percentage' => 'utilities.milestone',
+	            // 'contentDeliveries' => 'warehouse::contentDeliveries.contentList',
+	            // 'mySelfClients.contentDeliveries' => 'warehouse::contentDeliveries.clientsList',
+	            // 'mySelfDestinations.contentDeliveries' => 'warehouse::contentDeliveries.destinationsList',
+	            // 'mySelfUnitloads.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsCountList',
+	            // 'mySelfPartial.contentDeliveries' => [
+				// 	'type' => 'iterators.each',
+		        //     'childParameters' => [
+				// 		'type' => 'boolean',
+			    //         'property' => 'partial'
+		        //     ]
+	            // ]
             ]
         ];
 	}

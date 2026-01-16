@@ -7,6 +7,9 @@ use IlBronza\Datatables\DatatablesFields\Links\DatatableFieldFetcher;
 
 class DatatableFieldOrderDelivery extends DatatableFieldFetcher
 {
+	public ? string $translationPrefix = 'warehouse::fields';
+	public ? string $forcedStandardName = 'deliveriesList';
+
 	public $width = '200px';
 
 	public $textParameter = 'deliveries_names_string';

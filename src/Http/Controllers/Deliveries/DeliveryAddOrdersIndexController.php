@@ -15,6 +15,8 @@ class DeliveryAddOrdersIndexController extends DeliveryCRUD
 	use CRUDPlainIndexTrait;
 	use CRUDIndexTrait;
 
+	public $avoidCreateButton = true;
+
 	public $allowedMethods = ['index'];
 
 	public function getIndexFieldsArray()
@@ -25,7 +27,24 @@ class DeliveryAddOrdersIndexController extends DeliveryCRUD
 
 	public function getIndexElements()
 	{
-		return $this->getModelClass()::pickables()->get();
+		return $this->getModelClass()::current()->with([
+			'vehicle',
+			'notes',
+			'contentDeliveries.content.order.destination.address',
+			'contentDeliveries.content.order.client.notes',
+			'contentDeliveries.content.order.notes',
+			'contentDeliveries.content.product.size',
+			'contentDeliveries.content.product.notes',
+			'contentDeliveries.content.product.extraFields',
+			'contentDeliveries.content.product.packing',
+			'contentDeliveries.unitloads.loadable.size',
+			'contentDeliveries.unitloads.loadable.packing',
+			'contentDeliveries.unitloads.pallettype',
+			'contentDeliveries' => function($query)
+			{
+				$query->withCount('unitloads');
+			}
+		])->get();
 	}
 
 	public function shareExtraViews()
