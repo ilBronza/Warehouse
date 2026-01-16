@@ -17,6 +17,7 @@ class ContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupParameter
 	            'mySelfEdit' => 'links.edit',
 	            'delivery' => 'warehouse::deliveries.delivery',
 	            'client' => 'clients::client.client',
+	            'order.client' => 'clients::client.client',
 	            'mySelfWarn' => [
 		            'type' => 'function',
 		            'function' => 'getWarnClientSelect',
@@ -35,17 +36,18 @@ class ContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupParameter
 			            'property' => 'warned_at'
 	            ],
 
-	            'mySelfPrintRetiringList' => [
-		            'type' => 'links.link',
-		            'lightbox' => true,
-		            'function' => 'getPrintLoadingListUrl',
-		            'variable' => 'delivery',
-		            'faIcon' => 'list-check'
-	            ],
+	            'order' => 'products::orders.order',
+
+				'mySelfPrintRetiringList' => [
+					'type' => 'links.link',
+					'lightbox' => true,
+					'function' => 'getPrintLoadingListUrl',
+					'variable' => 'delivery',
+					'faIcon' => 'list-check'
+				],
 
 	            'destination' => 'clients::destination.short',
 	            'mySelfProvince.destination' => 'clients::destination.province',
-
 	            'order' => 'products::orders.order',
 
 	            'content' => [

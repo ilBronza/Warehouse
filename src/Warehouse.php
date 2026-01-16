@@ -65,9 +65,28 @@ class Warehouse implements RoutedObjectInterface
 
         $deliveriesButton = $menu->createButton([
             'name' => 'warehousedeliveries',
-            'icon' => 'pallet',
-            'text' => 'warehouse::warehouse.deliveries',
-            'href' => $this->route('deliveries.index')
+            'icon' => 'truck-ramp-box',
+            'text' => 'warehouse::deliveries.deliveries',
+            'children' => [
+                [
+                    'name' => 'warehouseActiveDeliveries',
+                    'icon' => 'list',
+                    'text' => 'warehouse::deliveries.active',
+                    'href' => $this->route('deliveries.active'),
+                ],
+	            [
+		            'name' => 'warehouseDeliveries',
+		            'icon' => 'database',
+		            'text' => 'warehouse::deliveries.archive',
+		            'href' => $this->route('deliveries.index'),
+	            ],
+	            [
+	            'name' => 'warehouseDeliveriesAutomaticCreationForm',
+	            'icon' => 'calendar-plus',
+	            'text' => 'warehouse::deliveries.automaticCreation',
+	            'href' => $this->route('deliveries.automaticCreationForm'),
+            ]
+            ]
         ]);
 
         $warehouseManagerButton->addChild($pallettypesButton);

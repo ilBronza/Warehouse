@@ -39,5 +39,8 @@ return [
 	'contentList' => 'Contenuto',
 	'destinationsList' => 'Destinazioni',
 	'zones' => 'Zone',
-	'partial' => 'Parziale'
+	'partial' => 'Parziale',
+	'entire' => 'Intera',
+	'entires' => 'Intere',
+	'mySelfPartial.contentDeliveries' => 'Parziali'
 ];

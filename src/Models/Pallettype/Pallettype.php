@@ -17,7 +17,15 @@ class Pallettype extends BaseWarehouseModel
 	static function getDefault()
 	{
 		return static::where('slug', 'tipo-eur')->first();
-		// return static::findCached(static::$defaultId);
 	}
 
+	public function getHeightMm() : ? float
+	{
+		return $this->height_mm;
+	}
+
+	public function getWeightKg() : ? float
+	{
+		return $this->weight_kg;
+	}
 }

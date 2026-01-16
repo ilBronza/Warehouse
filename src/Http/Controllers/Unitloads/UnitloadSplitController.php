@@ -42,6 +42,8 @@ class UnitloadSplitController extends UnitloadsCRUDController
 	{
 		$unitload = $this->findModel($unitload);
 
+		$this->setModel($unitload);
+
 		$helper = CrudModelUpdater::create($unitload, new ($this->getEditParametersFile()), $request);
 
 		$helper->setRequest($request);

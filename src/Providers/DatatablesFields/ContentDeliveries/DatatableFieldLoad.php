@@ -18,13 +18,13 @@ class DatatableFieldLoad extends DatatableFieldLink
 	{
 		if($value->isLoaded())
 			return [
-				$value->getUnLoadingUrl(),
-				FaIcon::inline('download'),
+				null,
+				null
 			];
 
 		return [
 			$value->getLoadingUrl(),
-			FaIcon::inline('upload'),
+			FaIcon::inline('truck-ramp-box'),
 		];
 	}
 }

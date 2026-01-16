@@ -27,6 +27,9 @@ trait InteractsWithDeliveryTrait
 				return true;
 		}
 
+		if($this->relationLoaded('unitloads'))
+			return !! $this->unitloads->whereNull('content_delivery_id')->first();
+
 		if ($this->unitloads()->notDelivering()->first())
 			return true;
 
@@ -35,6 +38,16 @@ trait InteractsWithDeliveryTrait
 
 	public function hasBeenCompletelyDelivered() : bool
 	{
+		if(! count($this->contentDeliveries))
+			return false;
+
+		foreach($this->contentDeliveries as $contentDelivery)
+			if(! $contentDelivery->hasBeenShipped())
+				return false;
+
+		if($this->getDeliveryingQuantity() < $this->getQuantityRequired())
+			return false;
+
 		if ($this->hasUndeliveringUnitloads())
 			return false;
 
@@ -43,6 +56,22 @@ trait InteractsWithDeliveryTrait
 				return false;
 
 		return true;
+	}
+
+	public function isBeingDelivered() : bool
+	{
+		if(! count($this->contentDeliveries))
+			return false;
+
+		return true;
+	}
+
+	public function getDeliveryingQuantity() : float
+	{
+		return $this->contentDeliveries->sum(function($contentDelivery)
+		{
+			return $contentDelivery->getQuantityRequired();
+		}) ?? 0;
 	}
 
 	public function contentDeliveries()
@@ -70,7 +99,7 @@ trait InteractsWithDeliveryTrait
 			$result = array_merge($child->getDeliveriesNamesArray());
 
 		foreach ($deliveries = $this->getDeliveries() as $delivery)
-			$result[] = $delivery->getName();
+			$result[] = $delivery->getShortName();
 
 		return array_unique($result);
 	}

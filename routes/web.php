@@ -40,6 +40,17 @@ Route::group([
 			'as' => 'deliveries.'
 		], function()
 		{
+			Route::get('automatically-creation-form', [Warehouse::getController('delivery', 'automaticCreation'), 'form'])->name('automaticCreationForm');
+			Route::post('automatically-creation', [Warehouse::getController('delivery', 'automaticCreation'), 'store'])->name('automaticCreationStore');
+
+			//DeliveryActiveController
+			Route::get('active', [Warehouse::getController('delivery', 'active'), 'index'])->name('active');
+
+			//DeliveryIndexController
+			Route::get('', [Warehouse::getController('delivery', 'index'), 'index'])->name('index');
+
+			Route::get('{delivery}/unship', [Warehouse::getController('delivery', 'unship'), 'unship'])->name('unship');
+			Route::get('{delivery}/ship', [Warehouse::getController('delivery', 'ship'), 'ship'])->name('ship');
 
 			Route::delete('{delivery}/delete', [Warehouse::getController('delivery', 'destroy'), 'destroy'])->name('destroy');
 
@@ -51,9 +62,6 @@ Route::group([
 				//DeliveryByOrderController
 				Route::get('{order}/deliveries-popup', [Warehouse::getController('delivery', 'orderDeliveriesPopup'), 'popup'])->name('popup');
 			});
-
-			//DeliveryIndexController
-			Route::get('', [Warehouse::getController('delivery', 'index'), 'index'])->name('index');
 
 			//DeliveryCreateStoreController
 			Route::get('create', [Warehouse::getController('delivery', 'create'), 'create'])->name('create');

@@ -17,6 +17,8 @@ class UnitloadAssociateToDeliveryController extends DeliveryIndexController
 
 	protected string $indexFieldsArraySuffix = 'associateUnitloadToDeliveryIndex';
 
+	public array $scopes = ['current'];
+
 	public function addPostFieldsToTable()
 	{
 		$unitloads = Unitload::gpc()::whereIn('id', request()->unitloads)->get();

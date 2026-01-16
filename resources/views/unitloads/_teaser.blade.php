@@ -27,7 +27,7 @@
 			</span>
 
 			<div>
-				{{ $unitload->processing->getKey() }}
+				{{ $unitload->processing?->getKey() }}
 			</div>
 		</div>
 		<div class="uk-card-footer">

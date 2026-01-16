@@ -1,5 +1,6 @@
 @php use IlBronza\Buttons\Icons\FaIcon; @endphp
 @foreach($children as $child)
+
 	<div class="uk-card uk-card-small uk-card-default uk-card-body uk-margin">
 		<div class="uk-card-header">
 			<h4 class="uk-card-title">
@@ -11,9 +12,10 @@
 					componente {{ $child->getName() }}</a>
 			</h4>
 		</div>
-			<div class="uk-card-body">
-				@include('warehouse::deliveries._deliveringModelHeader', ['child' => $child])
-			</div>
+		<div class="uk-card-body">
+			@include('warehouse::deliveries._deliveringModelHeader', ['child' => $child])
+		</div>
+
 		<div class="uk-card-footer">
 
 			@if(count($undelivering = $child->getProductionUnitloads()->where('content_delivery_id', null)))
@@ -23,9 +25,7 @@
 						Senza spedizione
 
 						<div class="uk-float-right">
-
 							@include('warehouse::contentDeliveries.__selectAllButtons')
-
 						</div>
 					</div>
 					<div class="uk-card-body">
@@ -41,7 +41,23 @@
 
 			@if($deliveries = $child->getDeliveries())
 				@foreach($deliveries as $delivery)
-					@include('warehouse::deliveries._mini')
+
+						@if($contentDelivery = $delivery->pivot)
+
+							@include('warehouse::contentDeliveries._teaser', [
+									'unitloads' => $contentDelivery->unitloads,
+								])
+
+						@else
+
+							<div class="uk-alert uk-alert-danger">
+								Qualcosa è andato storto con la spedizione {{ $delivery->getName() }}
+							</div>
+
+						@endif
+
+
+
 				@endforeach
 			@endif
 		</div>
