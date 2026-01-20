@@ -47,4 +47,9 @@ return [
 	'entire' => 'Intera',
 	'entires' => 'Intere',
 	'mySelfPartial.contentDeliveries' => 'Parziali',
+	'status_id' => 'Id status',
+	'mySelfWeight' => 'Peso',
+	'clients' => 'Clienti',
+	'mySelfOrdersWarnedList' => 'Lista ordini segnalati',
+	'' => '',
 ];
