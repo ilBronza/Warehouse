@@ -4,6 +4,7 @@ use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryLoaderHelper;
 use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryUnloaderHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryAutomaticCreatorHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryOrderHelper;
+use IlBronza\Warehouse\Helpers\Deliveries\DeliveryOrderProductHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryShipperHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryUnitloadHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryUnshipperHelper;
@@ -20,6 +21,8 @@ use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\ContentDeliveryLoadCum
 use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\ContentDeliveryPopupController;
 use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\GroupedContentDeliveryIndexController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryActiveController;
+use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddGroupedContentDeliveriesController;
+use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddGroupedContentDeliveriesIndexController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddOrdersController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddOrdersIndexController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddUnitloadsController;
@@ -80,6 +83,7 @@ return [
 		    'datatableFieldVolume' => '3em'
     	],
 		'contentDeliveries' => [
+			'datatableFieldChangeBulkDelivery' => '22em',
 			'datatableFieldDetach' => '2em',
 			'datatableFieldDetachList' => '2em',
 			'datatableFieldLoadCumulative' => '2em',
@@ -103,6 +107,8 @@ return [
 			'datatableFieldPiecesList' => '3em'
 		],
 		'groupedClientsContentDeliveries' => [
+			'datatableFieldEntiresList' => '5em',
+			'datatableFieldAddGroupedContentDeliveries' => '2em',
 			'datatableFieldContentList' => '2em',
 			'datatableFieldClientsList' => '20em',
 			'datatableFieldDestinationsList' => '12em',
@@ -127,6 +133,9 @@ return [
 			'helpers' => [
 				'automaticCreator' => DeliveryAutomaticCreatorHelper::class,
 				'orderDelivery' => DeliveryOrderHelper::class,
+
+				'orderProductDelivery' => DeliveryOrderProductHelper::class,
+
 				'unitloadDelivery' => DeliveryUnitloadHelper::class,
 				'shipperHelper' => DeliveryShipperHelper::class,
 				'unshipperHelper' => DeliveryUnshipperHelper::class,
@@ -149,7 +158,12 @@ return [
 				'addOrders' => DeliveryAddOrdersController::class,
 				'addOrdersIndex' => DeliveryAddOrdersIndexController::class,
 				'orderDeliveriesPopup' => DeliveryByOrderController::class,
-				'addUnitloads' => DeliveryAddUnitloadsController::class
+				'addUnitloads' => DeliveryAddUnitloadsController::class,
+
+
+				'addGroupedContentDeliveries' => DeliveryAddGroupedContentDeliveriesController::class,
+				'addGruopedContentDeliveriesIndex' => DeliveryAddGroupedContentDeliveriesIndexController::class,
+
 		    ],
 		    'fieldsGroupsFiles' => [
 				'active' => DeliveryActiveFieldsGroupParametersFile::class,

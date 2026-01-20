@@ -31,6 +31,11 @@ class GroupedContentDelivery extends Delivery
 		return $this->belongsTo(Delivery::gpc());
 	}
 
+	public function getKey()
+	{
+		return $this->client_destination_key;
+	}
+
 	public function getDelivery() : ? Delivery
 	{
 		return $this->delivery;

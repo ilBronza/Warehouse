@@ -70,8 +70,14 @@ Route::group([
 			//DeliveryAddOrdersIndexController
 			Route::post('add-orders-index', [Warehouse::getController('delivery', 'addOrdersIndex'), 'index'])->name('addOrdersIndex');
 
+			//DeliveryAddGroupedContentDeliveriesIndexController
+			Route::post('add-grouped-content-deliveries-index', [Warehouse::getController('delivery', 'addGruopedContentDeliveriesIndex'), 'index'])->name('addGroupedContentDeliveriesIndex');
+
 			//DeliveryAddOrdersController
 			Route::post('{delivery}/add-orders', [Warehouse::getController('delivery', 'addOrders'), 'addOrders'])->name('addOrders');
+
+			//DeliveryAddGroupedContentDeliveriesController
+			Route::post('{delivery}/add-grouped-content-deliveries', [Warehouse::getController('delivery', 'addGroupedContentDeliveries'), 'addGroupedContentDeliveries'])->name('addGroupedContentDeliveries');
 
 			//DeliveryAddUnitloadsController
 			Route::post('{delivery}/add-unitloads', [Warehouse::getController('delivery', 'addUnitloads'), 'addUnitloads'])->name('addUnitloads');

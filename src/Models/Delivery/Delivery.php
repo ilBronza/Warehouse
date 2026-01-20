@@ -4,6 +4,7 @@ namespace IlBronza\Warehouse\Models\Delivery;
 
 use Carbon\Carbon;
 use IlBronza\Buttons\Button;
+use IlBronza\Clients\Models\Client;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\Vehicles\Models\Vehicle;
 use IlBronza\Warehouse\Models\BaseWarehouseModel;
@@ -63,6 +64,13 @@ class Delivery extends BaseWarehouseModel
 		]);
 	}
 
+	public function getAddGroupedContentDeliveriesToDeliveryUrl() : string
+	{
+		return $this->getKeyedRoute('addGroupedContentDeliveries', [
+			'delivery' => $this->getKey()
+		]);
+	}
+
 	public function getAddUnitloadsToDeliveryUrl() : string
 	{
 		return $this->getKeyedRoute('addUnitloads', [
@@ -78,6 +86,13 @@ class Delivery extends BaseWarehouseModel
 	public function contentDeliveries()
 	{
 		return $this->hasMany(ContentDelivery::gpc());
+	}
+
+	public function getContentDeliveriesByClient(Client $client) : Collection
+	{
+		return $this->contentDeliveries->filter(function ($item) use ($client) {
+			return $item->getContent()?->getClientKey() == $client->getKey();
+		});
 	}
 
 	public function getClientsContentDeliveriesAttribute()

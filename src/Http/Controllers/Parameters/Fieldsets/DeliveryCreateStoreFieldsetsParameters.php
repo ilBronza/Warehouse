@@ -4,6 +4,8 @@ namespace IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets;
 
 use IlBronza\Form\Helpers\FieldsetsProvider\FieldsetParametersFile;
 
+use function config;
+
 class DeliveryCreateStoreFieldsetsParameters extends FieldsetParametersFile
 {
     public function _getFieldsetsParameters() : array
@@ -18,6 +20,16 @@ class DeliveryCreateStoreFieldsetsParameters extends FieldsetParametersFile
 					    'multiple' => false,
 					    'rules' => 'string|nullable|exists:' . config('vehicles.models.vehicle.table') . ',id',
 					    'relation' => 'vehicle'
+				    ],
+				    'status_id' => [
+					    'type' => 'select',
+					    'list' => [
+						    'ipotetica' => 'Ipotetica',
+						    'in-programmazione' => 'In Programmazione',
+						    'programmata' => 'Programmata',
+					    ],
+					    'rules' => 'string|nullable',
+					    'multiple' => false,
 				    ],
 			    ],
 			    'width' => ['1-3@l', '1-2@m']

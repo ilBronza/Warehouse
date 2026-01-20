@@ -106,7 +106,10 @@ class DeliveryAttacherHelper
 
 	public function attachContent($content, bool $partial = null, float $quantity = null) : ContentDelivery
 	{
-		$content->deliveries()->syncWithoutDetaching([$this->getDelivery()->getKey()]);
+		if(is_null($quantity))
+			$content->deliveries()->sync([$this->getDelivery()->getKey()]);
+		else
+			$content->deliveries()->syncWithoutDetaching([$this->getDelivery()->getKey()]);
 
 		$contentDelivery = $content->contentDeliveries()->byDelivery(
 			$this->getDelivery()

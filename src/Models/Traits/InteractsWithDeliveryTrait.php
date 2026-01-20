@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 
 trait InteractsWithDeliveryTrait
 {
+	abstract public function getProductionStatusList() : ? string;
+
 	public function deliveries()
 	{
 		return $this->morphToMany(Delivery::gpc(), 'content', config('warehouse.models.contentDelivery.table'))->using(ContentDelivery::gpc())->withPivot([
@@ -86,8 +88,6 @@ trait InteractsWithDeliveryTrait
 
 	public function getDeliveringChildren() : Collection
 	{
-		return collect();
-
 		return $this->getOrderrows();
 	}
 

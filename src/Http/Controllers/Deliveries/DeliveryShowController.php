@@ -11,7 +11,9 @@ class DeliveryShowController extends DeliveryCRUD
 
     public function getExtendedShowButtons()
     {
-	    $this->addNavbarButton($this->getModel()->getSendWarnEmailButton());
+    	if (config('warehouse.models.delivery.options.sendGlobalEmailButton'))
+	    	$this->addNavbarButton($this->getModel()->getSendWarnEmailButton());
+
 	    $this->addNavbarButton($this->getModel()->downloadLoadingList());
 
 	    if(! $this->getModel()->hasBeenShipped())

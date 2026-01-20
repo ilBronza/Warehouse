@@ -2,30 +2,12 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
-use IlBronza\Products\Models\Order;
-use IlBronza\Products\Models\OrderProduct;
-use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use Illuminate\Support\Collection;
-use function app;
-use function dd;
 
-class DeliveryOrderHelper extends DeliveryAttacherHelper
+class DeliveryOrderHelper extends DeliveryOrderProductHelper
 {
-	public function attachOrderProduct(OrderProduct $orderProduct, bool $partial = false, float $quantity = null) : ContentDelivery
-	{
-		$contentDelivery = $this->attachContent($orderProduct, $partial, $quantity);
-
-		$unitloads = $orderProduct->getUnitloadsByClientQuantity();
-
-		$this->checkOrderProductShippingIntegrity($orderProduct, $unitloads);
-
-		ContentDeliveryUnitloadsHelper::addUnitloadsToContentDelivery($contentDelivery, $unitloads);
-
-		return $contentDelivery;
-	}
-
-	public function attachElement(Order $order)
+	public function attachElement($order)
 	{
 		foreach($order->getOrderProducts() as $orderProduct)
 			$this->attachOrderProduct($orderProduct);

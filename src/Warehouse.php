@@ -19,10 +19,22 @@ class Warehouse implements RoutedObjectInterface
 		return config('warehouse.models.delivery.helpers.orderDelivery');
 	}
 
+    public function getOrderProductDeliveryHelperClass() : string
+    {
+        return config('warehouse.models.delivery.helpers.orderProductDelivery');        
+    }
+
 	public function getUnitloadDeliveryHelperClass() : string
 	{
 		return config('warehouse.models.delivery.helpers.unitloadDelivery');
 	}
+
+    public function getOrderProductDeliveryHelper()
+    {
+        $helperClass = $this->getOrderProductDeliveryHelperClass();
+
+        return new $helperClass();        
+    }
 
 	public function getOrderDeliveryHelper()
 	{

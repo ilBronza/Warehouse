@@ -94,7 +94,7 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getWaveStringAttribute'
 					],
-					'width' => '25px'
+					'width' => '45px'
 				],
 
 				'mySelfCardboard.contentDeliveries' => [
@@ -103,7 +103,7 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getCardboardStringAttribute'
 					],
-					'width' => '75px'
+					'width' => '105px'
 				],
 
 				'mySelfSupplier.contentDeliveries' => [
@@ -124,6 +124,28 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 					'width' => '75px'
 				],
 
+				'mySelfProductionStatus.contentDeliveries' => [
+					'type' => 'iterators.each',
+					'childParameters' => [
+						'type' => 'function',
+						'function' => 'getProductionStatusList'
+					],
+					'width' => '175px'
+				],
+
+				'mySelfProductModel.contentDeliveries' => [
+					'type' => 'iterators.each',
+					'childParameters' => [
+						'type' => 'function',
+						'function' => 'getStencilName'
+					],
+					'width' => '175px'
+				],
+
+				// 'mySelfDeliveries' => 'warehouse::deliveries.orderDelivery',
+
+				// 'mySelfChangeDeliveries' => 'warehouse::contentDeliveries.changeBulkDelivery',
+
 	            'mySelfUnitloadsCount.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsCountList',
 	            'mySelfDataSheets.contentDeliveries' => 'warehouse::contentDeliveries.dataSheetList',
 	            'mySelfPriority.contentDeliveries' => 'warehouse::contentDeliveries.prioritiesList',
@@ -134,18 +156,6 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 	            'mySelfLoad.contentDeliveries' => 'warehouse::contentDeliveries.loadButtonsList',
 	            'mySelfUnLoad.contentDeliveries' => 'warehouse::contentDeliveries.unloadButtonsList',
 
-
-
-
-	            ////                'mySelfLoad.orders' => [
-	            ////                    'translatedName' => 'Carica/Scarica',
-	            ////                    'type' => 'iterators.each',
-	            ////                    'childParameters' => [
-	            ////                        'type' => 'function',
-	            ////                        'function' => 'getLoadOrderOnTruckButton'
-	            ////                    ],
-	            ////                    'width' => '25px'
-	            ////                ],
 
 
             ]

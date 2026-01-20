@@ -2,12 +2,21 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Deliveries;
 
+use App\Delivery;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryIndexController;
 
 class DeliveryActiveController extends DeliveryIndexController
 {
 	public array $scopes = ['current'];
 	protected string $indexFieldsArraySuffix = 'active';
+
+	public function addIndexButtons()
+	{
+		$this->table->addButton(
+			Delivery::gpc()::automaticallySortOrderProductPhasesButton()
+		);
+	}
+
 
 	function getIndexElementsRelationsArray() : array
 	{

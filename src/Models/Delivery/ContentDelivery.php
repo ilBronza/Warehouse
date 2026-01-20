@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse\Models\Delivery;
 
 use Carbon\Carbon;
+use IlBronza\Buttons\Button;
 use IlBronza\CRUD\Traits\Model\CRUDCacheTrait;
 use IlBronza\CRUD\Traits\Model\CRUDModelTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
@@ -283,11 +284,11 @@ class ContentDelivery extends MorphPivot
 	public function getClientDestinationKey() : string
 	{
 		return cache()->remember(
-			$this->cacheKey('getClientDestinationKey'),
+			$this->cacheKey('getdDeliveryClientDestinationKey'),
 			3600,
 			function()
 			{
-				return Str::slug($this->getClient()?->getName() . '_' . $this->getDestination()?->getKey());
+				return $this->delivery_id . '_' . $this->getClient()?->getKey() . '_' . $this->getDestination()?->getKey();
 			}
 		);
 	}
@@ -323,4 +324,32 @@ class ContentDelivery extends MorphPivot
 	{
 		return !! $this->getDelivery()?->hasBeenShipped();
 	}
+
+	public function getProductionStatusList() : ? string
+	{
+		return $this->getContent()?->getProductionStatusList();
+	}
+
+	static public function getAddGroupedContentDeliveriesToDeliveryIndexUrl() : string
+	{
+		return app('warehouse')->route('deliveries.addGroupedContentDeliveriesIndex');
+	}
+
+	public function getAddGroupedContentDeliveriesToDeliveryButton() : Button
+	{
+		$button = Button::create([
+			'href' => static::getAddGroupedContentDeliveriesToDeliveryIndexUrl(),
+			'text' => 'warehouse::deliveries.associateDelivery',
+			'icon' => 'plus'
+		]);
+
+		$button->setAjaxTableButton('order', [
+			'openIframe' => true
+		]);
+
+		$button->setPrimary();
+
+		return $button;
+	}
+
 }
