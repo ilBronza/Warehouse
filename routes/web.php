@@ -10,6 +10,22 @@ Route::group([
 	],
 	function()
 	{
+
+		Route::group([
+			'prefix' => 'grouped-content-deliveries',
+			'as' => 'groupedContentDeliveries.'
+		], function()
+		{
+			Route::put('{groupedContentDelivery}', [Warehouse::getController('groupedContentDelivery', 'update'), 'update'])->name('update');
+
+			Route::get('{groupedContentDelivery}/global-load', [Warehouse::getController('groupedContentDelivery', 'globalLoad'), 'globalLoad'])->name('globalLoad');
+
+			//GroupedContentDeliveryElaborateController
+			Route::get('{groupedContentDelivery}/global-elaborate', [Warehouse::getController('groupedContentDelivery', 'globalElaborate'), 'globalElaborate'])->name('globalElaborate');
+
+			Route::post('reorder', [Warehouse::getController('groupedContentDelivery', 'reorder'), 'storeMassReorder'])->name('storeMassReorder');
+		});
+
 		Route::group([
 			'prefix' => 'content-deliveries',
 			'as' => 'contentDeliveries.'
@@ -40,6 +56,10 @@ Route::group([
 			'as' => 'deliveries.'
 		], function()
 		{
+			//DeliveryMapController
+			Route::get('{delivery}/map', [Warehouse::getController('delivery', 'renderMap'), 'renderMap'])->name('renderMap');
+
+
 			Route::get('automatically-creation-form', [Warehouse::getController('delivery', 'automaticCreation'), 'form'])->name('automaticCreationForm');
 			Route::post('automatically-creation', [Warehouse::getController('delivery', 'automaticCreation'), 'store'])->name('automaticCreationStore');
 

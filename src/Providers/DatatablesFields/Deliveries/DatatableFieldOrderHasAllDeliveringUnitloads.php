@@ -11,8 +11,14 @@ class DatatableFieldOrderHasAllDeliveringUnitloads extends DatatableFieldBoolean
 	public function transformValue($value)
 	{
 		foreach($value->getDeliveringChildren() as $child)
-			if(($child->unitloads->count() == 0)||($child->unitloads_without_delivery_count))
+		{
+			if(count($contentDeliveries = $child->getContentDeliveries()) == 0)
 				return false;
+
+			foreach($contentDeliveries as $contentDelivery)
+				if($contentDelivery->isPartial())
+					return false;
+		}
 
 		return true;
 	}

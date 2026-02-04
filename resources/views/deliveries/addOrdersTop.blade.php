@@ -2,7 +2,7 @@
 	<h3 class="uk-card-title">@lang('warehouse::deliveries.addOrdersToDeliveryTitle')</h3>
 	<div class="uk-grid-small" uk-grid>
 		@foreach($orders as $order)
-			<div class="uk-width-small uktext-center">
+			<div class="uk-width-medium uktext-center">
 				{{ $order->getName() }} <br />
 				<span class="uk-text-truncate">
 					{{ $order->getClient()?->getName() }}

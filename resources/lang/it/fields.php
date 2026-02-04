@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'datetime' => 'Data',
+	'delivery_datetime' => 'Data',
 	'name' => 'Nome',
 	'mySelfNotesLink' => 'Note',
 	'order' => 'Ordine',
@@ -11,6 +11,7 @@ return [
 	'assigned_loading_percentage' => '% assegnata',
 	'contentDeliveries' => 'Contenuto',
 	'mySelfClients.contentDeliveries' => 'Clienti',
+	'clients' => 'Clienti',
 	'vehicle' => 'Veicolo',
 	'client' => 'Azienda',
 	'valid_pieces_done' => 'Pezzi prodotti',
@@ -39,7 +40,7 @@ return [
 	'mySelfWeekday' => 'Feriale',
 	'hypothetical' => 'Ipotetica',
 	'mySelfIsFip' => 'FIP',
-	'mySelfTime.datetime' => 'Orario',
+	'mySelfTime.delivery_datetime' => 'Orario',
 	'contentList' => 'Contenuto',
 	'destinationsList' => 'Destinazioni',
 	'zones' => 'Zone',
@@ -47,4 +48,9 @@ return [
 	'entire' => 'Intera',
 	'entires' => 'Intere',
 	'mySelfPartial.contentDeliveries' => 'Parziali',
+	'quantity_done' => 'Pezzi prodotti',
+	'mySelfPrintLoadingList' => 'Lista di carico',
+	'quantity_required' => 'Pezzi richiesti',
+	'deliveriesTime' => 'Programma consegna',
+	'warnedList' => 'Avvisati'
 ];

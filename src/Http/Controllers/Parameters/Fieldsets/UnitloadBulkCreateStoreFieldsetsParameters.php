@@ -179,14 +179,15 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'readOnly' => true,
 						'rules' => 'integer|nullable|min:0|max:65535'
 					],
-					'total_valid_pieces_done' => [
-						'type' => 'number',
-						'label' => 'pezzi prodotti TOTALI',
-						'rules' => 'integer|nullable|min:0|max:65535'
-					],
+					// 'total_valid_pieces_done' => [
+					// 	'type' => 'number',
+					// 	'label' => 'pezzi prodotti TOTALI',
+					// 	'value' => $orderProductPhase->getExpectedPiecesCount() - $calculatedTotalPieces,
+					// 	'rules' => 'integer|nullable|min:0|max:65535'
+					// ],
 					'valid_pieces_done' => [
 						'type' => 'number',
-						'label' => 'pezzi prodotti AGGIUNTI',
+						'label' => 'pezzi prodotti',
 						'rules' => 'integer|nullable|min:0|max:65535'
 					],
 					'ordered_quantity' => [
@@ -201,6 +202,7 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 					],
 					'packings_quantity' => [
 						'type' => 'number',
+						'default' => 0,
 						'rules' => 'integer|required|min:0|max:65535'
 					],
 					'save' => [

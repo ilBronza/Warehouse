@@ -17,11 +17,12 @@ class DatatableFieldOrderProductPhaseDelivery extends DatatableFieldFlatColorCla
 		$result = [];
 
 		foreach($deliveries as $delivery)
-			$result[] = $delivery->datetime?->format('d/m H:i');
+			// $result[] = $delivery->delivery_datetime?->format('d/m H:i');
+			$result[] = $delivery->getShortName();
 
-		$closer = $deliveries->sortBy('datetime')->first();
+		$closer = $deliveries->sortBy('delivery_datetime')->first();
 
-		$dayClass = $closer->datetime->locale('it')->shortDayName;
+		$dayClass = $closer->delivery_datetime->locale('it')->shortDayName;
 
 		return [
 			implode('<br />', $result),

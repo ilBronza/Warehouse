@@ -3,7 +3,7 @@
     <div class="uk-grid-small" uk-grid>
         @foreach($filteredGroupedContentDeliveries as $groupedContentDeliveries)
             @foreach($groupedContentDeliveries->contentDeliveries as $contentDelivery)
-                <div class="uk-width-small uktext-center">
+                <div class="uk-width-medium uktext-center">
                     {{ $contentDelivery->getContent()?->getName() }} <br />
                     <span class="uk-text-truncate">
                         {{ $contentDelivery->getContent()?->getClient()?->getName() }}

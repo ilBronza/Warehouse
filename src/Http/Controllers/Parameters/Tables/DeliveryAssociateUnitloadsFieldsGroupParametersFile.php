@@ -14,7 +14,7 @@ class DeliveryAssociateUnitloadsFieldsGroupParametersFile extends FieldsGroupPar
             [
                 'name' => 'flat',
 	            'datetime' => 'dates.date',
-	            'vehicle' => 'vehicles::vehicle',
+	            'delivery_datetime' => 'vehicles::vehicle',
 	            'mySelfAddToDelivery' => 'warehouse::deliveries.addUnitloads'
             ]
         ];

@@ -14,23 +14,28 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
             'fields' => 
             [
 				'mySelfPrimary' => 'primary',
-	            'firstContentDelivery.mySelfWarn' => [
-					'type' => 'function',
-		            'function' => 'getWarnClientSelect',
-	            ],
-	            'mySelfWarnSendCustomEmail.firstContentDelivery' => [
+				'sorting_index' => 'utilities.sorting',
+
+				'mySelfWarnSendCustomEmail.firstContentDelivery' => [
 					'type' => 'links.link',
-		            'icon' => 'mail',
-		            'function' => 'getWarnClientSendCustomEmailUrl',
-		            'variable' => 'delivery',
-	            ],
+					'faIcon' => 'envelope',
+					'function' => 'getWarnClientSendCustomEmailUrl',
+					'variable' => 'delivery',
+				],
+				'warned_at' => [
+					'type' => 'editor.toggle',
+					'reloadTable' => true,
+					'falseIcon' => 'phone'
+				],
 	            'mySelfWarnedAtList.contentDeliveries' => 'warehouse::contentDeliveries.contentDeliveriesWarnedAtList',
 
 	            'mySelfPrintRetiringList.firstContentDelivery' => [
 					'type' => 'links.link',
+					'target' => '_blank',
 		            'function' => 'getPrintLoadingListUrl',
 		            'variable' => 'delivery',
-		            'faIcon' => 'list-check'
+		            'faIcon' => 'rectangle-list',
+		            'width' => '45px'
 	            ],
 
 	            'client' => 'clients::client.client',
@@ -38,24 +43,39 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 	            'destination_alert' => 'booleanAlarm',
 
 
-	                           'mySelfOrders.contentDeliveries' => [
-	                               'translatedName' => 'Carica/Scarica',
-	                               'type' => 'iterators.each',
-	                               'childParameters' => [
-	                                   'type' => 'function',
-	                                   'function' => 'getLoadOrderOnTruckButton'
-	                               ],
-	                               'width' => '25px'
-	                           ],
+               // 'mySelfOrders.contentDeliveries' => [
+               //     'translatedName' => 'Carica/Scarica',
+               //     'type' => 'iterators.each',
+               //     'childParameters' => [
+               //         'type' => 'function',
+               //         'function' => 'getLoadOrderOnTruckButton'
+               //     ],
+               //     'width' => '25px'
+               // ],
 
-
-	            'mySelfFullDestination.destination.name' => 'flat',
-	            'mySelfFullDestination.destination.address' => 'addresses::address.fullStreet',
-	            'destination' => 'clients::destination.city',
+	            'mySelfFullDestination.destination.name' => [
+	            	'type' => 'flat',
+	            	'width' => '10em'
+	            ],
+	            'mySelfFullDestination.destination.address' => [
+	            	'type' => 'addresses::address.fullStreet',
+	            	'width' => '10em'
+	            ],
+	            'destination' => [
+	            	'type' => 'clients::destination.city',
+	            	'width' => '10em'
+	            ],
 	            'mySelfProvince.destination' => 'clients::destination.province',
 
+	            'mySelfPriority.contentDeliveries' => 'warehouse::contentDeliveries.prioritiesList',
+	            'mySelfDataSheets.contentDeliveries' => 'warehouse::contentDeliveries.dataSheetList',
+
 	            'mySelfOrders.contentDeliveries' => 'warehouse::contentDeliveries.ordersList',
+
 	            'mySelfProducts.contentDeliveries' => 'warehouse::contentDeliveries.productsList',
+
+	            'mySelfDetach.contentDeliveries' => 'warehouse::contentDeliveries.detachList',
+
 	            'mySelfProductDescriptions.contentDeliveries' => 'warehouse::contentDeliveries.productDescriptionsList',
 
 				'mySelfDueDate.contentDeliveries' => [
@@ -94,7 +114,7 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getWaveStringAttribute'
 					],
-					'width' => '45px'
+					'width' => '2.4em'
 				],
 
 				'mySelfCardboard.contentDeliveries' => [
@@ -103,7 +123,7 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getCardboardStringAttribute'
 					],
-					'width' => '105px'
+					'width' => '9em'
 				],
 
 				'mySelfSupplier.contentDeliveries' => [
@@ -112,8 +132,10 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getSupplierStringAttribute'
 					],
-					'width' => '75px'
+					'width' => '55px'
 				],
+
+	            'mySelfPiecesRequired.contentDeliveries' => 'warehouse::contentDeliveries.quantityRequiredList',
 
 				'mySelfStock.contentDeliveries' => [
 					'type' => 'iterators.each',
@@ -121,8 +143,17 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getStockStringAttribute'
 					],
-					'width' => '75px'
+					'width' => '45px'
 				],
+
+	            'mySelfPiecesDone.contentDeliveries' => [
+	            	'type' => 'warehouse::contentDeliveries.quantityDoneList',
+	            	'childParameters' => [
+						'type' => 'flat',
+						'property' => 'quantity_done_string',
+					],
+					'width' => '55px'
+	            ],
 
 				'mySelfProductionStatus.contentDeliveries' => [
 					'type' => 'iterators.each',
@@ -139,7 +170,7 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 						'type' => 'function',
 						'function' => 'getStencilName'
 					],
-					'width' => '175px'
+					'width' => '8em'
 				],
 
 				// 'mySelfDeliveries' => 'warehouse::deliveries.orderDelivery',
@@ -147,17 +178,27 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 				// 'mySelfChangeDeliveries' => 'warehouse::contentDeliveries.changeBulkDelivery',
 
 	            'mySelfUnitloadsCount.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsCountList',
-	            'mySelfDataSheets.contentDeliveries' => 'warehouse::contentDeliveries.dataSheetList',
-	            'mySelfPriority.contentDeliveries' => 'warehouse::contentDeliveries.prioritiesList',
+	            'mySelfUnitloadsSizes.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsSizesList',
 
-	            'mySelfPieces.contentDeliveries' => 'warehouse::contentDeliveries.piecesList',
+	            'mySelfGlobalProduce' => 'warehouse::groupedClientsContentDeliveries.globalElaborate',
 
-	            'mySelfDetach.contentDeliveries' => 'warehouse::contentDeliveries.detachList',
+	            // 'mySelfPieces.contentDeliveries' => 'warehouse::contentDeliveries.piecesList',
+
+	            'mySelfGlobalLoad' => 'warehouse::groupedClientsContentDeliveries.globalLoad',
 	            'mySelfLoad.contentDeliveries' => 'warehouse::contentDeliveries.loadButtonsList',
 	            'mySelfUnLoad.contentDeliveries' => 'warehouse::contentDeliveries.unloadButtonsList',
 
+	            'mySelfUnLoad.contentDeliveries' => 'warehouse::contentDeliveries.unloadButtonsList',
 
-
+				'mySelfNotes.contentDeliveries' => [
+					'type' => 'iterators.each',
+					'childParameters' => [
+						'type' => 'function',
+						// 'ellipsis' => true,
+						'function' => 'getDeliveryNotesCompleteString'
+					],
+					'width' => '400px'
+				],
             ]
         ];
 	}

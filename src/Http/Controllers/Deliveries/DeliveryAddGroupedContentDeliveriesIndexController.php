@@ -10,7 +10,7 @@ class DeliveryAddGroupedContentDeliveriesIndexController extends DeliveryAddOrde
 {
 	public function getIndexFieldsArray()
 	{
-		$result = config('warehouse.models.delivery.fieldsGroupsFiles.pickable')::getFieldsGroup();
+		$result = config('warehouse.models.delivery.fieldsGroupsFiles.pickable')::getTracedFieldsGroup();
 
 		$result['fields']['mySelfAddToDelivery'] = 'warehouse::groupedClientsContentDeliveries.addGroupedContentDeliveries';
 

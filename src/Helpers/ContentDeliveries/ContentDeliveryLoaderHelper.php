@@ -42,17 +42,19 @@ class ContentDeliveryLoaderHelper extends ContentDeliveryBaseLoaderHelper
 				return false;
 			}
 
-		if(($missing = $this->getMissingQuantity()) > ($tolerance = $this->getQuantityTolerance()))
-		{
-			$this->addMessage(trans('warehouse::errors.cannotLoadContentDeliveryQuantityToleranceExceeded',
-				[
-					'contentDelivery' => $this->getContentDelivery()->getName(),
-					'missingQuantity' => abs($missing),
-					'tolerance' => $tolerance
-				]));
+		// dd($this->getMissingQuantity());
 
-			return false;
-		}
+		// if(($missing = $this->getMissingQuantity()) > ($tolerance = $this->getQuantityTolerance()))
+		// {
+		// 	$this->addMessage(trans('warehouse::errors.cannotLoadContentDeliveryQuantityToleranceExceeded',
+		// 		[
+		// 			'contentDelivery' => $this->getContentDelivery()->getName(),
+		// 			'missingQuantity' => abs($missing),
+		// 			'tolerance' => $tolerance
+		// 		]));
+
+		// 	return false;
+		// }
 
 		return true;
 	}

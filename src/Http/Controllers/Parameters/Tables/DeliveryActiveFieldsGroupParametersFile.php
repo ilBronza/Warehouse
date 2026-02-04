@@ -15,7 +15,7 @@ class DeliveryActiveFieldsGroupParametersFile extends FieldsGroupParametersFile
 	            'mySelfEdit' => 'links.edit',
 	            'mySelfSee' => 'links.see',
                 'name' => 'flat',
-	            'datetime' => 'dates.date',
+	            'delivery_datetime' => 'dates.date',
 	            'vehicle' => 'vehicles::vehicle',
 	            'assigned_loading_percentage' => 'utilities.milestone',
 	            'contentDeliveries' => 'warehouse::contentDeliveries.contentList',

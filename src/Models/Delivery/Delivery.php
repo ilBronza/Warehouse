@@ -4,8 +4,9 @@ namespace IlBronza\Warehouse\Models\Delivery;
 
 use Carbon\Carbon;
 use IlBronza\Buttons\Button;
-use IlBronza\Clients\Models\Client;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
+use IlBronza\Clients\Models\Client;
+use IlBronza\Ukn\Ukn;
 use IlBronza\Vehicles\Models\Vehicle;
 use IlBronza\Warehouse\Models\BaseWarehouseModel;
 use IlBronza\Warehouse\Models\Delivery\GroupedContentDelivery;
@@ -24,7 +25,7 @@ class Delivery extends BaseWarehouseModel
 	protected $keyType = 'string';
 
 	protected $casts = [
-		'datetime' => 'datetime',
+		'delivery_datetime' => 'datetime',
 		'shipped_at' => 'datetime',
 		'loaded_at' => 'datetime',
 		'deleted_at' => 'datetime'
@@ -78,14 +79,35 @@ class Delivery extends BaseWarehouseModel
 		]);
 	}
 
+	public function getMapUrl() : string
+	{
+		return $this->getKeyedRoute('renderMap');
+	}
+
 	public function scopeCurrent($query)
 	{
-		$query->where('datetime', '>', Carbon::now()->startOfDay()->subDays(2));
+		if(\Auth::id() == 1)
+		{
+			Ukn::w('Ricordarsi di levare le vecchie nel modo corretto');
+			$query->where(function($_query)
+				{
+					$_query->where('delivery_datetime', '>', Carbon::now()->startOfDay()->subDays(1))
+						->orWhereNull('shipped_at');
+				});
+		}
+
+		else
+			$query->where('delivery_datetime', '>', Carbon::now()->startOfDay()->subDays(1));
 	}
 
 	public function contentDeliveries()
 	{
 		return $this->hasMany(ContentDelivery::gpc());
+	}
+
+	public function groupedContentDeliveries()
+	{
+		return $this->hasMany(GroupedContentDelivery::gpc());
 	}
 
 	public function getContentDeliveriesByClient(Client $client) : Collection
@@ -140,6 +162,25 @@ class Delivery extends BaseWarehouseModel
 			$groupedContentDelivery->client_destination_key = $_result->first()->getClientDestinationKey();
 
 			$collection->push($groupedContentDelivery);
+		}
+
+		$collection = $collection->sortBy(function($item)
+		{
+			return $item->getCalculatedSortingIndex();
+		});
+
+		$lastIndex = 0;
+
+		foreach($collection as $groupedContentDelivery)
+		{
+			$index = $groupedContentDelivery->getCalculatedSortingIndex();
+
+			if(! $index)
+				$index = $lastIndex + 1;
+
+			$groupedContentDelivery->sorting_index = $index;
+
+			$lastIndex = $index;
 		}
 
 		return $collection;
@@ -239,12 +280,12 @@ class Delivery extends BaseWarehouseModel
 
 	public function getDateTimeString() : ? string
 	{
-		return $this->datetime?->format('d-m-Y H:i');
+		return $this->delivery_datetime?->format('d-m-Y H:i');
 	}
 
 	public function getDateTime() : ? Carbon
 	{
-		return $this->datetime;
+		return $this->delivery_datetime;
 	}
 
 	public function getShippingStatusColorAttribute()
@@ -329,7 +370,7 @@ class Delivery extends BaseWarehouseModel
 
 	public function getShortName() : string
 	{
-		if (! $datetime = $this->datetime)
+		if (! $datetime = $this->delivery_datetime)
 			return $this->name;
 
 		$pieces = [
@@ -361,6 +402,11 @@ class Delivery extends BaseWarehouseModel
 			'text' => 'deliveries.sendWarnEmail',
 			'icon' => 'envelope'
 		]);
+	}
+
+	public function getDownloadingListUrl() : string
+	{
+		return route('deliveries.printFullLoadingList', [$this]);
 	}
 
 	public function downloadLoadingList()
@@ -395,5 +441,25 @@ class Delivery extends BaseWarehouseModel
 	{
 		return $this->getName();
 	}
+
+	public function getStartingPairs() : array
+	{
+		return ['lat' => 45.712357, 'lng' => 11.672024, 'label' => 'Idealpack'];
+	}
+
+	public function getEndingPairs() : array
+	{
+		return ['lat' => 45.712357, 'lng' => 11.672024, 'label' => 'Idealpack'];
+	}
+
+    public function scopeToShip($query)
+    {
+        return $query->whereNull('shipped_at');
+    }
+
+    public function scopePassed($query)
+    {
+        $query->where('delivery_datetime', '<', Carbon::now());
+    }
 
 }

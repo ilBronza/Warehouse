@@ -41,7 +41,7 @@
 
 				<div class="uk-width-expand uk-text-right">
 					<label for="unitload{{ $unitload->getKey() }}">
-						<i class="fa-solid fa-print"></i>
+						<i class="fa-solid fa-check"></i>
 					</label>
 
 					<input class="uk-checkbox unitload" id="unitload{{ $unitload->getKey() }}" type="checkbox" name="unitloads[]" value="{{ $unitload->getKey() }}">

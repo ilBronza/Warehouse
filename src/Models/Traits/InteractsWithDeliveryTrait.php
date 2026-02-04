@@ -81,6 +81,51 @@ trait InteractsWithDeliveryTrait
 		return $this->morphMany(ContentDelivery::gpc(), 'content');
 	}
 
+	public function getContentDeliveries() : Collection
+	{
+		return $this->contentDeliveries;
+	}
+
+	public function getVacantContentDeliveries() : Collection
+	{
+		return $this->getContentDeliveries()->filter(function($item)
+		{
+			if($item->isLoaded())
+				return false;
+
+			return $item->hasSpaceAvailable();
+		});
+	}
+
+	public function getSortedVacantContentDeliveries() : Collection
+	{
+		return $this->getVacantContentDeliveries()->sortBy(function($item)
+			{
+				return $item->getDelivery()->getDateTime();
+			});
+	}
+
+	public function getFirstVacantContentDelivery() : ? ContentDelivery
+	{
+		return $this->getSortedVacantContentDeliveries()->first();
+	}
+
+	public function getForcedAssignedContentDelivery() : ? ContentDelivery
+	{
+		foreach($this->getContentDeliveries()->sortBy(function($item)
+			{
+				return $item->getDelivery()->getDateTime();
+			}) as $contentDelivery)
+		{
+			if($contentDelivery->isLoaded())
+				continue;
+
+			return $contentDelivery;
+		}
+
+		return null;
+	}
+
 	public function getDeliveries() : Collection
 	{
 		return $this->deliveries;

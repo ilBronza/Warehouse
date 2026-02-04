@@ -2,9 +2,14 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\ContentDeliveries;
 
-use IlBronza\Warehouse\Models\Delivery\GroupedContentDelivery;
+use IlBronza\CRUD\Http\Controllers\Traits\StandardTraits\PackageStandardIndexTrait;
+use IlBronza\Warehouse\Http\Controllers\CRUDWarehousePackageController;
 
-class GroupedContentDeliveryIndexController extends ContentDeliveryIndexController
+class GroupedContentDeliveryIndexController extends CRUDWarehousePackageController
 {
+	use PackageStandardIndexTrait;
+
 	public $configModelClassName = 'groupedContentDelivery';
+	public $avoidCreateButton = true;
+	public $scopes = [];
 }

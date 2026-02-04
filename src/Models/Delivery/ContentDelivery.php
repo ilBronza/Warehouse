@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use IlBronza\Buttons\Button;
 use IlBronza\CRUD\Traits\Model\CRUDCacheTrait;
 use IlBronza\CRUD\Traits\Model\CRUDModelTrait;
+use IlBronza\CRUD\Traits\Model\CRUDReorderableStandardTrait;
 use IlBronza\CRUD\Traits\Model\CRUDUseUuidTrait;
 use IlBronza\CRUD\Traits\Model\PackagedModelsTrait;
 use IlBronza\Clients\Models\Client;
@@ -23,6 +24,8 @@ use function route;
 
 class ContentDelivery extends MorphPivot
 {
+	use CRUDReorderableStandardTrait;
+
 	protected $touches = ['delivery'];
 
 	static $warningValues = [
@@ -48,6 +51,7 @@ class ContentDelivery extends MorphPivot
 
 	protected $casts = [
 		'loaded_at' => 'datetime',
+		'warned_at' => 'datetime'
 	];
 
 	static $deletingRelationships = [];
@@ -173,6 +177,11 @@ class ContentDelivery extends MorphPivot
 		})->sum('quantity');
 	}
 
+	public function getAllocatedQuantity() : int
+	{
+		return $this->getUnitloads()->sum('quantity');		
+	}
+
 	public function getVolumeMcAttribute() : float
 	{
 		return $this->getUnitloads()->sum('volume_mc');
@@ -193,6 +202,11 @@ class ContentDelivery extends MorphPivot
 			return false;
 
 		return true;
+	}
+
+	public function hasSpaceAvailable() : bool
+	{
+		return $this->getAllocatedQuantity() < $this->getQuantityRequired();
 	}
 
 	protected static function booted(): void
@@ -273,6 +287,11 @@ class ContentDelivery extends MorphPivot
 		return $this->getWarningStatusString($this->warned ?? 0);
 	}
 
+	public function hasBeenWarned() : bool
+	{
+		return $this->warned == 1;
+	}
+
 	public function setWarned($warningStatus, bool $save = false)
 	{
 		$this->warned = $warningStatus;
@@ -330,26 +349,13 @@ class ContentDelivery extends MorphPivot
 		return $this->getContent()?->getProductionStatusList();
 	}
 
-	static public function getAddGroupedContentDeliveriesToDeliveryIndexUrl() : string
+	public function getUnitloadsSizeAttribute() : ? string
 	{
-		return app('warehouse')->route('deliveries.addGroupedContentDeliveriesIndex');
+		return $this->getUnitloads()?->first()?->getHotrizontalSizes();
 	}
 
-	public function getAddGroupedContentDeliveriesToDeliveryButton() : Button
+	public function getQuantityDoneAttribute() : float
 	{
-		$button = Button::create([
-			'href' => static::getAddGroupedContentDeliveriesToDeliveryIndexUrl(),
-			'text' => 'warehouse::deliveries.associateDelivery',
-			'icon' => 'plus'
-		]);
-
-		$button->setAjaxTableButton('order', [
-			'openIframe' => true
-		]);
-
-		$button->setPrimary();
-
-		return $button;
+		return $this->getQuantityProduced();
 	}
-
 }

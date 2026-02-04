@@ -22,7 +22,7 @@ class DeliveryAddOrdersIndexController extends DeliveryCRUD
 	public function getIndexFieldsArray()
 	{
 		//DeliveryPickableFieldsGroupParametersFile
-		return config('warehouse.models.delivery.fieldsGroupsFiles.pickable')::getFieldsGroup();
+		return config('warehouse.models.delivery.fieldsGroupsFiles.pickable')::getTracedFieldsGroup();
 	}
 
 	public function getIndexElements()

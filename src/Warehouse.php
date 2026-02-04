@@ -2,11 +2,16 @@
 
 namespace IlBronza\Warehouse;
 
+use Carbon\Carbon;
 use IlBronza\CRUD\Providers\RouterProvider\RoutedObjectInterface;
 use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaPackagesTrait;
 
+use IlBronza\Warehouse\Models\Delivery\Delivery;
+use Illuminate\Support\Str;
+
 use function config;
 use function ff;
+use function trans;
 
 class Warehouse implements RoutedObjectInterface
 {
@@ -48,6 +53,42 @@ class Warehouse implements RoutedObjectInterface
 		$helperClass = $this->getUnitloadDeliveryHelperClass();
 
 		return new $helperClass();
+	}
+
+	static function getDeliveriesMenuItems() : array
+	{
+		return cache()->remember(
+			Str::slug(static::class . 'getDeliveriesMenuItems'),
+			3600 * 24,
+			function()
+			{
+				Carbon::setLocale('it');
+
+				$result = [];
+
+				$deliveries = Delivery::gpc()::current()->orderBy('delivery_datetime')->get();
+
+				foreach($deliveries as $delivery)
+				{
+					$dateName = $delivery->getDatetime()->translatedFormat('l d M');
+
+					if(! isset($result[$dateName]))
+						$result[$dateName] = [
+							'name' => 'deliveryMaster' . $delivery->getKey(),
+							'text' => $dateName,
+							'children' => []
+						];
+
+					$result[$dateName]['children'][] = [
+						'name' => 'delivery' . $delivery->getKey(),
+						'text' => $delivery->getShortName(),
+						'href' => $delivery->getShowUrl()
+					];
+				}
+
+				return $result;
+			}
+		);
 	}
 
     public function manageMenuButtons()

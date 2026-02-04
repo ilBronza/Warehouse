@@ -40,6 +40,8 @@ class Unitload extends BaseModel
 	public ?string $translationFolderPrefix = 'warehouse';
 	protected $keyType = 'string';
 
+	protected $touches = ['production'];
+
 	protected $casts = [
 		'printed_at' => 'datetime',
 		'loaded_at' => 'datetime',
@@ -90,6 +92,12 @@ class Unitload extends BaseModel
 				if (($production = $unitload->production) && ($production instanceof OrderProductPhase))
 					OrderProductPhaseCheckCompletionHelper::gpc()::execute($production);
 			}
+		});
+
+		static::deleting(function ($unitload)
+		{
+			$unitload->content_delivery_id = null;
+			$unitload->saveQuietly();
 		});
 
 		static::deleted(function ($unitload)
@@ -461,5 +469,12 @@ class Unitload extends BaseModel
 			$this->save();
 
 		return $this;
+	}
+
+	public function getHotrizontalSizes() : ? string
+	{
+		$result = array_filter([$this->length_mm, $this->width_mm]);
+
+		return implode(" x ", $result);
 	}
 }

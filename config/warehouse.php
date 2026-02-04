@@ -20,6 +20,8 @@ use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\ContentDeliveryLoadCon
 use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\ContentDeliveryLoadCumulativeController;
 use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\ContentDeliveryPopupController;
 use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\GroupedContentDeliveryIndexController;
+use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\GroupedContentDeliveryReorderController;
+use IlBronza\Warehouse\Http\Controllers\ContentDeliveries\GroupedContentDeliveryUpdateController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryActiveController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddGroupedContentDeliveriesController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddGroupedContentDeliveriesIndexController;
@@ -32,8 +34,11 @@ use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryCreateStoreController
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryDestroyController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryEditUpdateController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryIndexController;
+use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryMapController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryShipController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryShowController;
+use IlBronza\Warehouse\Http\Controllers\GroupedContentDeliveries\GroupedContentDeliveryElaborateController;
+use IlBronza\Warehouse\Http\Controllers\GroupedContentDeliveries\GroupedContentDeliveryLoadController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCreateStoreController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeDestroyController;
 use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeEditUpdateController;
@@ -75,7 +80,7 @@ return [
     		'datatableFieldDelivery' => '12em',
     		'datatableFieldName' => '20em',
 		    'datatableFieldOrderDelivery' => '10em',
-    		'datatableFieldOrderProductPhaseDelivery' => '6em',
+    		'datatableFieldOrderProductPhaseDelivery' => '9em',
     		'datatableFieldAddUnitloads' => '2em',
     		'datatableFieldAddOrders' => '2em',
 		    'datatableFieldOrderHasAllDeliveringUnitloads' => '2em',
@@ -84,7 +89,10 @@ return [
     	],
 		'contentDeliveries' => [
 			'datatableFieldChangeBulkDelivery' => '22em',
+			'datatableFieldUnitloadsSizesList' => '6em',
 			'datatableFieldDetach' => '2em',
+			'datatableFieldQuantityDoneList' => '3em',
+			'datatableFieldQuantityRequiredList' => '3em',
 			'datatableFieldDetachList' => '2em',
 			'datatableFieldLoadCumulative' => '2em',
 			'datatableFieldLoadButtonsList' => '2em',
@@ -94,30 +102,33 @@ return [
 			'datatableFieldContentList' => '12em',
 			'datatableFieldContent' => '10em',
 			'datatableFieldClientsList' => '20em',
-			'datatableFieldDestinationsList' => '12em',
+			'datatableFieldDestinationsList' => '18em',
 			'datatableFieldDataSheetList' => '2em',
 			'datatableFieldPrioritiesList' => '2em',
 			'datatableFieldZonesList' => '2em',
 			'datatableFieldUnitloadsCountList' => '2em',
 			'datatableFieldUnloadButtonsList' => '2em',
-			'datatableFieldContentDeliveriesWarnedAtList' => '10em',
+			'datatableFieldContentDeliveriesWarnedAtList' => '8em',
 			'datatableFieldProductsList' => '4em',
-			'datatableFieldOrdersList' => '4em',
+			'datatableFieldOrdersList' => '5em',
 			'datatableFieldProductDescriptionsList' => '16em',
 			'datatableFieldPiecesList' => '3em'
 		],
 		'groupedClientsContentDeliveries' => [
-			'datatableFieldEntiresList' => '5em',
+			'datatableFieldEntiresList' => '2em',
+			'datatableFieldGlobalLoad' => '2em',
+			'datatableFieldGlobalElaborate' => '2em',
 			'datatableFieldAddGroupedContentDeliveries' => '2em',
 			'datatableFieldContentList' => '2em',
 			'datatableFieldClientsList' => '20em',
-			'datatableFieldDestinationsList' => '12em',
+			'datatableFieldDestinationsList' => '18em',
 			'datatableFieldZonesList' => '2em',
 			'datatableFieldZone' => '2em',
 			'datatableFieldUnitloadsCountList' => '2em',
 			'datatableFieldVolumesList' => '4em',
 			'datatableFieldWeightsList' => '3.3em',
-			'datatableFieldPartialsList' => '2em'
+			'datatableFieldPartialsList' => '2em',
+			'datatableFieldWarnedList' => '2em'
 		]
     ],
 
@@ -144,6 +155,7 @@ return [
 			    'show' => DeliveryRelationshipsManager::class
 		    ],
 		    'controllers' => [
+				'renderMap' => DeliveryMapController::class,
 			    'automaticCreation' => DeliveryAutomaticCreationController::class,
 			    'active' => DeliveryActiveController::class,
 				'index' => DeliveryIndexController::class,
@@ -199,11 +211,16 @@ return [
 	    ],
 	    'groupedContentDelivery' => [
 	    	'class' => GroupedContentDelivery::class,
+            'table' => 'warehouse__deliveries',
 		    'fieldsGroupsFiles' => [
 			    'related' => GroupedContentDeliveryIndexFieldsGroupParametersFile::class,
 		    ],
 		    'controllers' => [
 				'index' => GroupedContentDeliveryIndexController::class,
+				'update' => GroupedContentDeliveryUpdateController::class,
+				'reorder' => GroupedContentDeliveryReorderController::class,
+				'globalLoad' => GroupedContentDeliveryLoadController::class,
+				'globalElaborate' => GroupedContentDeliveryElaborateController::class,
 		    ],
 	    ],
         'unitload' => [

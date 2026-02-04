@@ -25,14 +25,14 @@ class DeliveryPickableFieldsGroupParametersFile extends FieldsGroupParametersFil
 		            'valueAsRowClass' => true
 	            ],
 
-	            'datetime' => [
+	            'delivery_datetime' => [
 		            'type' => 'dates.datetime',
 		            'order' => [
 			            'priority' => 10,
 		            ]
 	            ],
 
-	            'mySelfTime.datetime' => [
+	            'mySelfTime.delivery_datetime' => [
 		            'type' => 'dates.format',
 		            'width' => '25px',
 		            'format' => 'a',

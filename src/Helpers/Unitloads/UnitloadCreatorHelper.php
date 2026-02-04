@@ -169,7 +169,7 @@ class UnitloadCreatorHelper
 		Processing $processing = null
 	) : array
 	{
-		if(! $quantityPerPacking = $loadable->getQuantityPerUnitload())
+		if(! $quantityPerPacking = $parameters['quantity_capacity'] ?? $loadable->getQuantityPerUnitload())
 			throw new \Exception ('Quantity per packing not defined');
 
 		if($quantityRequired / $quantityPerPacking > 60)
@@ -216,7 +216,7 @@ class UnitloadCreatorHelper
 		{
 			if(! ($first = $removable->whereNull('content_delivery_id')->sortBy('quantity')->first()))
 			{
-				if(! $contentDelivery = $removable->pluck('contentDelivery')->unique()->filter()->sortByDesc('delivery.datetime')->first())
+				if(! $contentDelivery = $removable->pluck('contentDelivery')->unique()->filter()->sortByDesc('delivery.delivery_datetime')->first())
 					dd($removable);
 
 				if(! ($first = $removable->where('content_delivery_id', $contentDelivery->getKey())->sortBy('quantity')->first()))
@@ -242,12 +242,17 @@ class UnitloadCreatorHelper
 		return $productionUnitloads;
 	}
 
-	static function provideByModelsQuantity(UnitloadableInterface $loadable, $productionModel, float $quantityRequired = null, array $parameters = [], Processing $processing = null) : Collection
+	static function provideByModelsQuantity(
+		UnitloadableInterface $loadable,
+		$productionModel,
+		float $quantityRequired = null,
+		array $parameters = [],
+		Processing $processing = null) : Collection
 	{
 		if(! $quantityRequired)
 			$quantityRequired = 0;
 
-		if(! $quantityPerPacking = $loadable->getQuantityPerUnitload())
+		if(! $quantityPerPacking = $parameters['quantity_capacity'] ?? $loadable->getQuantityPerUnitload())
 			throw new \Exception ('Quantity per packing not defined');
 
 		if(($quantityRequired !== 1)&&($quantityRequired / $quantityPerPacking > 90))
@@ -263,8 +268,6 @@ class UnitloadCreatorHelper
 				return static::removeQuantityOnExistingUnitloads($productionUnitloads, $quantityRequired);
 
 			$parameters['sequence'] = $productionUnitloads->max('sequence') + 1;
-
-			$created = collect();
 
 			while (($remaining = $quantityRequired - $productionModel->getProductionUnitloadsQuantity()) > 0)
 			{
@@ -283,17 +286,21 @@ class UnitloadCreatorHelper
 				$productionUnitloads->push(
 					$unitload = UnitloadCreatorHelper::createByArray($unitloadParameters, false)
 				);
-
-				$created->push($unitload);
+			
+				UnitloadDeliveryCheckerHelper::gpc()::checkForDeliveryAutoAttaching($unitload);
 			}
 
-			UnitloadDeliveryCheckerHelper::gpc()::checkForDeliveryAutoAttaching($created);
 		// }
 
 		return $productionUnitloads;
 	}
 
-	static function addByModelsQuantity(UnitloadableInterface $loadable, $productionModel, float $quantityRequired, array $parameters = [], Processing $processing = null) : Collection
+	static function addByModelsQuantity(
+		UnitloadableInterface $loadable,
+		$productionModel,
+		float $quantityRequired,
+		array $parameters = [],
+		Processing $processing = null) : Collection
 	{
 		$quantityRequired += $productionModel->getProductionUnitloadsQuantity();
 

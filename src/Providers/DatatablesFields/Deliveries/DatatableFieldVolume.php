@@ -6,6 +6,8 @@ use IlBronza\Datatables\DatatablesFields\DatatableFieldFlatColorClass;
 
 class DatatableFieldVolume extends DatatableFieldFlatColorClass
 {
+	public $decimals = 2;
+	
 	public function transformValue($value)
 	{
 		$maximumVolume = $value->getMaximumVolumeMc();
@@ -20,7 +22,7 @@ class DatatableFieldVolume extends DatatableFieldFlatColorClass
 			$color = 'orange';
 
 		return [
-			number_format($volume, 2),
+			number_format($volume, $this->decimals),
 			$color
 		];
 	}

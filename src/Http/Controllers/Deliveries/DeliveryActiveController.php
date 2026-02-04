@@ -17,7 +17,6 @@ class DeliveryActiveController extends DeliveryIndexController
 		);
 	}
 
-
 	function getIndexElementsRelationsArray() : array
 	{
 		return [

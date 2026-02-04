@@ -67,7 +67,7 @@ class DeliveryAutomaticCreatorHelper
 		{
 			$delivery = Delivery::gpc()::make();
 			$delivery->name = static::_getAutomaticName($date, $name, $delivery);
-			$delivery->datetime = $date->format('Y-m-d') . ' ' . $time;
+			$delivery->delivery_datetime = $date->format('Y-m-d') . ' ' . $time;
 			$delivery->save();
 		}
 

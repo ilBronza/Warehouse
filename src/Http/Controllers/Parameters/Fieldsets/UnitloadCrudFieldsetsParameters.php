@@ -16,8 +16,8 @@ class UnitloadCrudFieldsetsParameters extends FieldsetParametersFile
                 'fields' => [
 
                     'quantity' => ['number' => 'numeric|nullable|min:0'],
-                    // 'quantity_capacity' => ['number' => 'numeric|nullable|min:0'],
-                    // 'quantity_expected' => ['number' => 'numeric|nullable|min:0'],
+                    'quantity_capacity' => ['number' => 'numeric|nullable|min:0'],
+                    'quantity_expected' => ['number' => 'numeric|nullable|min:0'],
                     'pallettype_id' => [
                         'type' => 'select',
                         'value' => $this->getModel()?->getPallettype()?->getKey(),
@@ -28,6 +28,13 @@ class UnitloadCrudFieldsetsParameters extends FieldsetParametersFile
                         ],
                         'list' => $palletArray,
                         'rules' => 'string|required|in:' . implode(",", array_keys($palletArray))
+                    ],
+
+                    'finishing_id' => [
+                        'type' => 'select',
+                        'multiple' => false,
+                        'rules' => 'string|nullable|exists:' . config('products.models.finishing.table') . ',id',
+                        'relation' => 'finishing'
                     ],
                 ],
                 'width' => ["1-3@l", '1-2@m']

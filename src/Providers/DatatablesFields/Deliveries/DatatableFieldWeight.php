@@ -6,6 +6,8 @@ use IlBronza\Datatables\DatatablesFields\DatatableFieldFlatColorClass;
 
 class DatatableFieldWeight extends DatatableFieldFlatColorClass
 {
+	public $decimals = 2;
+
 	public function transformValue($value)
 	{
 		$maximumWeight = $value->getMaximumWeightKg();
@@ -20,7 +22,7 @@ class DatatableFieldWeight extends DatatableFieldFlatColorClass
 			$color = 'orange';
 
 		return [
-			number_format($weight, 2),
+			number_format($weight, $this->decimals),
 			$color
 		];
 	}

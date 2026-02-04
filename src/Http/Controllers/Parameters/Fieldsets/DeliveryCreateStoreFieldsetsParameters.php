@@ -14,7 +14,7 @@ class DeliveryCreateStoreFieldsetsParameters extends FieldsetParametersFile
 		    'base' => [
 			    'fields' => [
 				    'name' => ['text' => 'string|required|max:255'],
-				    'datetime' => ['datetime' => 'date|nullable'],
+				    'delivery_datetime' => ['datetime' => 'date|nullable'],
 				    'vehicle_id' => [
 					    'type' => 'select',
 					    'multiple' => false,

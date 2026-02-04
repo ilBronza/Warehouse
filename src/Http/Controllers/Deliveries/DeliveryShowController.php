@@ -14,17 +14,16 @@ class DeliveryShowController extends DeliveryCRUD
     	if (config('warehouse.models.delivery.options.sendGlobalEmailButton'))
 	    	$this->addNavbarButton($this->getModel()->getSendWarnEmailButton());
 
-	    $this->addNavbarButton($this->getModel()->downloadLoadingList());
+	$this->addNavbarButton($this->getModel()->downloadLoadingList());
 
-	    if(! $this->getModel()->hasBeenShipped())
-	        $this->addNavbarButton(
-		        $this->getModel()->getShipButton()
-	        );
+	if(! $this->getModel()->hasBeenShipped())
+		$this->addNavbarButton(
+			$this->getModel()->getShipButton()
+		);
 
-        else
-	        $this->addNavbarButton(
-				$this->getModel()->getUnshipButton()
-	        );
-
+	else
+		$this->addNavbarButton(
+			$this->getModel()->getUnshipButton()
+		);
     }
 }
