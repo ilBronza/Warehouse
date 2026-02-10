@@ -79,7 +79,7 @@ class GroupedContentDelivery extends BaseWarehouseModel
 		return Client::gpc()::find($clientId);
 	}
 
-	static function getDestinationFromKey(string $key) : Destination
+	static function getDestinationFromKey(string $key) : ? Destination
 	{
 		$pieces = explode("_", $key);
 

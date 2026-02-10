@@ -5,11 +5,10 @@ namespace IlBronza\Warehouse\Helpers\ContentDeliveries;
 use Carbon\Carbon;
 use IlBronza\CRUD\Traits\Helpers\HelperMessageBagTrait;
 use IlBronza\CRUD\Traits\PackagedHelpersTrait;
+use IlBronza\Warehouse\Helpers\Deliveries\DeliveryShipperHelper;
 use IlBronza\Warehouse\Helpers\Unitloads\UnitloadLoaderHelper;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
-
 use Illuminate\Database\Eloquent\Model;
-
 use function abs;
 use function dd;
 use function trans;
@@ -53,7 +52,11 @@ abstract class ContentDeliveryBaseLoaderHelper
 			return false;
 		}
 
-		return $this->__execute();
+		$result = $this->__execute();
+
+		DeliveryShipperHelper::execute($this->getContentDelivery()->getDelivery());
+
+		return $result;
 	}
 
 

@@ -70,6 +70,9 @@ class Warehouse implements RoutedObjectInterface
 
 				foreach($deliveries as $delivery)
 				{
+					if(! $delivery->getDatetime())
+						continue;
+
 					$dateName = $delivery->getDatetime()->translatedFormat('l d M');
 
 					if(! isset($result[$dateName]))

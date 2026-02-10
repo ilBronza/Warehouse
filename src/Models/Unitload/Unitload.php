@@ -22,6 +22,7 @@ use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use const STR_PAD_LEFT;
 use function dd;
 use function str_pad;
@@ -57,6 +58,9 @@ class Unitload extends BaseModel
 
 		static::saved(function ($unitload)
 		{
+			Log::info('Bindello ' . $unitload->getKey() . ' creato da ' . \Auth::user()?->getName());
+			Log::info('Route ' . request()?->route()?->getName());
+
 			if(! $unitload->isSplitted())
 			{
 				if (! $processing = $unitload->processing)
@@ -302,6 +306,11 @@ class Unitload extends BaseModel
 	public function contentDelivery()
 	{
 		return $this->belongsTo(ContentDelivery::gpc());
+	}
+
+	public function getContentDelivery() : ? ContentDelivery
+	{
+		return $this->contentDelivery;
 	}
 
 	public function scopeNotDelivering($query)

@@ -49,7 +49,7 @@ class DeliveryBaseShipperHelper
 		{
 			$this->addMessage(trans('warehouse::errors.' . static::$cantExecuteError,
 				[
-					'contentDelivery' => $this->getContentDelivery()->getName(),
+					'delivery' => $this->getDelivery()->getName(),
 				]));
 
 			return false;

@@ -24,6 +24,9 @@ class DeliveryMapController extends ContentDeliveriesCRUDController
 		{
 			$destination = $groupedContentDelivery->getDestinationFromKey($groupedContentDelivery->getKey());
 
+			if(! $destination)
+				continue;
+
 			$pairs = $destination->getCoordinatesPair();
 
 			$pairs['label'] = $destination->getClient()?->getName();

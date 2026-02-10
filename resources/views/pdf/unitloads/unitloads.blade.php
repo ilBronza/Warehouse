@@ -47,7 +47,11 @@ tr, td
 
 .pagina
 {
-	page-break-after: auto;
+	page-break-before: always;
+}
+
+.pagina:first-child {
+    page-break-before: auto;
 }
 
 h5.small

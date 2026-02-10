@@ -22,6 +22,10 @@ class DeliveryUnitloadHelper extends DeliveryAttacherHelper
 
 		$contentDeliveries = $this->getElements()->pluck('content_delivery_id')->unique()->values();
 
+		foreach($this->getElements() as $unitload)
+			if(! ($contentDelivery = $unitload->getcontentDelivery())->isPartial())
+				$contentDelivery->setPartial(true);
+
 		foreach($distinctProductions as $distinctProduction)
 		{
 			$unitloads = $this->getElements()

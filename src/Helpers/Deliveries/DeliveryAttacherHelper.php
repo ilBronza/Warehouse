@@ -75,7 +75,11 @@ class DeliveryAttacherHelper
 			->first())
 			return $result;
 
-		return $this->attachContent($content);
+		$content->deliveries()->syncWithoutDetaching([$this->getDelivery()->getKey()]);
+
+		return $this->getDelivery()->contentDeliveries()
+			->byContent($content)
+			->first();
 	}
 
 	public function checkOrderProductShippingIntegrity(OrderProduct $orderProduct)

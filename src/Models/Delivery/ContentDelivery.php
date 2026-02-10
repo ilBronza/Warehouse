@@ -17,6 +17,7 @@ use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function array_merge;
 use function is_string;
@@ -215,11 +216,43 @@ class ContentDelivery extends MorphPivot
 			if($contentDelivery->unitloads()->count())
 				DeliveryDetacherHelper::detachContentDelivery($contentDelivery);
 		});
+
+		static::saved(function (ContentDelivery $contentDelivery) {
+			if($contentDelivery->partial)
+			{
+				Log::info('ContentDelivery ' . $contentDelivery->getKey() . ' creato da ' . \Auth::user()?->getName());
+				Log::info('Route ' . request()?->route()?->getName());
+				Log::info(
+				    collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))
+				        ->map(function ($frame) {
+				            return [
+				                'file'     => $frame['file'] ?? null,
+				                'line'     => $frame['line'] ?? null,
+				                'function' => $frame['function'] ?? null,
+				                'class'    => $frame['class'] ?? null,
+				            ];
+				        })
+				        ->filter(fn ($f) => $f['file'])   // solo frame con file reale
+				        ->take(30)                        // ⬅️ massimo 30
+				        ->values()
+				        ->all()
+				);
+
+			}
+		});
 	}
 
 	public function isPartial() : bool
 	{
 		return !! $this->partial;
+	}
+
+	public function setPartial(bool $partial, bool $save = true) : self
+	{
+		$this->partial = $partial;
+		$this->save();
+
+		return $this;
 	}
 
 	public function getDetachUrl() : string

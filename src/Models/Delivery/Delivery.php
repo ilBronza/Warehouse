@@ -36,6 +36,11 @@ class Delivery extends BaseWarehouseModel
 		return $query->whereNull('shipped_at');
 	}
 
+    public function scopeToday($query)
+    {
+        $query->whereDate('delivery_datetime', Carbon::today());
+    }
+
 	static public function getAddOrdersToDeliveryIndexUrl() : string
 	{
 		return app('warehouse')->route('deliveries.addOrdersIndex');
@@ -82,6 +87,14 @@ class Delivery extends BaseWarehouseModel
 	public function getMapUrl() : string
 	{
 		return $this->getKeyedRoute('renderMap');
+	}
+
+	public function scopeNotFullyLoaded($query)
+	{
+		$query->whereHas('contentDeliveries', function($_query)
+		{
+			$_query->whereNull('loaded_at');
+		});
 	}
 
 	public function scopeCurrent($query)
@@ -351,7 +364,7 @@ class Delivery extends BaseWarehouseModel
 		return !! $this->getShippedAt();
 	}
 
-	private function getHourString($datetime)
+	public function getHourString($datetime)
 	{
 		if (($hour = $datetime->hour) < 8)
 			return ' - mat1';
@@ -384,7 +397,6 @@ class Delivery extends BaseWarehouseModel
 			$pieces[] = 'FIP';
 
 		return implode(' ', $pieces);
-
 	}
 
     public function getClients() : ? Collection

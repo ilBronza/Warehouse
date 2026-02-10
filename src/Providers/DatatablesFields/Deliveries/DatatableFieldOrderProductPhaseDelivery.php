@@ -18,7 +18,7 @@ class DatatableFieldOrderProductPhaseDelivery extends DatatableFieldFlatColorCla
 
 		foreach($deliveries as $delivery)
 			// $result[] = $delivery->delivery_datetime?->format('d/m H:i');
-			$result[] = $delivery->getShortName();
+			$result[] = $delivery->getShortNameForProduction();
 
 		$closer = $deliveries->sortBy('delivery_datetime')->first();
 

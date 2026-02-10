@@ -40,7 +40,7 @@ class DeliveryPickableFieldsGroupParametersFile extends FieldsGroupParametersFil
 	            ],
 
 	            'name' => 'warehouse::deliveries.name',
-	            'mySelfAddToDelivery' => 'warehouse::deliveries.addOrders',
+				'mySelfAddToDelivery' => 'warehouse::deliveries.addOrders',
 
 	            'mySelfOrdersCompletion' => [
 		            'type' => 'function',

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 class DeliveryShipperHelper extends DeliveryBaseShipperHelper
 {
 	static $classConfigPrefix = 'shipperHelper';
+	static string $cantExecuteError = 'cantBeShipped';
 
 	public function canExecute() : bool
 	{
@@ -18,7 +19,12 @@ class DeliveryShipperHelper extends DeliveryBaseShipperHelper
 				]));
 
 			return false;
+		}
 
+		foreach($this->getDelivery()->getContentDeliveries() as $contentDelivery)
+		{
+			if(! $contentDelivery->isLoaded())
+				return false;
 		}
 
 		return true;
