@@ -258,6 +258,14 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'rules' => []
 					],
 
+					'printClientCustomSonusUnitload' => [
+						'type' => 'button',
+						'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+						'label' => trans('warehouse::unitloads.printSelectedCustomSonus'),
+						'fasIcon' => 'file-pdf',
+						'rules' => []
+					],
+
 					//this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
 					'printTotalUnitloads' => [
 						'type' => 'button',
@@ -285,6 +293,13 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 				'width' => ["1-3@l", '1-2@m']
 			],
 		];
+
+
+		if(stripos($client->getName(), 'Psafe') === false)
+		{
+			unset($result['selection']['fields']['printClientCustomSonusUnitload']);
+		}
+
 
 		if (! $client->hasCustomUnitloadPdf())
 		{

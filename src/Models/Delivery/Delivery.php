@@ -99,18 +99,18 @@ class Delivery extends BaseWarehouseModel
 
 	public function scopeCurrent($query)
 	{
-		if(\Auth::id() == 1)
-		{
-			Ukn::w('Ricordarsi di levare le vecchie nel modo corretto');
+		// if(\Auth::id() == 1)
+		// {
+		// 	Ukn::w('Ricordarsi di levare le vecchie nel modo corretto');
 			$query->where(function($_query)
 				{
 					$_query->where('delivery_datetime', '>', Carbon::now()->startOfDay()->subDays(1))
 						->orWhereNull('shipped_at');
 				});
-		}
+		// }
 
-		else
-			$query->where('delivery_datetime', '>', Carbon::now()->startOfDay()->subDays(1));
+		// else
+		// 	$query->where('delivery_datetime', '>', Carbon::now()->startOfDay()->subDays(1));
 	}
 
 	public function contentDeliveries()

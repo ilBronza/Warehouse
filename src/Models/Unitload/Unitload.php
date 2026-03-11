@@ -61,7 +61,7 @@ class Unitload extends BaseModel
 			Log::info('Bindello ' . $unitload->getKey() . ' creato da ' . \Auth::user()?->getName());
 			Log::info('Route ' . request()?->route()?->getName());
 
-			if(! $unitload->isSplitted())
+			if((! $unitload->isSplitted())&&($unitload->isCompleted()))
 			{
 				if (! $processing = $unitload->processing)
 				{

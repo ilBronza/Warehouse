@@ -155,10 +155,13 @@ class ContentDelivery extends MorphPivot
 		return $query->whereHas('content.order', function($_query)
 		{
 			$_query->orderBy('client_id');
-		});
-		             
+		});		             
 	}
 
+	public function scopeNotLoaded($query)
+	{
+		return $query->whereNull('loaded_at');
+	}
 
 	public function getQuantityRequired() : ? float
 	{

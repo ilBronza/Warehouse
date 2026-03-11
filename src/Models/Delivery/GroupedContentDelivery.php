@@ -92,7 +92,7 @@ class GroupedContentDelivery extends BaseWarehouseModel
 	{
 		$pieces = explode("_", $key);
 
-		return ContentDelivery::where('delivery_id', $pieces[0])->with('content.order')->get()->filter(function($item) use($pieces)
+		return ContentDelivery::gpc()::where('delivery_id', $pieces[0])->with('content.order')->get()->filter(function($item) use($pieces)
 			{
 				if($item->getContent()?->getOrder()?->client_id != $pieces[1])
 					return false;
@@ -140,6 +140,11 @@ class GroupedContentDelivery extends BaseWarehouseModel
 			return true;
 
 		return false;
+	}
+
+	public function getPrintLoadingListUrl() : string
+	{
+		return route('groupedContentDeliveries.printLoadingList', ['groupedContentDelivery' => $this->client_destination_key]);
 	}
 
 

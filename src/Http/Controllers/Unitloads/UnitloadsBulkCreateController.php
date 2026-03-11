@@ -117,11 +117,11 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 
 	public function getCustomUnitloadPrinterHelper($selectedUnitloads) : string
 	{
-		$clientString = ucfirst(
-			Str::camel(
-				$selectedUnitloads->first()->getProduction()->getclient()->getSlug()
-			)
-		);
+        $clientString = ucfirst(
+            Str::camel(
+                $selectedUnitloads->first()->getProduction()->getUnitloadPrinterHelperName()
+            )
+        );
 
 		return 'App\Providers\Helpers\Warehouse\CustomUnitloadsHelpers\\' . $clientString . 'UnitloadPrinterHelper';
 	}
@@ -135,9 +135,32 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         return $helper::printTotalUnitloads($selectedUnitloads);        
     }
 
+    public function bulkPrintSonusCustom()
+    {
+        $selectedUnitloads = $this->getSelectedUnitloads();
+
+        if($productExtraFields = $selectedUnitloads->first()?->getLoadable()?->extraFields)
+        {
+            $productExtraFields->client_psafe_sonus_faber_boolean = true;
+            $productExtraFields->saveQuietly();
+        }
+
+        $helper = $this->getCustomUnitloadPrinterHelper($selectedUnitloads);
+
+        return $helper::printUnitloads($selectedUnitloads);
+
+    }
+
 	public function bulkPrintCustom()
 	{
 		$selectedUnitloads = $this->getSelectedUnitloads();
+
+        if($productExtraFields = $selectedUnitloads->first()?->getLoadable()?->extraFields)
+        {
+            $productExtraFields->client_psafe_sonus_faber_boolean = false;
+            $productExtraFields->saveQuietly();
+        }
+
 
 		$helper = $this->getCustomUnitloadPrinterHelper($selectedUnitloads);
 
@@ -221,6 +244,9 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 
         if($request->input('printClientCustomUnitload', false))
             return $this->bulkPrintCustom();
+
+        if($request->input('printClientCustomSonusUnitload', false))
+            return $this->bulkPrintSonusCustom();
 
         if($request->input('printTotalUnitloads', false))
             return $this->bulkPrintTotal();

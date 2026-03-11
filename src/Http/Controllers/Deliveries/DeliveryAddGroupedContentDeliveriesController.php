@@ -2,7 +2,6 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Deliveries;
 
-use IlBronza\Warehouse\Helpers\Deliveries\DeliveryOrderProductHelper;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use Illuminate\Http\Request;
 
@@ -29,11 +28,12 @@ class DeliveryAddGroupedContentDeliveriesController extends DeliveryCRUD
 				});
 
 			foreach($groupedContentDeliveries->contentDeliveries as $contentDelivery)
-				$orderProducts->push(
-					$contentDelivery->getContent()
-				);
+			{
+				$contentDelivery->delivery_id = $delivery->getKey();
+				$contentDelivery->save();
+			}
 		}
 
-		return DeliveryOrderProductHelper::attachOrderProductsToDelivery($delivery, $orderProducts)->getResponse();
+		return view('datatables::utilities.closeIframe', ['reloadAllTables' => true]);
 	}
 }

@@ -16,5 +16,7 @@ return [
 
 	'printSelected' => 'Stampa bindello IP',
 	'printSelectedCustom' => 'Stampa bindello cliente',
+	'printSelectedCustomSonus' => 'SONUS',
+
 	'printTotal' => 'Stampa bindello IP + Cliente',
 ];

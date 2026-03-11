@@ -13,15 +13,10 @@ class DeliveryShowFieldsetsParameters extends FieldsetParametersFile
 	    	return [];
 
 	    return [
-		    'name' => [
+		    'parameters' => [
 				'showLegend' => false,
 				'vertical' => true,
 			    'fields' => [
-				    'name' => [
-						'type' => 'text',
-						'rules' => 'string|required|max:255',
-						'vertical' => true,
-				    ],
 				    'delivery_datetime' => [
 				    	'type' => 'datetime',
 				    	'rules' => 'date|nullable',
@@ -33,21 +28,7 @@ class DeliveryShowFieldsetsParameters extends FieldsetParametersFile
 					    'multiple' => false,
 					    'rules' => 'string|nullable|exists:' . config('vehicles.models.vehicle.table') . ',id',
 					    'relation' => 'vehicle'
-				    ],
-					'route-distance' => [
-						'type' => 'text',
-						'value' => 0,
-						'disabled' => true,
-						'rules' => 'string|nullable|max:255',
-						'vertical' => true,
-					],
-					'route-duration' => [
-						'type' => 'text',
-						'value' => 0,
-						'disabled' => true,
-						'rules' => 'string|nullable|max:255',
-						'vertical' => true,
-					],
+				    ]
 			    ],
 			    'width' => ['medium'],
 		    ],

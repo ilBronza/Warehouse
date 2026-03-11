@@ -249,6 +249,9 @@ class UnitloadCreatorHelper
 		array $parameters = [],
 		Processing $processing = null) : Collection
 	{
+		if(! $productionModel)
+			return collect();
+
 		if(! $quantityRequired)
 			$quantityRequired = 0;
 

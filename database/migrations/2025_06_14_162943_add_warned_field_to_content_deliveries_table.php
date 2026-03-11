@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table(config('warehouse.models.contentDelivery.table'), function (Blueprint $table) {
-	        $table->smallInteger('warned')->nullable()->after('sorting_index');
-	        $table->timestamp('warned_at')->nullable()->after('sorting_index');
+	        $table->smallInteger('warned')->nullable();//->after('sorting_index');
+	        $table->timestamp('warned_at')->nullable();//->after('sorting_index');
         });
     }
 

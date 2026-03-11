@@ -52,17 +52,10 @@ class DeliveryPickableFieldsGroupParametersFile extends FieldsGroupParametersFil
 
 	            'vehicle' => 'vehicles::vehicle',
 	            'assigned_loading_percentage' => 'utilities.milestone',
-	            'contentDeliveries' => 'warehouse::contentDeliveries.contentList',
-	            'mySelfClients.contentDeliveries' => 'warehouse::contentDeliveries.clientsList',
-	            'mySelfDestinations.contentDeliveries' => 'warehouse::contentDeliveries.destinationsList',
-	            'mySelfZone.contentDeliveries' => 'warehouse::contentDeliveries.zonesList',
-
-	            'mySelfOrdersWarnedList' => [
-		            'type' => 'function',
-		            // 'function' => 'getOrdersString',
-		            'function' => 'TODO_DOGODO_GRAVE_getClientsWarned',
-		            'width' => '70px'
-	            ],
+				'groupedClientsContentDeliveries' => 'warehouse::groupedClientsContentDeliveries.contentList',
+				'mySelfClients.groupedClientsContentDeliveries' => 'warehouse::groupedClientsContentDeliveries.clientsList',
+				'mySelfDestinations.groupedClientsContentDeliveries' => 'warehouse::groupedClientsContentDeliveries.destinationsList',
+				'mySelfZone.groupedClientsContentDeliveries' => 'warehouse::groupedClientsContentDeliveries.zonesList',
 
 	            'mySelfOrdersNotesList' => [
 		            'visible' => false,
@@ -78,16 +71,8 @@ class DeliveryPickableFieldsGroupParametersFile extends FieldsGroupParametersFil
 		            'width' => '40px'
 	            ],
 
-	            'mySelfUnitloads.contentDeliveries' => 'warehouse::contentDeliveries.unitloadsCountList',
+				'mySelfUnitloads.groupedClientsContentDeliveries' => 'warehouse::groupedClientsContentDeliveries.unitloadsCountList',
 	            'shipping_status_color' => 'color',
-	            'mySelfPartial.contentDeliveries' => [
-		            'translatedName' => trans('warehouse::fields.partial'),
-		            'type' => 'iterators.each',
-		            'childParameters' => [
-			            'type' => 'boolean',
-			            'property' => 'partial'
-		            ]
-	            ],
             ]
         ];
 	}

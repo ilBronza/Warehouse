@@ -8,6 +8,8 @@ class DatatableFieldClientsList extends DatatableFieldGroupedContentDelivery
 
 	public function _transformValue($value)
 	{
-		return $value->first()?->getContent()->getClient()->getName();
+		$string = $value->first()?->getContent()->getClient()->getName();
+
+		return "<span class=\"uk-text-truncate\">{$string}</span>";
 	}
 }

@@ -25,11 +25,12 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 				'warned_at' => [
 					'type' => 'editor.toggle',
 					'reloadTable' => true,
-					'falseIcon' => 'phone'
+					'falseIcon' => 'phone',
+	            	'width' => '12em'
 				],
 	            'mySelfWarnedAtList.contentDeliveries' => 'warehouse::contentDeliveries.contentDeliveriesWarnedAtList',
 
-	            'mySelfPrintRetiringList.firstContentDelivery' => [
+	            'mySelfPrintRetiringList' => [
 					'type' => 'links.link',
 					'target' => '_blank',
 		            'function' => 'getPrintLoadingListUrl',
@@ -37,6 +38,14 @@ class GroupedContentDeliveryIndexFieldsGroupParametersFile extends FieldsGroupPa
 		            'faIcon' => 'rectangle-list',
 		            'width' => '45px'
 	            ],
+	            // 'mySelfPrintRetiringList.firstContentDelivery' => [
+				// 	'type' => 'links.link',
+				// 	'target' => '_blank',
+		        //     'function' => 'getPrintLoadingListUrl',
+		        //     'variable' => 'delivery',
+		        //     'faIcon' => 'rectangle-list',
+		        //     'width' => '45px'
+	            // ],
 
 	            'client' => 'clients::client.client',
 

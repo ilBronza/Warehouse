@@ -23,7 +23,10 @@ class DatatableFieldPrioritiesList extends DatatableFieldEach
 	{
 		return $value->map(function ($item)
 		{
-			return $this->getItemValue($item->getContent()->getOrder());
+			if(($item->getContent())&&($item->getContent()->getOrder()))
+				return $this->getItemValue($item->getContent()->getOrder());
+
+			return [null, null];
 		});
 	}
 }
