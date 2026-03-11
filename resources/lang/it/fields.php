@@ -53,4 +53,8 @@ return [
 	'quantity_required' => 'Pezzi richiesti',
 	'deliveriesTime' => 'Programma consegna',
 	'warnedList' => 'Avvisati'
+	'status_id' => 'Id status',
+	'mySelfWeight' => 'Peso',
+	'clients' => 'Clienti',
+	'mySelfOrdersWarnedList' => 'Lista ordini segnalati',
 ];
