@@ -74,6 +74,14 @@ use IlBronza\Warehouse\Providers\RelationshipsManagers\DeliveryRelationshipsMana
 return [
     'routePrefix' => 'ibWarehouse',
 
+    'defaultRoles' => [
+        'superadmin',
+        'administrator',
+        'warehouse',
+    ],
+
+    'routeRoles' => [
+    ],
 
     'datatableFieldWidths' => [
     	'deliveries' => [

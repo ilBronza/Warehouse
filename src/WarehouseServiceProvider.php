@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse;
 
 use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaServiceProviderPackagesTrait;
+use IlBronza\Warehouse\Http\Middleware\WarehouseMiddlewareRolesPermissions;
 use Illuminate\Support\ServiceProvider;
 
 class WarehouseServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class WarehouseServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'warehouse');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
+        $this->app['router']->aliasMiddleware('warehouse.roles', WarehouseMiddlewareRolesPermissions::class);
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {

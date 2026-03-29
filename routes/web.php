@@ -4,7 +4,7 @@ use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCRUDController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadsBulkCreateController;
 
 Route::group([
-	'middleware' => ['web', 'auth'],
+	'middleware' => ['web', 'auth', 'warehouse.roles'],
 	'prefix' => 'warehouse-management',
 	'as' => config('warehouse.routePrefix')
 	],
