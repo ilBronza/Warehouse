@@ -11,6 +11,9 @@
 			<span class="uk-float-right">
 				@include('warehouse::unitloads.buttons._printButton')
 				@include('warehouse::unitloads.buttons._splitButton')
+				@if($unitload->content_delivery_id)
+					@include('warehouse::unitloads.buttons._detachFromDeliveryButton')
+				@endif
 			</span>
 		</div>
 		<div class="uk-card-body">

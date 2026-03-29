@@ -35,5 +35,8 @@ class DeliveryDetacherHelper
 			dd('occuparsi del check delle quantità');
 
 		$unitload->save();
+
+		$contentDelivery->partial = true;
+		$contentDelivery->save();
 	}
 }

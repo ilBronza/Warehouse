@@ -38,7 +38,9 @@ class UnitloadPrinterHelper
 
 	public function setUnitloadPrinted(Unitload $unitload)
 	{
-		$unitload->printed_at = Carbon::now();
+		if(! $unitload->printed_at)
+			$unitload->printed_at = Carbon::now();
+
 		$unitload->printed_by = Auth::id();
 		$unitload->placeholder = false;
 		$unitload->save();

@@ -67,6 +67,8 @@ class Unitload extends BaseModel
 				{
 					$production = $unitload->production;
 
+					dd('qua sta il problema');
+
 					if(! $processing = Processing::where('user_id', Auth::id())->orderByDesc('ended_at')->where('ended_at', '>', Carbon::now()->subMinutes(15))->first())
 					{
 						$processingParameters = [
@@ -235,6 +237,11 @@ class Unitload extends BaseModel
 	public function getStoreSplitUrl()
 	{
 		return $this->getKeyedRoute('split');
+	}
+
+	public function getDetachFromDeliveryUrl()
+	{
+		return $this->getKeyedRoute('detachFromDelivery');
 	}
 
 	public function isCompleted() : bool

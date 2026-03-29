@@ -4,7 +4,7 @@
 	<div class="uk-card uk-card-small uk-card-default uk-card-body uk-margin">
 		<div class="uk-card-header">
 			<h4 class="uk-card-title">
-				@if($order = $child->getOrder())
+				@if($order = $child?->getOrder())
 					<a href="{{ $order->getEditUrl() }}">{!! FaIcon::edit() !!} Modifica
 						ordine {{ $order->getName() }}</a> -
 				@endif

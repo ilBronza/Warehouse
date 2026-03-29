@@ -67,7 +67,7 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'disabled' => true
 					],
 				],
-				'width' => ["1-3@l", '1-2@m']
+				'width' => ["large"]
 			],
 			'destination' => [
 				'translationPrefix' => 'warehouse::fields',
@@ -92,7 +92,7 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 					],
 
 				],
-				'width' => ["1-3@l", '1-2@m']
+				'width' => ["large"]
 			],
 			'details' => [
 				'translationPrefix' => 'warehouse::fields',
@@ -107,70 +107,61 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 						'rules' => 'string|nullable|max:1024'
 					],
 				],
-				'width' => ["1-3@l", '1-2@m']
+				'width' => ["large"]
 			],
-			'createdunitloads' => [
-				'translationPrefix' => 'warehouse::fields',
-				'fields' => [],
-				'view' => [
-					'name' => 'warehouse::unitloads.previous'
-				],
-				'width' => ['1-1']
-			],
-
 			'newUnitloads' => [
 				'translationPrefix' => 'warehouse::fields',
 				'fields' => [
 					'pallettype_id' => [
 						'type' => 'select',
 						'value' => $orderProduct?->getPallettypeItem()?->getKey(),
-						'opener' => [
-							'event' => 'change',
-							'targetName' => 'save_pallettype_id_on',
-							'required' => true
-						],
+						// 'opener' => [
+						// 	'event' => 'change',
+						// 	'targetName' => 'save_pallettype_id_on',
+						// 	'required' => true
+						// ],
 						'list' => $palletArray,
 						'rules' => 'string|required|in:' . implode(",", array_keys($palletArray))
 					],
-					'save_pallettype_id_on' => [
-						'closed' => true,
-						'label' => 'Salva bancale su',
-						'type' => 'radio',
-						'required' => false,
-						'list' => [
-							'product' => 'Prodotto',
-							'client' => 'Cliente',
-							'nothing' => 'Niente, è solo per questa volta',
-						],
-						'rules' => 'string|nullable|in:product,client,nothing',
-						'value' => [],
-					],
+					// 'save_pallettype_id_on' => [
+					// 	'closed' => true,
+					// 	'label' => 'Salva bancale su',
+					// 	'type' => 'radio',
+					// 	'required' => false,
+					// 	'list' => [
+					// 		'product' => 'Prodotto',
+					// 		'client' => 'Cliente',
+					// 		'nothing' => 'Niente, è solo per questa volta',
+					// 	],
+					// 	'rules' => 'string|nullable|in:product,client,nothing',
+					// 	'value' => [],
+					// ],
 
 					'finishing_id' => [
 						'type' => 'select',
 						'value' => $orderProduct?->getFinishingItem()?->getKey(),
-						'opener' => [
-							'event' => 'change',
-							'targetName' => 'save_finishing_id_on',
-							'required' => true
-						],
+						// 'opener' => [
+						// 	'event' => 'change',
+						// 	'targetName' => 'save_finishing_id_on',
+						// 	'required' => true
+						// ],
 						'list' => $finishingArray,
 						'rules' => 'string|required|in:' . implode(',', array_keys($finishingArray))
 					],
 
-					'save_finishing_id_on' => [
-						'closed' => true,
-						'label' => 'Salva finitura su',
-						'type' => 'radio',
-						'required' => false,
-						'list' => [
-							'product' => 'Prodotto',
-							'client' => 'Cliente',
-							'nothing' => 'Niente, è solo per questa volta',
-						],
-						'rules' => 'string|nullable|in:product,client,nothing',
-						'value' => [],
-					],
+					// 'save_finishing_id_on' => [
+					// 	'closed' => true,
+					// 	'label' => 'Salva finitura su',
+					// 	'type' => 'radio',
+					// 	'required' => false,
+					// 	'list' => [
+					// 		'product' => 'Prodotto',
+					// 		'client' => 'Cliente',
+					// 		'nothing' => 'Niente, è solo per questa volta',
+					// 	],
+					// 	'rules' => 'string|nullable|in:product,client,nothing',
+					// 	'value' => [],
+					// ],
 
 					'calculated_total_pieces' => [
 						'type' => 'number',
@@ -216,82 +207,105 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 				'view' => [
 					'name' => 'unitloads.creationScripts'
 				],
-				'width' => ["1-3@l", '1-2@m']
+				'width' => ["large"]
 			],
-			'selection' => [
-				'translationPrefix' => 'warehouse::fields',
-				'fields' => [
-					'from' => [
-						'type' => 'number',
-						'label' => trans('warehouse::fields.select_from'),
-						'rules' => []
-					],
-					'to' => [
-						'type' => 'number',
-						'label' => trans('warehouse::fields.select_to'),
-						'rules' => []
-					],
-					'all' => [
-						'type' => 'radio',
-						'default' => false,
-						'label' => trans('warehouse::fields.selection'),
-						'list' => [
-							'true' => 'Seleziona tutti',
-							'false' => 'Deseleziona tutti'
+			'unitloads' => [
+				'fields' => [],
+				'fieldsets' => [
+					'createdunitloads' => [
+						'translationPrefix' => 'warehouse::fields',
+						'fields' => [],
+						'view' => [
+							'name' => 'warehouse::unitloads.previous'
 						],
-						'rules' => ['nullable']
+						'width' => ['expand']
 					],
-					'print' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
-						'label' => trans('warehouse::unitloads.printSelected'),
-						'fasIcon' => 'file-pdf',
-						'rules' => []
-					],
+					'selection' => [
+						'translationPrefix' => 'warehouse::fields',
+						'fields' => [
+							'from' => [
+								'type' => 'number',
+								'label' => trans('warehouse::fields.select_from'),
+								'rules' => []
+							],
+							'to' => [
+								'type' => 'number',
+								'label' => trans('warehouse::fields.select_to'),
+								'rules' => []
+							],
+							'all' => [
+								'type' => 'radio',
+								'default' => false,
+								'label' => trans('warehouse::fields.selection'),
+								'list' => [
+									'true' => 'Seleziona tutti',
+									'false' => 'Deseleziona tutti'
+								],
+								'rules' => ['nullable']
+							],
+							'recalculate' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.recalculateUnitloads'),
+								'fasIcon' => 'square-root-variable',
+								'rules' => []
+							],
 
-					//this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
-					'printClientCustomUnitload' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
-						'label' => trans('warehouse::unitloads.printSelectedCustom'),
-						'fasIcon' => 'file-pdf',
-						'rules' => []
-					],
+							'print' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.printSelected'),
+								'fasIcon' => 'file-pdf',
+								'rules' => []
+							],
 
-					'printClientCustomSonusUnitload' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
-						'label' => trans('warehouse::unitloads.printSelectedCustomSonus'),
-						'fasIcon' => 'file-pdf',
-						'rules' => []
-					],
+							//this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
+							'printClientCustomUnitload' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.printSelectedCustom'),
+								'fasIcon' => 'file-pdf',
+								'rules' => []
+							],
 
-					//this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
-					'printTotalUnitloads' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
-						'label' => trans('warehouse::unitloads.printTotal'),
-						'fasIcon' => 'file-pdf',
-						'rules' => []
-					],
+							'printClientCustomSonusUnitload' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.printSelectedCustomSonus'),
+								'fasIcon' => 'file-pdf',
+								'rules' => []
+							],
 
-					'reset' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-large'],
-						'label' => trans('warehouse::unitloads.resetSelected'),
-						'fasIcon' => 'refresh',
-						'rules' => []
-					],
-					'delete' => [
-						'type' => 'button',
-						'htmlClasses' => ['uk-button-danger', 'uk-button-large'],
-						'label' => trans('warehouse::unitloads.deleteSelected'),
-						'fasIcon' => 'trash',
-						'rules' => []
+							//this name has to be the same as the one in UnitloadsBulkCreateController@bulkStore
+							'printTotalUnitloads' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-primary', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.printTotal'),
+								'fasIcon' => 'file-pdf',
+								'rules' => []
+							],
+
+							'reset' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-large'],
+								'label' => trans('warehouse::unitloads.resetSelected'),
+								'fasIcon' => 'refresh',
+								'rules' => []
+							],
+							'delete' => [
+								'type' => 'button',
+								'htmlClasses' => ['uk-button-danger', 'uk-button-large'],
+								'label' => trans('warehouse::unitloads.deleteSelected'),
+								'fasIcon' => 'trash',
+								'rules' => []
+							],
+						],
+						'width' => ["large"]
 					],
 				],
-				'width' => ["1-3@l", '1-2@m']
+				'width' => ["1-1"]
 			],
+
 		];
 
 

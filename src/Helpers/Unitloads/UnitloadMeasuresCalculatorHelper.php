@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse\Helpers\Unitloads;
 
 use IlBronza\CRUD\Traits\PackagedHelpersTrait;
+use IlBronza\Ukn\Ukn;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 
 class UnitloadMeasuresCalculatorHelper
@@ -19,6 +20,13 @@ class UnitloadMeasuresCalculatorHelper
 		$palletHeight = $unitload->getPallettype()?->getHeightMm() ?? 144;
 
 		$neatHeight = $height - $palletHeight;
+
+		if($neatHeight < 0)
+		{
+			Ukn::e("problemi di calcolo altezza bancale: {$neatHeight} ottenuto da height:{$height} - palletHeight:{$palletHeight}");
+			$neatHeight = $palletHeight;
+		}
+
 		$productRealHeight = $neatHeight * ($unitload->getQuantity() / $unitload->getQuantityCapacity());
 
 		return $productRealHeight + $palletHeight;

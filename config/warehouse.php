@@ -60,6 +60,7 @@ use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\GroupedContentDelivery
 use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\PallettypeFieldsGroupParametersFile;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadAssociateToDeliveryController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadDestroyController;
+use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadDetachFromDeliveryController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadEditUpdateController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadPrintController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadSplitController;
@@ -241,6 +242,7 @@ return [
 	        ],
             'controllers' => [
 	            'associateToDelivery' => UnitloadAssociateToDeliveryController::class,
+	            'detachFromDelivery' => UnitloadDetachFromDeliveryController::class,
 	            'index' => UnitloadPrintController::class,
 	            'print' => UnitloadPrintController::class,
 	            'split' => UnitloadSplitController::class,

@@ -52,9 +52,10 @@ return [
 	'mySelfPrintLoadingList' => 'Lista di carico',
 	'quantity_required' => 'Pezzi richiesti',
 	'deliveriesTime' => 'Programma consegna',
-	'warnedList' => 'Avvisati'
+	'warnedList' => 'Avvisati',
 	'status_id' => 'Id status',
 	'mySelfWeight' => 'Peso',
 	'clients' => 'Clienti',
 	'mySelfOrdersWarnedList' => 'Lista ordini segnalati',
+	'partialDeliveriesList' => 'Contenuto sped'
 ];

@@ -149,4 +149,17 @@ trait InteractsWithDeliveryTrait
 		return array_unique($result);
 	}
 
+	public function getDeliveriesDataArray() : array
+	{
+		$result = [];
+
+		foreach ($this->getDeliveringChildren() as $child)
+			$result = array_merge($child->getDeliveriesDataArray());
+
+		foreach ($deliveries = $this->getDeliveries() as $delivery)
+			$result[] = "{$delivery->pivot->quantity_required} - " . ($delivery->pivot->partial ? 'parz' : 'int');
+
+		return array_unique($result);
+	}
+
 }

@@ -18,6 +18,7 @@ Route::group([
 		{
 			Route::put('{groupedContentDelivery}', [Warehouse::getController('groupedContentDelivery', 'update'), 'update'])->name('update');
 
+			//GroupedContentDeliveryLoadController
 			Route::get('{groupedContentDelivery}/global-load', [Warehouse::getController('groupedContentDelivery', 'globalLoad'), 'globalLoad'])->name('globalLoad');
 
 			//GroupedContentDeliveryElaborateController
@@ -146,6 +147,7 @@ Route::group([
 			// UnitloadPrintController
 			Route::get('{unitload}/print', [Warehouse::getController('unitload', 'print'), 'print'])->name('unitloads.print');
 			Route::get('{unitload}/reset-printed-at', [Warehouse::getController('unitload', 'resetPrintedAt'), 'resetPrintedAt'])->name('unitloads.resetPrintedAt');
+			Route::get('{unitload}/detach-from-delivery', [Warehouse::getController('unitload', 'detachFromDelivery'), 'detach'])->name('unitloads.detachFromDelivery');
 
 			Route::get('{unitload}/delete', [Warehouse::getController('unitload', 'destroy'), 'destroy'])->name('unitloads.destroy');
 		});

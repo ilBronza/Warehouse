@@ -18,6 +18,9 @@
 				@include('warehouse::unitloads.buttons._printButton')
 				@include('warehouse::unitloads.buttons._editButton')
 				{{-- @include('warehouse::unitloads.buttons._splitButton') --}}
+				@if($unitload->content_delivery_id)
+					@include('warehouse::unitloads.buttons._detachFromDeliveryButton')
+				@endif
 				@include('warehouse::unitloads.buttons._deleteButton')
 			</span>
 		</div>
@@ -75,6 +78,22 @@
 			@else
 				<div>Non ancora stampato</div>
 			@endif
+
+			@if($processing = $unitload->getPackingProcessing())
+			<dl class="uk-description-list ib-horizontal-description-list">
+				<dt>Id</dt>
+				<dd>{{ $processing->getKey() }}</dd>
+				<dt>Utente</dt>
+				<dd>{{ $processing->getUser()->getShortName() }}</dd>
+				<dt>Il</dt>
+				<dd>{{ $processing?->getStartedAt()->format('d-m-Y') }}</dd>
+				<dt>Inizio</dt>
+				<dd>{{ $processing?->getStartedAt()->format('H:i:s') }}</dd>
+				<dt>Fine</dt>
+				<dd>{{ $processing?->getEndedAt()?->format('H:i:s') }}</dd>
+			</dl>
+			@endif
+
 
 		</div>
 	</div>

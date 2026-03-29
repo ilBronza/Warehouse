@@ -39,7 +39,7 @@ class ContentDeliveryLoaderHelper extends ContentDeliveryBaseLoaderHelper
 						'unitload' => $unitload->getName()
 					]));
 
-				return false;
+				// return false;
 			}
 
 		// dd($this->getMissingQuantity());

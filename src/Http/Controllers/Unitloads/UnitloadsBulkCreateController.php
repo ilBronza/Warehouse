@@ -2,6 +2,7 @@
 
 namespace IlBronza\Warehouse\Http\Controllers\Unitloads;
 
+use App\Processing;
 use App\Providers\Helpers\Processings\ProcessingCreatorHelper;
 use Auth;
 use Carbon\Carbon;
@@ -148,7 +149,17 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         $helper = $this->getCustomUnitloadPrinterHelper($selectedUnitloads);
 
         return $helper::printUnitloads($selectedUnitloads);
+    }
 
+    public function recalculate()
+    {
+        UnitloadCreatorHelper::recalculateByModelsQuantity(
+            $this->orderProductPhase->getProduct(),
+            $this->orderProductPhase,
+            $this->orderProductPhase->getCurrentPackingProcess()?->getEstimtedPiecesAvailable()
+        );
+
+        return back();
     }
 
 	public function bulkPrintCustom()
@@ -245,6 +256,9 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
         if($request->input('printClientCustomUnitload', false))
             return $this->bulkPrintCustom();
 
+        if($request->input('recalculate', false))
+            return $this->recalculate();
+
         if($request->input('printClientCustomSonusUnitload', false))
             return $this->bulkPrintSonusCustom();
 
@@ -271,17 +285,20 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 	    $this->managePelletIdStoring($parameters);
 	    $this->manageFinishingIdStoring($parameters);
 
-        $processingParameters = [
-            'processing_type' => 'packing',
-            'order_product_phase_id' => $this->orderProductPhase->getKey(),
-            'started_at' => Carbon::now(),
-            'ended_at' => Carbon::now(),
-            'workstation_alias' => $this->orderProductPhase->getWorkstationId(),
-            'user_id' => Auth::id()
-        ];
+        $processing = Processing::where('order_product_phase_id', $this->orderProductPhase->getKey())->where('user_id', Auth::id())->first();
+        // {
+        //     $processingParameters = [
+        //         'processing_type' => 'packing',
+        //         'order_product_phase_id' => $this->orderProductPhase->getKey(),
+        //         'started_at' => Carbon::now(),
+        //         'ended_at' => Carbon::now(),
+        //         'workstation_alias' => $this->orderProductPhase->getWorkstationId(),
+        //         'user_id' => Auth::id()
+        //     ];
 
-        $processing = ProcessingCreatorHelper::createByParameters($processingParameters);
-        $processing->terminate();
+        //     $processing = ProcessingCreatorHelper::createByParameters($processingParameters);
+        //     $processing->terminate();
+        // }
 
 	    UnitloadCreatorHelper::addByModelsQuantity(
 		    $this->orderProductPhase->getProduct(),
@@ -293,7 +310,8 @@ class UnitloadsBulkCreateController extends UnitloadsCRUDController
 			    'pallettype_id' => $parameters['pallettype_id'],
 			    'finishing_id' => $parameters['finishing_id'],
 		    ],
-		    $processing
+		    $processing,
+            true
 	    );
 
 

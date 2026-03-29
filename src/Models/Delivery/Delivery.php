@@ -147,10 +147,24 @@ class Delivery extends BaseWarehouseModel
 
 	public function getGroupedClientsContentDeliveriesAttribute()
 	{
-		return $this->contentDeliveries->groupBy(function ($item)
-		{
-			return $item->getClientDestinationKey();
-		})->values();
+		// return $this->contentDeliveries->groupBy(function ($item)
+		// {
+		// 	return $item->getClientDestinationKey();
+		// })->values();
+
+		return $this->contentDeliveries
+				->groupBy(function ($item)
+				{
+					return $item->getClientDestinationKey();
+				})
+				->map(function ($group)
+				{
+					return $group->sortBy(function ($item)
+					{
+						return $item->getContent()?->getOrder()?->getName();
+					})->values();
+				})
+				->values();
 	}
 
 	public function getGroupedClientsContentDeliveriesModels()
@@ -164,7 +178,6 @@ class Delivery extends BaseWarehouseModel
 			$groupedContentDelivery = GroupedContentDelivery::make($this->getAttributes());
 
 			$groupedContentDelivery->setRelation('contentDeliveries', $_result);
-
 			$groupedContentDelivery->setRelation('client', $_result->first()->getClient());
 			$groupedContentDelivery->setRelation('destination', $_result->first()->getDestination());
 
@@ -186,14 +199,14 @@ class Delivery extends BaseWarehouseModel
 
 		foreach($collection as $groupedContentDelivery)
 		{
-			$index = $groupedContentDelivery->getCalculatedSortingIndex();
+			// $index = $groupedContentDelivery->getCalculatedSortingIndex();
 
-			if(! $index)
-				$index = $lastIndex + 1;
+			// if(! $index)
+			// 	$index = $lastIndex + 1;
 
-			$groupedContentDelivery->sorting_index = $index;
+			$groupedContentDelivery->sorting_index = ++ $lastIndex;
 
-			$lastIndex = $index;
+			// $lastIndex = $index;
 		}
 
 		return $collection;
