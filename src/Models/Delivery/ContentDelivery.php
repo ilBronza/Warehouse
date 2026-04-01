@@ -13,6 +13,7 @@ use IlBronza\Clients\Models\Client;
 use IlBronza\Clients\Models\Destination;
 use IlBronza\Products\Models\Order;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryDetacherHelper;
+use IlBronza\Warehouse\Models\Delivery\Traits\ContentDeliveryScopesTrait;
 use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
@@ -25,6 +26,7 @@ use function route;
 
 class ContentDelivery extends MorphPivot
 {
+	use ContentDeliveryScopesTrait;
 	use CRUDReorderableStandardTrait;
 
 	protected $touches = ['delivery'];
@@ -48,11 +50,13 @@ class ContentDelivery extends MorphPivot
 	public $fillable = [
 		'quantity_required',
 		'partial',
+		'fully_delivered',
 	];
 
 	protected $casts = [
 		'loaded_at' => 'datetime',
-		'warned_at' => 'datetime'
+		'warned_at' => 'datetime',
+		'fully_delivered' => 'boolean',
 	];
 
 	static $deletingRelationships = [];
@@ -60,14 +64,6 @@ class ContentDelivery extends MorphPivot
 	static $packageConfigPrefix = 'warehouse';
 	static $modelConfigPrefix = 'contentDelivery';
 	protected $keyType = 'string';
-
-	public function scopeByDelivery($query, string|Delivery $delivery)
-	{
-		if(! is_string($delivery))
-			$delivery = $delivery->getKey();
-
-		$query->where('delivery_id', $delivery);
-	}
 
 	public function delivery()
 	{
@@ -142,25 +138,6 @@ class ContentDelivery extends MorphPivot
 	public function getWeightKg() : float
 	{
 		return $this->weight_kg;
-	}
-
-	public function scopeByContent($query, DeliverableInterface $content)
-	{
-		return $query->where('content_type', $content->getMorphClass())
-			->where('content_id', $content->getKey());
-	}
-
-	public function scopeSortedByClient($query)
-	{
-		return $query->whereHas('content.order', function($_query)
-		{
-			$_query->orderBy('client_id');
-		});		             
-	}
-
-	public function scopeNotLoaded($query)
-	{
-		return $query->whereNull('loaded_at');
 	}
 
 	public function getQuantityRequired() : ? float
