@@ -275,6 +275,7 @@ return [
             ],
             'controllers' => [
                 'index' => PallettypeIndexController::class,
+                'index' => PallettypeCreateStoreController::class,
                 'create' => PallettypeCreateStoreController::class,
                 'store' => PallettypeCreateStoreController::class,
                 'show' => PallettypeShowController::class,

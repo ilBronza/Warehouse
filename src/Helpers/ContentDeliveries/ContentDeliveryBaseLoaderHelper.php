@@ -5,6 +5,7 @@ namespace IlBronza\Warehouse\Helpers\ContentDeliveries;
 use Carbon\Carbon;
 use IlBronza\CRUD\Traits\Helpers\HelperMessageBagTrait;
 use IlBronza\CRUD\Traits\PackagedHelpersTrait;
+use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryFullyDeliveredHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryShipperHelper;
 use IlBronza\Warehouse\Helpers\Unitloads\UnitloadLoaderHelper;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
@@ -54,7 +55,9 @@ abstract class ContentDeliveryBaseLoaderHelper
 
 		$result = $this->__execute();
 
-		DeliveryShipperHelper::execute($this->getContentDelivery()->getDelivery());
+		DeliveryShipperHelper::execute($delivery);
+
+		ContentDeliveryFullyDeliveredHelper::check($contentDelivery);
 
 		return $result;
 	}

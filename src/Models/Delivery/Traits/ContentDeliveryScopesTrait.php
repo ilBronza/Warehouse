@@ -57,6 +57,11 @@ trait ContentDeliveryScopesTrait
 		return $query->where('fully_delivered', true);
 	}
 
+	public function scopeNullFullyDelivered($query)
+	{
+		return $query->whereNull('fully_delivered');
+	}
+
 	public function scopeNotFullyDelivered($query)
 	{
 		return $query->where(function($q)

@@ -1,24 +1,24 @@
 <?php
 
-use IlBronza\CRUD\Traits\CRUDIndexTrait;
-use IlBronza\CRUD\Traits\CRUDPlainIndexTrait;
-use IlBronza\Warehouse\Http\Controllers\Warehouse\VehicleCRUD;
+// use IlBronza\CRUD\Traits\CRUDIndexTrait;
+// use IlBronza\CRUD\Traits\CRUDPlainIndexTrait;
+// use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCRUD;
 
-class PallettypeIndexController extends PallettypeCRUD
-{
-    use CRUDPlainIndexTrait;
-    use CRUDIndexTrait;
+// class PallettypeIndexController extends PallettypeCRUD
+// {
+//     use CRUDPlainIndexTrait;
+//     use CRUDIndexTrait;
 
-    public $allowedMethods = ['index'];
+//     public $allowedMethods = ['index'];
 
-    public function getIndexFieldsArray()
-    {
-        return config('warehouse.models.pallettype.fieldsGroupsFiles.index')::getTracedFieldsGroup();
-    }
+//     public function getIndexFieldsArray()
+//     {
+//         return config('warehouse.models.pallettype.fieldsGroupsFiles.index')::getTracedFieldsGroup();
+//     }
 
-    public function getIndexElements()
-    {
-        return $this->getModelClass()::all();
-    }
+//     public function getIndexElements()
+//     {
+//         return $this->getModelClass()::all();
+//     }
 
-}
+// }

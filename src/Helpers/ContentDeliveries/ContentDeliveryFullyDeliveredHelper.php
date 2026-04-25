@@ -14,15 +14,13 @@ class ContentDeliveryFullyDeliveredHelper
 	 * partial = true: tutti i content_delivery fratelli (stesso content) devono essere caricati (isLoaded);
 	 * poi somma quantità allocate vs fabbisogno del content; se ok, fully_delivered = true su tutti i fratelli, altrimenti false.
 	 */
-	public static function check(ContentDelivery $contentDelivery) : void
+	public static function check(ContentDelivery $contentDelivery)
 	{
-		if (! $contentDelivery->isPartial())
-		{
-			$contentDelivery->fully_delivered = true;
-			$contentDelivery->save();
+		if (! $contentDelivery->isLoaded())
+			return static::persistFullyDeliveredAll(collect([$contentDelivery]), false);
 
-			return;
-		}
+		if (! $contentDelivery->isPartial())
+			return static::persistFullyDeliveredAll(collect([$contentDelivery]), true);
 
 		$content = $contentDelivery->getContent();
 
@@ -30,16 +28,18 @@ class ContentDeliveryFullyDeliveredHelper
 
 		foreach ($siblings as $sibling)
 			if (! $sibling->isLoaded())
-			{
-				static::persistFullyDeliveredAll($siblings, false);
-				return;
-			}
+				return static::persistFullyDeliveredAll($siblings, false);
 
 		$totalSent = $siblings->sum(fn(ContentDelivery $cd) => $cd->getAllocatedQuantity());
 
 		$required = static::contentShipmentQuantityRequired($content);
 
-		static::persistFullyDeliveredAll($siblings, $totalSent >= $required * 0.95);
+		$unitloadsWithoutContentDelivery = static::getUnitloadsWithoutContentDelivery($content);
+
+		if ($unitloadsWithoutContentDelivery->isNotEmpty())
+			return static::persistFullyDeliveredAll($siblings, false);
+
+		return static::persistFullyDeliveredAll($siblings, $totalSent >= $required * 0.95);
 	}
 
 	protected static function persistFullyDeliveredAll(Collection $siblings, bool $value) : void
@@ -49,6 +49,15 @@ class ContentDeliveryFullyDeliveredHelper
 			$contentDelivery->fully_delivered = $value;
 			$contentDelivery->save();
 		}
+	}
+
+	/**
+	 * Unitload del content ancora senza distinta (content_delivery_id nullo).
+	 * Usa la relazione unitloads()->notDelivering() sul deliverable (stesso criterio di hasUndeliveringUnitloads).
+	 */
+	public static function getUnitloadsWithoutContentDelivery(?DeliverableInterface $content) : Collection
+	{
+		return $content->unitloads()->notDelivering()->orderBy('sequence')->get();
 	}
 
 	protected static function contentShipmentQuantityRequired(Model $content) : float
