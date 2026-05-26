@@ -290,7 +290,7 @@ class UnitloadCreatorHelper
 				$productionUnitloads->push(
 					$unitload = UnitloadCreatorHelper::createByArray($unitloadParameters, false)
 				);
-			
+
 				UnitloadDeliveryCheckerHelper::gpc()::checkForDeliveryAutoAttaching($unitload);
 			}
 		}
