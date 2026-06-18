@@ -26,7 +26,7 @@ class DeliveryCreateStoreFieldsetsParameters extends FieldsetParametersFile
 					    'list' => [
 						    'ipotetica' => 'Ipotetica',
 						    'in-programmazione' => 'In Programmazione',
-						    'programmata' => 'Programmata',
+						    'programmata' => 'Gestita',
 					    ],
 					    'rules' => 'string|nullable',
 					    'multiple' => false,
