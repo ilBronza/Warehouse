@@ -1,24 +1,10 @@
 <?php
 
-// use IlBronza\CRUD\Traits\CRUDIndexTrait;
-// use IlBronza\CRUD\Traits\CRUDPlainIndexTrait;
-// use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCRUD;
+namespace IlBronza\Warehouse\Http\Controllers\Pallettypes;
 
-// class PallettypeIndexController extends PallettypeCRUD
-// {
-//     use CRUDPlainIndexTrait;
-//     use CRUDIndexTrait;
+use IlBronza\CRUD\Http\Controllers\Traits\StandardTraits\PackageStandardIndexTrait;
 
-//     public $allowedMethods = ['index'];
-
-//     public function getIndexFieldsArray()
-//     {
-//         return config('warehouse.models.pallettype.fieldsGroupsFiles.index')::getTracedFieldsGroup();
-//     }
-
-//     public function getIndexElements()
-//     {
-//         return $this->getModelClass()::all();
-//     }
-
-// }
+class PallettypeIndexController extends PallettypeCRUD
+{
+	use PackageStandardIndexTrait;
+}

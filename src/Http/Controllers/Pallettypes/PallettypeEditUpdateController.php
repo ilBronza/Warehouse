@@ -3,7 +3,6 @@
 namespace IlBronza\Warehouse\Http\Controllers\Pallettypes;
 
 use IlBronza\CRUD\Traits\CRUDEditUpdateTrait;
-use IlBronza\Warehouse\Models\Pallettype\Pallettype;
 use Illuminate\Http\Request;
 
 class PallettypeEditUpdateController extends PallettypeCRUD
@@ -12,9 +11,15 @@ class PallettypeEditUpdateController extends PallettypeCRUD
 
     public $allowedMethods = ['edit', 'update'];
 
-    public function getGenericParametersFile() : ? string
+    public function getEditParametersFile() : ? string
     {
-        return config('warehouse.models.pallettype.parametersFiles.crud');
+        return config('warehouse.models.pallettype.parametersFiles.edit');
+    }
+
+    public function getUpdateParametersFile() : ? string
+    {
+        return config('warehouse.models.pallettype.parametersFiles.update')
+            ?? $this->getEditParametersFile();
     }
 
     public function edit(string $pallettype)

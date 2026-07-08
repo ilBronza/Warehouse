@@ -14,7 +14,7 @@ class PallettypeShowController extends PallettypeCRUD
 
     public function getGenericParametersFile() : ? string
     {
-        return config('warehouse.models.pallettype.parametersFiles.create');
+        return config('warehouse.models.pallettype.parametersFiles.show');
     }
 
     public function getRelationshipsManagerClass()

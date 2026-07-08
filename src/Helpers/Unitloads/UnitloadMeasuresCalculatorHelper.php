@@ -23,7 +23,7 @@ class UnitloadMeasuresCalculatorHelper
 
 		if($neatHeight < 0)
 		{
-			Ukn::e("problemi di calcolo altezza bancale: {$neatHeight} ottenuto da height:{$height} - palletHeight:{$palletHeight}");
+			// Ukn::e("problemi di calcolo altezza bancale: {$neatHeight} ottenuto da height:{$height} - palletHeight:{$palletHeight}");
 			$neatHeight = $palletHeight;
 		}
 

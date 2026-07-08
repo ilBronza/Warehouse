@@ -1,5 +1,7 @@
 <div
 	id="{{ $unitload->getHtmlId() }}" 
+	data-unitload-id="{{ $unitload->getKey() }}"
+	data-production-id="{{ $unitload->production_id }}"
 	class="uk-width-medium unitload teaser"
 	data-piecesremaining="{{ $unitload->getPiecesSpaceRemaining() }}"
 	>

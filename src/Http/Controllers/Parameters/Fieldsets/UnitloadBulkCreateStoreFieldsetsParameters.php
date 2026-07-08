@@ -115,27 +115,9 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 					'pallettype_id' => [
 						'type' => 'select',
 						'value' => $orderProduct?->getPallettypeItem()?->getKey(),
-						// 'opener' => [
-						// 	'event' => 'change',
-						// 	'targetName' => 'save_pallettype_id_on',
-						// 	'required' => true
-						// ],
 						'list' => $palletArray,
 						'rules' => 'string|required|in:' . implode(",", array_keys($palletArray))
 					],
-					// 'save_pallettype_id_on' => [
-					// 	'closed' => true,
-					// 	'label' => 'Salva bancale su',
-					// 	'type' => 'radio',
-					// 	'required' => false,
-					// 	'list' => [
-					// 		'product' => 'Prodotto',
-					// 		'client' => 'Cliente',
-					// 		'nothing' => 'Niente, è solo per questa volta',
-					// 	],
-					// 	'rules' => 'string|nullable|in:product,client,nothing',
-					// 	'value' => [],
-					// ],
 
 					'finishing_id' => [
 						'type' => 'select',

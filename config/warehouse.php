@@ -189,6 +189,7 @@ return [
 		    'fieldsGroupsFiles' => [
 				'active' => DeliveryActiveFieldsGroupParametersFile::class,
 				'index' => DeliveryIndexFieldsGroupParametersFile::class,
+				'related' => DeliveryIndexFieldsGroupParametersFile::class,
 				'associateUnitloadToDeliveryIndex' => DeliveryAssociateUnitloadsFieldsGroupParametersFile::class,
 				'pickable' => DeliveryPickableFieldsGroupParametersFile::class
 		    ],
@@ -271,11 +272,15 @@ return [
                 'index' => PallettypeFieldsGroupParametersFile::class
             ],
             'parametersFiles' => [
-                'crud' => PallettypeCreateStoreFieldsetsParameters::class
+                'crud' => PallettypeCreateStoreFieldsetsParameters::class,
+                'create' => PallettypeCreateStoreFieldsetsParameters::class,
+                'store' => PallettypeCreateStoreFieldsetsParameters::class,
+                'edit' => PallettypeCreateStoreFieldsetsParameters::class,
+                'update' => PallettypeCreateStoreFieldsetsParameters::class,
+                'show' => PallettypeCreateStoreFieldsetsParameters::class
             ],
             'controllers' => [
                 'index' => PallettypeIndexController::class,
-                'index' => PallettypeCreateStoreController::class,
                 'create' => PallettypeCreateStoreController::class,
                 'store' => PallettypeCreateStoreController::class,
                 'show' => PallettypeShowController::class,

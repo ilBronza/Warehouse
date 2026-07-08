@@ -21,11 +21,6 @@ class UnitloadCrudFieldsetsParameters extends FieldsetParametersFile
                     'pallettype_id' => [
                         'type' => 'select',
                         'value' => $this->getModel()?->getPallettype()?->getKey(),
-                        'opener' => [
-                            'event' => 'change',
-                            'targetName' => 'save_pallettype_id_on',
-                            'required' => true
-                        ],
                         'list' => $palletArray,
                         'rules' => 'string|required|in:' . implode(",", array_keys($palletArray))
                     ],

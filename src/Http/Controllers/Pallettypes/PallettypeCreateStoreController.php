@@ -4,30 +4,22 @@ namespace IlBronza\Warehouse\Http\Controllers\Pallettypes;
 
 use IlBronza\CRUD\Traits\CRUDCreateStoreTrait;
 use IlBronza\CRUD\Traits\CRUDRelationshipTrait;
-use IlBronza\CRUD\Traits\CRUDShowTrait;
 
 class PallettypeCreateStoreController extends PallettypeCRUD
 {
     use CRUDCreateStoreTrait;
-    use CRUDShowTrait;
     use CRUDRelationshipTrait;
 
-    public $allowedMethods = ['create', 'store', 'edit', 'update', 'show'];
+    public $allowedMethods = ['create', 'store'];
 
-    public function getGenericParametersFile() : ? string
+    public function getCreateParametersFile() : ? string
     {
-        return config('warehouse.models.pallettype.parametersFiles.crud');
+        return config('warehouse.models.pallettype.parametersFiles.create');
     }
 
-    public function getRelationshipsManagerClass()
+    public function getStoreParametersFile() : ? string
     {
-        return config("warehouse.models.{$this->configModelClassName}.relationshipsManagerClasses.show");
-    }
-
-    public function show(string $pallettype)
-    {
-        $pallettype = $this->findModel($pallettype);
-
-        return $this->_show($pallettype);
+        return config('warehouse.models.pallettype.parametersFiles.store')
+            ?? $this->getCreateParametersFile();
     }
 }

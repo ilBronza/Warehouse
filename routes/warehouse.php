@@ -1,6 +1,5 @@
 <?php
 
-use IlBronza\Warehouse\Http\Controllers\Pallettypes\PallettypeCRUDController;
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadsBulkCreateController;
 
 Route::group([
@@ -117,7 +116,7 @@ Route::group([
 			Route::post('', [Warehouse::getController('pallettype', 'store'), 'store'])->name('pallettypes.store');
 			Route::get('{pallettype}', [Warehouse::getController('pallettype', 'show'), 'show'])->name('pallettypes.show');
 			Route::get('{pallettype}/edit', [Warehouse::getController('pallettype', 'edit'), 'edit'])->name('pallettypes.edit');
-			Route::put('{pallettype}', [Warehouse::getController('pallettype', 'edit'), 'update'])->name('pallettypes.update');
+			Route::put('{pallettype}', [Warehouse::getController('pallettype', 'update'), 'update'])->name('pallettypes.update');
 
 			Route::delete('{pallettype}/delete', [Warehouse::getController('pallettype', 'destroy'), 'destroy'])->name('pallettypes.destroy');
 		});

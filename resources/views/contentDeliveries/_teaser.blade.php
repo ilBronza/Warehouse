@@ -27,6 +27,7 @@
 		Altri bancali nella spedizione
 
 		<div>
+			@isset($unitload)
 			<div id="{{ $unitload->getHtmlId() }}" class="uk-width-medium unitload title">
 				<div class="@if($unitload->hasBeenPrinted()) uk-background-primary @else uk-background-default @endif uk-padding-remove uk-grid-collapse" uk-grid>
 					<span class="uk-h4 uk-text-bold uk-width-expand">
@@ -37,6 +38,7 @@
 					</span>
 				</div>
 			</div>
+			@endisset
 
 			<ul class="uk-accordion-default" uk-accordion>
 
@@ -46,8 +48,8 @@
 				})->groupBy('content_delivery_id') as $group)
 					<li>
 						<a class="uk-accordion-title" href>
-							{{ $group->first()->getProduction()->getOrder()?->getName() }} -
-							{{ $group->first()->getProduction()->getProduct()?->getName() }}
+							{{ $group->first()?->getProduction()?->getOrder()?->getName() }} -
+							{{ $group->first()?->getProduction()?->getProduct()?->getName() }}
 							<span class="uk-float-right">
 								{{ round($group->sum(function($item) { return $item->getVolumeCubicMeters(); })) }}m³
 							</span>

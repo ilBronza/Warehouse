@@ -66,6 +66,17 @@ class DeliveryAutomaticCreatorHelper
 		foreach (static::$deliveriesDefaultTimes as $time => $name)
 		{
 			$delivery = Delivery::gpc()::make();
+
+			$old = Delivery::gpc()::where(
+				'name',
+				static::_getAutomaticName($date, $name, $delivery))->get();
+
+			foreach($old as $_old)
+			{
+				if($_old->delivery_datetime->year == $date->year)
+					continue;
+			}
+
 			$delivery->name = static::_getAutomaticName($date, $name, $delivery);
 			$delivery->delivery_datetime = $date->format('Y-m-d') . ' ' . $time;
 			$delivery->save();
