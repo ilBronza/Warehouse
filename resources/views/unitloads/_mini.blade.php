@@ -16,6 +16,7 @@
 				@if($unitload->content_delivery_id)
 					@include('warehouse::unitloads.buttons._detachFromDeliveryButton')
 				@endif
+				@include('warehouse::unitloads.buttons._deleteButton')
 			</span>
 		</div>
 		<div class="uk-card-body">
