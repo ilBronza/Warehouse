@@ -1,17 +1,64 @@
 <?php
 
 return [
+	'ibWarehousebulkcreate' => 'Crea bulk',
+	'ibWarehousebulkstore' => 'Salva bulk',
+	'ibWarehousecontentDeliveriesdetach' => 'Detach — content deliveries',
+	'ibWarehousecontentDeliveriesedit' => 'Modifica content deliveries :model',
+	'ibWarehousecontentDeliveriesindex' => 'Lista content deliveries',
+	'ibWarehousecontentDeliveriesload' => 'Load — content deliveries',
+	'ibWarehousecontentDeliveriesloadCumulative' => 'Load cumulative — content deliveries',
+	'ibWarehousecontentDeliveriespopup' => 'Popup — content deliveries',
+	'ibWarehousecontentDeliveriesunload' => 'Unload — content deliveries',
+	'ibWarehousecontentDeliveriesunloadCumulative' => 'Unload cumulative — content deliveries',
+	'ibWarehousecontentDeliveriesupdate' => 'Aggiorna content deliveries',
 	'ibWarehousedeliveries' => [
 		'index' => 'Lista spedizioni',
 	],
-
+	'ibWarehousedeliveriesactive' => 'Spedizione attivi',
+	'ibWarehousedeliveriesaddGroupedContentDeliveries' => 'Add grouped content deliveries — spedizione',
+	'ibWarehousedeliveriesaddGroupedContentDeliveriesIndex' => 'Add grouped content deliveries index — spedizione',
+	'ibWarehousedeliveriesaddOrders' => 'Add orders — spedizione',
+	'ibWarehousedeliveriesaddOrdersIndex' => 'Add orders index — spedizione',
+	'ibWarehousedeliveriesaddUnitloads' => 'Add unitloads — spedizione',
+	'ibWarehousedeliveriesautomaticCreationForm' => 'Automatic creation form — spedizione',
+	'ibWarehousedeliveriesautomaticCreationStore' => 'Automatic creation store — spedizione',
+	'ibWarehousedeliveriescreate' => 'Crea spedizione',
+	'ibWarehousedeliveriesdestroy' => 'Elimina spedizione',
+	'ibWarehousedeliveriesedit' => 'Modifica spedizione :model',
+	'ibWarehousedeliveriesorders' => [
+		'popup' => 'Popup — commessa',
+	],
+	'ibWarehousedeliveriesrenderMap' => 'Render map — spedizione',
+	'ibWarehousedeliveriesship' => 'Ship — spedizione',
+	'ibWarehousedeliveriesshow' => 'Mostra spedizione :model',
+	'ibWarehousedeliveriesstore' => 'Salva spedizione',
+	'ibWarehousedeliveriesunship' => 'Unship — spedizione',
+	'ibWarehousedeliveriesupdate' => 'Aggiorna spedizione',
+	'ibWarehousegroupedContentDeliveriesglobalElaborate' => 'Elaborazione globale — spedizione raggruppata',
+	'ibWarehousegroupedContentDeliveriesglobalLoad' => 'Carico globale — spedizione raggruppata',
+	'ibWarehousegroupedContentDeliveriesstoreMassReorder' => 'Salva riordino massivo — spedizione raggruppata',
+	'ibWarehousegroupedContentDeliveriesupdate' => 'Aggiorna spedizione raggruppata',
 	'ibWarehousepallettypes' => [
 		'index' => 'Lista Tipi',
 	],
-
+	'ibWarehousepallettypescreate' => 'Crea tipo pallet',
+	'ibWarehousepallettypesdestroy' => 'Elimina tipo pallet',
+	'ibWarehousepallettypesedit' => 'Modifica tipo pallet :model',
+	'ibWarehousepallettypesshow' => 'Mostra tipo pallet :model',
+	'ibWarehousepallettypesstore' => 'Salva tipo pallet',
+	'ibWarehousepallettypesupdate' => 'Aggiorna tipo pallet',
 	'ibWarehouseunitloads' => [
 		'associateToDeliveryTable' => 'Associa unità di carico a spedizione',
 	],
-
-
+	'ibWarehouseunitloadsassociateToDelivery' => 'Associate to delivery — unità di carico',
+	'ibWarehouseunitloadsdestroy' => 'Elimina unità di carico',
+	'ibWarehouseunitloadsdetachFromDelivery' => 'Detach from delivery — unità di carico',
+	'ibWarehouseunitloadsedit' => 'Modifica unità di carico :model',
+	'ibWarehouseunitloadsindex' => 'Lista unità di carico',
+	'ibWarehouseunitloadsprint' => 'Print — unità di carico',
+	'ibWarehouseunitloadsresetPrintedAt' => 'Reset printed at — unità di carico',
+	'ibWarehouseunitloadssplit' => 'Dividi — unità di carico',
+	'ibWarehouseunitloadssplitForm' => 'Split form — unità di carico',
+	'ibWarehouseunitloadsupdate' => 'Aggiorna unità di carico',
 ];
