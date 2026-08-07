@@ -1,19 +1,22 @@
 <?php
 
 use IlBronza\Warehouse\Http\Controllers\Unitloads\UnitloadsBulkCreateController;
+use IlBronza\Warehouse\Warehouse;
 
 Route::group([
 	'middleware' => ['web', 'auth', 'warehouse.roles'],
 	'prefix' => 'warehouse-management',
-	'as' => config('warehouse.routePrefix')
+	'as' => config('warehouse.routePrefix'),
+	'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
 	],
 	function()
 	{
 
 		Route::group([
 			'prefix' => 'grouped-content-deliveries',
-			'as' => 'groupedContentDeliveries.'
-		], function()
+			'as' => 'groupedContentDeliveries.',
+			'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
+	], function()
 		{
 			Route::put('{groupedContentDelivery}', [Warehouse::getController('groupedContentDelivery', 'update'), 'update'])->name('update');
 
@@ -28,8 +31,9 @@ Route::group([
 
 		Route::group([
 			'prefix' => 'content-deliveries',
-			'as' => 'contentDeliveries.'
-		], function()
+			'as' => 'contentDeliveries.',
+			'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
+	], function()
 		{
 			//ContentDeliveryPopupController
 			Route::get('{contentDelivery}/deliveries-popup', [Warehouse::getController('contentDelivery', 'popup'), 'popup'])->name('popup');
@@ -53,8 +57,9 @@ Route::group([
 
 		Route::group([
 			'prefix' => 'deliveries-management',
-			'as' => 'deliveries.'
-		], function()
+			'as' => 'deliveries.',
+			'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
+	], function()
 		{
 			//DeliveryMapController
 			Route::get('{delivery}/map', [Warehouse::getController('delivery', 'renderMap'), 'renderMap'])->name('renderMap');
@@ -76,8 +81,9 @@ Route::group([
 
 			Route::group([
 				'prefix' => 'orders',
-				'as' => 'orders.'
-			], function()
+				'as' => 'orders.',
+				'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
+	], function()
 			{
 				//DeliveryByOrderController
 				Route::get('{order}/deliveries-popup', [Warehouse::getController('delivery', 'orderDeliveriesPopup'), 'popup'])->name('popup');
