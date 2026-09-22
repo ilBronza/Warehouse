@@ -61,4 +61,12 @@ return [
 	'ibWarehouseunitloadssplit' => 'Dividi — unità di carico',
 	'ibWarehouseunitloadssplitForm' => 'Split form — unità di carico',
 	'ibWarehouseunitloadsupdate' => 'Aggiorna unità di carico',
+
+  'ibWarehousebulk.create' => 'Crea carico di magazzino',
+  'ibWarehouseunitloads.edit' => 'Modifica unità di carico',
+  'ibWarehousepallettypes.edit' => 'Modifica tipo di pallet',
+  'ibWarehousedeliveries.edit' => 'Modifica consegna di magazzino',
+  'ibWarehousedeliveries.create' => 'Crea consegna di magazzino',
+  'ibWarehousedeliveries.addGroupedContentDeliveriesIndex' => 'Aggiungi consegne raggruppate di contenuti',
+  'ibWarehousecontentDeliveries.edit' => 'Modifica consegna contenuto',
 ];

@@ -32,4 +32,7 @@ return [
 		'caricato' => 'Caricato',
 		'daCaricare' => 'Da caricare',
 	],
+
+  'cardTitleEdit' => 'Modifica spedizione',
+  'cardIntroEdit' => 'Modifica i dati della spedizione',
 ];

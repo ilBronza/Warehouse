@@ -11,4 +11,7 @@ return [
 	'delivery' => 'Spedizione',
 
 	'deliveries' => 'Spedizioni',
+
+  'pallettype' => 'Tipo di pallet',
+  'contentDelivery' => 'Contenuto della spedizione',
 ];

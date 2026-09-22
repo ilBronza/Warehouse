@@ -7,4 +7,7 @@ return [
 	'contentDeliveryHasBeenLoadedButSomeUnitloadsGaveProblems' => 'La distinta <strong class=\"uk-text-nowrap\">:contentDelivery</strong> è stata caricata, ma alcuni colli hanno dato dei problemi durante l\'operazione.',
 	'unitloadAlreadyLoaded' => 'Impossibile caricare il collo <strong class=\"uk-text-nowrap\">:unitload</strong> perché è già stato caricato.',
 	'unitloadNotCompleted' => 'Impossibile caricare il collo <strong class=\"uk-text-nowrap\">:unitload</strong> perché non è completo.',
+
+  'deliveryAlreadyShipped' => 'La spedizione :delivery è già stata contrassegnata come spedita.',
+  'cantBeShipped' => 'La spedizione :delivery non può essere contrassegnata come spedita.',
 ];
