@@ -2,6 +2,7 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
+use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Support\Collection;
@@ -25,7 +26,23 @@ class DeliveryUnitloadHelper extends DeliveryAttacherHelper
 		foreach($this->getElements() as $unitload)
 			if(! ($contentDelivery = $unitload->getcontentDelivery())?->isPartial())
 				if($contentDelivery)
+				{
+					ContentDeliveryPartialLogger::logTransition(
+						$contentDelivery,
+						true,
+						'unitload_moved_from_content_delivery',
+						[
+							'writer' => __METHOD__,
+							'unitload_id' => $unitload->getKey(),
+							'production_type' => $unitload->production_type,
+							'production_id' => $unitload->production_id,
+							'source_delivery_id' => $contentDelivery->delivery_id,
+							'target_delivery_id' => $this->getDelivery()->getKey(),
+						]
+					);
+
 					$contentDelivery->setPartial(true);
+				}
 
 		foreach($distinctProductions as $distinctProduction)
 		{

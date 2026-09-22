@@ -67,7 +67,7 @@ class Unitload extends BaseModel
 				{
 					$production = $unitload->production;
 
-					dd('qua sta il problema');
+					Log::critical('qua sta il problema');
 
 					if(! $processing = Processing::where('user_id', Auth::id())->orderByDesc('ended_at')->where('ended_at', '>', Carbon::now()->subMinutes(15))->first())
 					{
@@ -183,14 +183,7 @@ class Unitload extends BaseModel
 
 	public function getBrotherNumbers() : int
 	{
-		return cache()->remember(
-			$this->cacheKey('getTwins'), 5, function ()
-		{
-//			return static::where('production_id', $this->getProductionId())->count();
-
-			return $this->twins()->count();
-		}
-		);
+		return $this->twins()->count();
 	}
 
 	public function twins()

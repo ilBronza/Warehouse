@@ -2,6 +2,7 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
+use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 
 use IlBronza\Warehouse\Models\Unitload\Unitload;
@@ -35,6 +36,18 @@ class DeliveryDetacherHelper
 			dd('occuparsi del check delle quantità');
 
 		$unitload->save();
+
+		ContentDeliveryPartialLogger::logTransition(
+			$contentDelivery,
+			true,
+			'unitload_detached_from_content_delivery',
+			[
+				'writer' => __METHOD__,
+				'unitload_id' => $unitload->getKey(),
+				'production_type' => $unitload->production_type,
+				'production_id' => $unitload->production_id,
+			]
+		);
 
 		$contentDelivery->partial = true;
 		$contentDelivery->save();

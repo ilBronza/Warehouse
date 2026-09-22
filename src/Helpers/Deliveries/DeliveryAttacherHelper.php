@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
 use IlBronza\Products\Models\OrderProduct;
+use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
@@ -89,10 +90,24 @@ class DeliveryAttacherHelper
 
 	public function checkOrderProductShippingTotalQuantity(OrderProduct $orderProduct)
 	{
-		if($orderProduct->deliveries->where('pivot.partial', false)->count() > 1)
+		$nonPartialDeliveries = $orderProduct->deliveries->where('pivot.partial', false);
+
+		if($nonPartialDeliveries->count() > 1)
 		{
 			foreach($orderProduct->deliveries as $delivery)
 			{
+				ContentDeliveryPartialLogger::logTransition(
+					$delivery->pivot,
+					true,
+					'multiple_non_partial_deliveries_for_order_product',
+					[
+						'writer' => __METHOD__,
+						'order_product_id' => $orderProduct->getKey(),
+						'non_partial_delivery_ids' => $nonPartialDeliveries->pluck('id')->values()->all(),
+						'all_delivery_ids' => $orderProduct->deliveries->pluck('id')->values()->all(),
+					]
+				);
+
 				$delivery->pivot->partial = true;
 				$delivery->pivot->saveQuietly();
 			}
