@@ -55,9 +55,9 @@ abstract class ContentDeliveryBaseLoaderHelper
 
 		$result = $this->__execute();
 
-		DeliveryShipperHelper::execute($delivery);
+		DeliveryShipperHelper::execute($this->getContentDelivery()->getDelivery());
 
-		ContentDeliveryFullyDeliveredHelper::check($contentDelivery);
+		ContentDeliveryFullyDeliveredHelper::check($this->getContentDelivery());
 
 		return $result;
 	}

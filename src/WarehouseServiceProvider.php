@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse;
 
 use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaServiceProviderPackagesTrait;
+use IlBronza\Warehouse\Console\Commands\CheckFullyDeliveredContentDeliveriesCommand;
 use IlBronza\Warehouse\Http\Middleware\WarehouseMiddlewareRolesPermissions;
 use Illuminate\Support\ServiceProvider;
 
@@ -81,7 +82,8 @@ class WarehouseServiceProvider extends ServiceProvider
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/ilbronza'),
         ], 'warehouse.views');*/
 
-        // Registering package commands.
-        // $this->commands([]);
+        $this->commands([
+            CheckFullyDeliveredContentDeliveriesCommand::class,
+        ]);
     }
 }

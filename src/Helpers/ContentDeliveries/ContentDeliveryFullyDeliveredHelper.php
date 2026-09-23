@@ -10,25 +10,41 @@ use Illuminate\Support\Collection;
 class ContentDeliveryFullyDeliveredHelper
 {
 	/**
-	 * partial = false/null: fully_delivered = true e stop.
-	 * partial = true: tutti i content_delivery fratelli (stesso content) devono essere caricati (isLoaded);
-	 * poi somma quantità allocate vs fabbisogno del content; se ok, fully_delivered = true su tutti i fratelli, altrimenti false.
+	 * Una distinta senza fratelli parziali è completa solo se caricata.
+	 * Se almeno una distinta dello stesso contenuto è parziale, tutte le sorelle
+	 * devono essere caricate, senza unitload non assegnati, e le quantità allocate
+	 * devono coprire almeno il 95% del fabbisogno del contenuto.
 	 */
-	public static function check(ContentDelivery $contentDelivery)
+	/**
+	 * Ricalcola il flag e restituisce le distinte che risultavano incoerenti.
+	 *
+	 * Se almeno una distinta dello stesso contenuto è parziale, il flag descrive
+	 * lo stato complessivo del contenuto e deve quindi avere lo stesso valore su
+	 * tutte le distinte sorelle.
+	 */
+	public static function check(ContentDelivery $contentDelivery, bool $persist = true) : Collection
 	{
-		if (! $contentDelivery->isLoaded())
-			return static::persistFullyDeliveredAll(collect([$contentDelivery]), false);
-
-		if (! $contentDelivery->isPartial())
-			return static::persistFullyDeliveredAll(collect([$contentDelivery]), true);
-
 		$content = $contentDelivery->getContent();
+
+		if (! $content)
+			return static::persistFullyDeliveredAll(
+				collect([$contentDelivery]),
+				false,
+				$persist
+			);
 
 		$siblings = static::siblingsForContent($content);
 
+		if (! $siblings->contains(fn (ContentDelivery $sibling) => $sibling->isPartial()))
+			return static::persistFullyDeliveredAll(
+				collect([$contentDelivery]),
+				$contentDelivery->isLoaded(),
+				$persist
+			);
+
 		foreach ($siblings as $sibling)
 			if (! $sibling->isLoaded())
-				return static::persistFullyDeliveredAll($siblings, false);
+				return static::persistFullyDeliveredAll($siblings, false, $persist);
 
 		$totalSent = $siblings->sum(fn(ContentDelivery $cd) => $cd->getAllocatedQuantity());
 
@@ -37,18 +53,35 @@ class ContentDeliveryFullyDeliveredHelper
 		$unitloadsWithoutContentDelivery = static::getUnitloadsWithoutContentDelivery($content);
 
 		if ($unitloadsWithoutContentDelivery->isNotEmpty())
-			return static::persistFullyDeliveredAll($siblings, false);
+			return static::persistFullyDeliveredAll($siblings, false, $persist);
 
-		return static::persistFullyDeliveredAll($siblings, $totalSent >= $required * 0.95);
+		return static::persistFullyDeliveredAll(
+			$siblings,
+			$totalSent >= $required * 0.95,
+			$persist
+		);
 	}
 
-	protected static function persistFullyDeliveredAll(Collection $siblings, bool $value) : void
+	protected static function persistFullyDeliveredAll(
+		Collection $siblings,
+		bool $value,
+		bool $persist
+	) : Collection
 	{
-		foreach ($siblings as $contentDelivery)
+		$inconsistentContentDeliveries = $siblings->filter(
+			fn (ContentDelivery $contentDelivery) => $contentDelivery->fully_delivered !== $value
+		);
+
+		if (! $persist)
+			return $inconsistentContentDeliveries;
+
+		foreach ($inconsistentContentDeliveries as $contentDelivery)
 		{
 			$contentDelivery->fully_delivered = $value;
 			$contentDelivery->save();
 		}
+
+		return $inconsistentContentDeliveries;
 	}
 
 	/**
@@ -70,6 +103,7 @@ class ContentDeliveryFullyDeliveredHelper
 		return ContentDelivery::gpc()::query()
 			->where('content_type', $content->getMorphClass())
 			->where('content_id', $content->getKey())
+			->whereNull('deleted_at')
 			->with(['delivery', 'unitloads'])
 			->orderBy('sorting_index')
 			->get();
