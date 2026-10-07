@@ -2,7 +2,6 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
-use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 
 class ContentDeliveryIntegrityHelper
@@ -16,9 +15,7 @@ class ContentDeliveryIntegrityHelper
 
 		if($unitloadsCount != $brotherCount)
 		{
-			ContentDeliveryPartialLogger::logTransition(
-				$contentDelivery,
-				true,
+			$contentDelivery->setPartialReason(
 				'unitloads_count_does_not_match_first_production_brothers',
 				[
 					'writer' => __METHOD__,
@@ -44,9 +41,7 @@ class ContentDeliveryIntegrityHelper
 		}
 		else
 		{
-			ContentDeliveryPartialLogger::logTransition(
-				$contentDelivery,
-				false,
+			$contentDelivery->setPartialReason(
 				$firstUnitload
 					? 'unitloads_count_matches_first_production_brothers'
 					: 'no_unitloads_attached',

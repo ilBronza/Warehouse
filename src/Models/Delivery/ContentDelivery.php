@@ -13,12 +13,12 @@ use IlBronza\Clients\Models\Client;
 use IlBronza\Clients\Models\Destination;
 use IlBronza\Products\Models\Order;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryDetacherHelper;
+use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\Traits\ContentDeliveryScopesTrait;
 use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
 use IlBronza\Warehouse\Models\Unitload\Unitload;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function array_merge;
 use function is_string;
@@ -197,29 +197,34 @@ class ContentDelivery extends MorphPivot
 				DeliveryDetacherHelper::detachContentDelivery($contentDelivery);
 		});
 
-		static::saved(function (ContentDelivery $contentDelivery) {
-			if($contentDelivery->partial)
-			{
-				Log::info('ContentDelivery ' . $contentDelivery->getKey() . ' creato da ' . \Auth::user()?->getName());
-				Log::info('Route ' . request()?->route()?->getName());
-				Log::info(
-				    collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))
-				        ->map(function ($frame) {
-				            return [
-				                'file'     => $frame['file'] ?? null,
-				                'line'     => $frame['line'] ?? null,
-				                'function' => $frame['function'] ?? null,
-				                'class'    => $frame['class'] ?? null,
-				            ];
-				        })
-				        ->filter(fn ($f) => $f['file'])   // solo frame con file reale
-				        ->take(30)                        // ⬅️ massimo 30
-				        ->values()
-				        ->all()
-				);
+	}
 
-			}
-		});
+	// Diagnostic metadata for the next save; never persisted as model attributes.
+	protected ?string $partialLogReason = null;
+	protected array $partialLogContext = [];
+
+	public function setPartialReason(string $reason, array $context = []) : self
+	{
+		$this->partialLogReason = $reason;
+		$this->partialLogContext = $context;
+
+		return $this;
+	}
+
+	public function save(array $options = [])
+	{
+		$previousPartial = $this->getRawOriginal('partial');
+		$reason = $this->partialLogReason ?? 'partial_flag_explicitly_updated';
+		$context = $this->partialLogContext;
+		$this->partialLogReason = null;
+		$this->partialLogContext = [];
+
+		$saved = parent::save($options);
+
+		if($saved)
+			ContentDeliveryPartialLogger::logSavedTransition($this, $previousPartial, $reason, $context);
+
+		return $saved;
 	}
 
 	public function isPartial() : bool

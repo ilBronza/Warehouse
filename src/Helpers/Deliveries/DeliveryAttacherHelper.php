@@ -3,7 +3,6 @@
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
 use IlBronza\Products\Models\OrderProduct;
-use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 use IlBronza\Warehouse\Models\Delivery\Delivery;
 use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
@@ -96,9 +95,7 @@ class DeliveryAttacherHelper
 		{
 			foreach($orderProduct->deliveries as $delivery)
 			{
-				ContentDeliveryPartialLogger::logTransition(
-					$delivery->pivot,
-					true,
+				$delivery->pivot->setPartialReason(
 					'multiple_non_partial_deliveries_for_order_product',
 					[
 						'writer' => __METHOD__,
@@ -135,7 +132,13 @@ class DeliveryAttacherHelper
 		)->first();
 
 		if(! is_null($partial))
+		{
+			$contentDelivery->setPartialReason('partial_requested_when_attaching_content', [
+				'writer' => __METHOD__,
+				'requested_quantity' => $quantity,
+			]);
 			$contentDelivery->partial = $partial;
+		}
 
 		if(! is_null($quantity))
 			$contentDelivery->quantity_required = $quantity;

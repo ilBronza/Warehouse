@@ -2,7 +2,6 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
-use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryPartialLogger;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 
 use IlBronza\Warehouse\Models\Unitload\Unitload;
@@ -37,9 +36,7 @@ class DeliveryDetacherHelper
 
 		$unitload->save();
 
-		ContentDeliveryPartialLogger::logTransition(
-			$contentDelivery,
-			true,
+		$contentDelivery->setPartialReason(
 			'unitload_detached_from_content_delivery',
 			[
 				'writer' => __METHOD__,
