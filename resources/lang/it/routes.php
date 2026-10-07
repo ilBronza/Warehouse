@@ -69,4 +69,12 @@ return [
   'ibWarehousedeliveries.create' => 'Crea consegna di magazzino',
   'ibWarehousedeliveries.addGroupedContentDeliveriesIndex' => 'Aggiungi consegne raggruppate di contenuti',
   'ibWarehousecontentDeliveries.edit' => 'Modifica consegna contenuto',
+    'ibWarehousecontentDeliveries.popup' => 'Spedizioni della distinta',
+    'ibWarehousecontentDeliveries.index' => 'Distinte di consegna',
+    'ibWarehousedeliveries.automaticCreationForm' => 'Creazione automatica delle spedizioni',
+    'ibWarehousedeliveries.orders.popup' => 'Commesse della spedizione',
+    'ibWarehousepallettypes.create' => 'Crea tipo di pallet',
+    'ibWarehousepallettypes.show' => 'Dettagli: tipo di pallet',
+    'ibWarehouseunitloads.index' => 'Unità di carico',
+    'ibWarehouseunitloads.splitForm' => 'Dividi unità di carico',
 ];
