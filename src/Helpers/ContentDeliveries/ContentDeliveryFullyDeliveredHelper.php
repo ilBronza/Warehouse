@@ -2,64 +2,35 @@
 
 namespace IlBronza\Warehouse\Helpers\ContentDeliveries;
 
+use Carbon\Carbon;
+use IlBronza\Products\Models\OrderProduct;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
-use IlBronza\Warehouse\Models\Interfaces\DeliverableInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class ContentDeliveryFullyDeliveredHelper
 {
 	/**
-	 * Una distinta senza fratelli parziali è completa solo se caricata.
-	 * Se almeno una distinta dello stesso contenuto è parziale, tutte le sorelle
-	 * devono essere caricate, senza unitload non assegnati, e le quantità allocate
-	 * devono coprire almeno il 95% del fabbisogno del contenuto.
-	 */
-	/**
-	 * Ricalcola il flag e restituisce le distinte che risultavano incoerenti.
-	 *
-	 * Se almeno una distinta dello stesso contenuto è parziale, il flag descrive
-	 * lo stato complessivo del contenuto e deve quindi avere lo stesso valore su
-	 * tutte le distinte sorelle.
+	 * Ricalcola il flag usando soltanto il completamento del prodotto d'ordine
+	 * e del relativo ordine. Una distinta può diventare completa solo dopo
+	 * due giorni dalla spedizione effettiva.
 	 */
 	public static function check(ContentDelivery $contentDelivery, bool $persist = true) : Collection
 	{
 		$content = $contentDelivery->getContent();
+		$siblings = static::siblingsForContentDelivery($contentDelivery);
 
-		if (! $content)
-			return static::persistFullyDeliveredAll(
-				collect([$contentDelivery]),
-				false,
-				$persist
-			);
+		$fullyDelivered = $content instanceof OrderProduct
+			&& $content->isCompleted()
+			&& $content->getOrder()?->isCompleted();
 
-		$siblings = static::siblingsForContent($content);
+		return static::persistFullyDeliveredAll($siblings, $fullyDelivered, $persist);
+	}
 
-		if (! $siblings->contains(fn (ContentDelivery $sibling) => $sibling->isPartial()))
-			return static::persistFullyDeliveredAll(
-				collect([$contentDelivery]),
-				$contentDelivery->isLoaded(),
-				$persist
-			);
+	public static function shipmentIsAtLeastTwoDaysOld(ContentDelivery $contentDelivery) : bool
+	{
+		$shippedAt = $contentDelivery->getDelivery()?->getShippedAt();
 
-		foreach ($siblings as $sibling)
-			if (! $sibling->isLoaded())
-				return static::persistFullyDeliveredAll($siblings, false, $persist);
-
-		$totalSent = $siblings->sum(fn(ContentDelivery $cd) => $cd->getAllocatedQuantity());
-
-		$required = static::contentShipmentQuantityRequired($content);
-
-		$unitloadsWithoutContentDelivery = static::getUnitloadsWithoutContentDelivery($content);
-
-		if ($unitloadsWithoutContentDelivery->isNotEmpty())
-			return static::persistFullyDeliveredAll($siblings, false, $persist);
-
-		return static::persistFullyDeliveredAll(
-			$siblings,
-			$totalSent >= $required * 0.95,
-			$persist
-		);
+		return $shippedAt && $shippedAt->lessThanOrEqualTo(Carbon::now()->subDays(2));
 	}
 
 	protected static function persistFullyDeliveredAll(
@@ -70,6 +41,7 @@ class ContentDeliveryFullyDeliveredHelper
 	{
 		$inconsistentContentDeliveries = $siblings->filter(
 			fn (ContentDelivery $contentDelivery) => $contentDelivery->fully_delivered !== $value
+				&& (! $value || static::shipmentIsAtLeastTwoDaysOld($contentDelivery))
 		);
 
 		if (! $persist)
@@ -84,27 +56,13 @@ class ContentDeliveryFullyDeliveredHelper
 		return $inconsistentContentDeliveries;
 	}
 
-	/**
-	 * Unitload del content ancora senza distinta (content_delivery_id nullo).
-	 * Usa la relazione unitloads()->notDelivering() sul deliverable (stesso criterio di hasUndeliveringUnitloads).
-	 */
-	public static function getUnitloadsWithoutContentDelivery(?DeliverableInterface $content) : Collection
-	{
-		return $content->unitloads()->notDelivering()->orderBy('sequence')->get();
-	}
-
-	protected static function contentShipmentQuantityRequired(Model $content) : float
-	{
-		return $content->getQuantityRequired();
-	}
-
-	protected static function siblingsForContent(DeliverableInterface $content) : Collection
+	protected static function siblingsForContentDelivery(ContentDelivery $contentDelivery) : Collection
 	{
 		return ContentDelivery::gpc()::query()
-			->where('content_type', $content->getMorphClass())
-			->where('content_id', $content->getKey())
+			->where('content_type', $contentDelivery->content_type)
+			->where('content_id', $contentDelivery->content_id)
 			->whereNull('deleted_at')
-			->with(['delivery', 'unitloads'])
+			->with('delivery')
 			->orderBy('sorting_index')
 			->get();
 	}
