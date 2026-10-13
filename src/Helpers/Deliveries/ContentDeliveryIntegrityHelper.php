@@ -2,6 +2,7 @@
 
 namespace IlBronza\Warehouse\Helpers\Deliveries;
 
+use IlBronza\Products\Models\OrderProduct;
 use IlBronza\Warehouse\Models\Delivery\ContentDelivery;
 
 class ContentDeliveryIntegrityHelper
@@ -9,6 +10,17 @@ class ContentDeliveryIntegrityHelper
 	static function checkContentDeliveryIntegrity(ContentDelivery $contentDelivery)
 	{
 		$unitloads = $contentDelivery->unitloads;
+		$content = $contentDelivery->getContent();
+
+		if($content instanceof OrderProduct)
+		{
+			$lastPhase = $content->getLastOrderProductPhase();
+			$unitloads = $unitloads->filter(fn($unitload) => $lastPhase
+				&& $unitload->production_type === $lastPhase->getMorphClass()
+				&& $unitload->production_id === $lastPhase->getKey()
+			)->values();
+		}
+
 		$firstUnitload = $unitloads->first();
 		$unitloadsCount = $unitloads->count();
 		$brotherCount = $firstUnitload?->getBrotherNumbers();
