@@ -3,6 +3,7 @@
 namespace IlBronza\Warehouse\Providers\DatatablesFields\GroupedClientsContentDeliveries;
 
 use DOMDocument;
+use IlBronza\Products\Models\OrderProduct;
 
 class DatatableFieldProductionList extends DatatableFieldGroupedContentDelivery
 {
@@ -23,8 +24,14 @@ class DatatableFieldProductionList extends DatatableFieldGroupedContentDelivery
 			$required = $item->getQuantityRequired();
 			$produced = $content ? $item->getQuantityProduced() : 0;
 
-			// Le quantità sono quelle di questa consegna, anche se parziale.
-			if ($content && $required > 0 && $produced >= $required)
+			$target = $required;
+			// Per le consegne intere, la produzione chiusa fissa la quantità finale.
+			// I pezzi devono comunque essere pronti e assegnati a questa consegna.
+			if ($required > 0 && !$item->isPartial() && $content instanceof OrderProduct
+				&& $content->isCompleted() && ($finalQuantity = $content->getQuantityDone()) > 0)
+				$target = min($required, $finalQuantity);
+
+			if ($content && $target > 0 && $produced >= $target)
 				$ready++;
 
 			$description = e($content?->getName() ?? __('warehouse::fields.productionContentUnavailable'));
@@ -32,6 +39,10 @@ class DatatableFieldProductionList extends DatatableFieldGroupedContentDelivery
 				'produced' => number_format($produced, 0, ',', '.'),
 				'required' => $required === null ? '—' : number_format($required, 0, ',', '.'),
 			]));
+			if ($target < $required)
+				$quantities .= '<br>' . e(__('warehouse::fields.productionCompletedQuantity', [
+					'quantity' => number_format($target, 0, ',', '.'),
+				]));
 			$hasStartedPhase = false;
 			$status = $this->getProductionDetails($content ? $item->getProductionStatusList() : null, $hasStartedPhase);
 			$hasProduction = $hasProduction || $produced > 0 || $hasStartedPhase;

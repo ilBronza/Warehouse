@@ -103,6 +103,7 @@ return [
     'productionList' => 'Stato produzione',
     'productionReadyCount' => ':ready/:total articoli pronti per la consegna',
     'productionItemQuantities' => ':produced / :required pz prodotti assegnati alla consegna',
+    'productionCompletedQuantity' => 'Produzione conclusa a :quantity pz: riferimento per la consegna intera.',
     'productionStatusUnavailable' => 'Dettaglio lavorazioni non disponibile',
     'productionContentUnavailable' => 'Articolo non disponibile',
 ];
