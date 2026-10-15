@@ -13,8 +13,16 @@
 
 				@include('warehouse::deliveries._deliveringModels')
 
-				<button id="associatedelivery" class="uk-button uk-button-primary uk-button-small">
+				<button type="submit" id="associatedelivery" class="uk-button uk-button-primary uk-button-small">
 					{!! FaIcon::save() !!} @lang('warehouse::deliveries.associateDelivery')
+				</button>
+
+				<button type="submit" id="detachunitloadsfromdelivery" class="uk-button uk-button-danger uk-button-small"
+					formaction="{{ app('warehouse')->route('unitloads.detachSelectedFromDelivery') }}"
+					data-empty-message="@lang('warehouse::unitloads.selectUnitloadsToDetach')"
+					data-confirm="@lang('warehouse::unitloads.detachSelectedFromDeliveryConfirm')"
+					onclick="if (!this.form.querySelector('input[name=&quot;unitloads[]&quot;]:checked')) { alert(this.dataset.emptyMessage); return false; } return confirm(this.dataset.confirm);">
+					<i class="fa-solid fa-link-slash"></i> @lang('warehouse::unitloads.detachSelectedFromDelivery')
 				</button>
 
 			</form>

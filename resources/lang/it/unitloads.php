@@ -26,6 +26,11 @@ return [
 	'detachFromDeliveryConfirm' => 'Scollegare il bindello dalla spedizione?',
 	'unitloadDetachedFromDelivery' => 'Il bindello :unitload è stato scollegato dalla spedizione.',
 	'unitloadNotAssociatedToDelivery' => 'Il bindello non è associato a nessuna spedizione.',
+	'detachSelectedFromDelivery' => 'Scollega selezionati dalla spedizione',
+	'detachSelectedFromDeliveryConfirm' => 'Scollegare i bindelli selezionati dalle rispettive spedizioni?',
+	'selectUnitloadsToDetach' => 'Seleziona almeno un bindello da scollegare.',
+	'unitloadsDetachedFromDelivery' => 'Bindelli scollegati dalla spedizione: :count.',
+	'selectedUnitloadsNotAssociatedToDelivery' => 'I bindelli selezionati non sono associati a nessuna spedizione.',
 
   'cardTitleCreate' => 'Crea unità di carico',
   'cardIntroCreate' => 'Inserisci i dati dell’unità di carico',

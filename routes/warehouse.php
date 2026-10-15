@@ -137,6 +137,7 @@ Route::group([
 			//UnitloadAssociateToDeliveryController
 			Route::post('associate-to-delivery-table', [Warehouse::getController('unitload', 'associateToDelivery'), 'index'])->name('unitloads.associateToDeliveryTable');
 			Route::post('associate-to-delivery', [Warehouse::getController('unitload', 'associateToDelivery'), 'store'])->name('unitloads.associateToDelivery');
+			Route::post('detach-from-delivery', [Warehouse::getController('unitload', 'detachFromDelivery'), 'detachSelected'])->name('unitloads.detachSelectedFromDelivery');
 
 
 			Route::get('', [Warehouse::getController('unitload', 'index'), 'index'])->name('unitloads.index');

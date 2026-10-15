@@ -54,6 +54,7 @@ return [
 	'ibWarehouseunitloadsassociateToDelivery' => 'Associate to delivery — unità di carico',
 	'ibWarehouseunitloadsdestroy' => 'Elimina unità di carico',
 	'ibWarehouseunitloadsdetachFromDelivery' => 'Detach from delivery — unità di carico',
+	'ibWarehouseunitloadsdetachSelectedFromDelivery' => 'Scollega unità di carico selezionate dalla spedizione',
 	'ibWarehouseunitloadsedit' => 'Modifica unità di carico :model',
 	'ibWarehouseunitloadsindex' => 'Lista unità di carico',
 	'ibWarehouseunitloadsprint' => 'Print — unità di carico',
