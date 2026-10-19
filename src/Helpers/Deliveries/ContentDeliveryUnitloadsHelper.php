@@ -34,7 +34,10 @@ class ContentDeliveryUnitloadsHelper
 		$content = $contentDelivery->getContent();
 
 		foreach($content->getDeliveries() as $delivery)
+		{
+			$delivery->pivot->unsetRelation('unitloads');
 			ContentDeliveryIntegrityHelper::checkContentDeliveryIntegrity($delivery->pivot);
+		}
 	}
 
 	static function addUnitloadToContentDelivery(string|ContentDelivery $contentDelivery, Unitload $unitload)
@@ -47,12 +50,18 @@ class ContentDeliveryUnitloadsHelper
 		$content = $contentDelivery->getContent();
 
 		foreach($content->getDeliveries() as $delivery)
+		{
+			$delivery->pivot->unsetRelation('unitloads');
 			ContentDeliveryIntegrityHelper::checkContentDeliveryIntegrity($delivery->pivot);
+		}
 	}
 
 	static function _addUnitloadToContentDelivery(ContentDelivery $contentDelivery, Unitload $unitload)
 	{
 		$unitload->contentDelivery()->associate($contentDelivery);
 		$unitload->save();
+
+		// Allocation checks may have cached this collection before the association.
+		$contentDelivery->unsetRelation('unitloads');
 	}
 }
