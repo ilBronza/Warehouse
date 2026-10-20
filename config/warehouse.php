@@ -1,5 +1,23 @@
 <?php
 
+use IlBronza\Warehouse\Http\Controllers\Rooms\StructureController;
+use IlBronza\Warehouse\Http\Controllers\Rooms\RoomCategoryController;
+use IlBronza\Warehouse\Http\Controllers\Rooms\RoomTypeController;
+use IlBronza\Warehouse\Http\Controllers\Rooms\RoomController;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\SpaceCatalogFieldsetsParameters;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\RoomTypeFieldsetsParameters;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\RoomFieldsetsParameters;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\SpaceCatalogFieldsGroupParametersFile;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\RoomTypeFieldsGroupParametersFile;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\RoomFieldsGroupParametersFile;
+use IlBronza\Warehouse\Models\Structure\Structure;
+use IlBronza\Warehouse\Models\Room\RoomCategory;
+use IlBronza\Warehouse\Models\Room\RoomType;
+use IlBronza\Warehouse\Models\Room\Room;
+use IlBronza\Warehouse\Providers\RelationshipsManagers\StructureRelationshipsManager;
+use IlBronza\Warehouse\Providers\RelationshipsManagers\RoomCategoryRelationshipsManager;
+use IlBronza\Warehouse\Providers\RelationshipsManagers\RoomTypeRelationshipsManager;
+
 use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryLoaderHelper;
 use IlBronza\Warehouse\Helpers\ContentDeliveries\ContentDeliveryUnloaderHelper;
 use IlBronza\Warehouse\Helpers\Deliveries\DeliveryAutomaticCreatorHelper;
@@ -142,6 +160,95 @@ return [
     ],
 
 	'models' => [
+		'structure' => [
+			'class' => Structure::class,
+			'table' => 'warehouse__structures',
+			'controller' => StructureController::class,
+			'controllers' => array_fill_keys(
+				['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'],
+				StructureController::class
+			),
+			'parametersFiles' => [
+				'create' => SpaceCatalogFieldsetsParameters::class,
+				'store' => SpaceCatalogFieldsetsParameters::class,
+				'show' => SpaceCatalogFieldsetsParameters::class,
+				'edit' => SpaceCatalogFieldsetsParameters::class,
+				'update' => SpaceCatalogFieldsetsParameters::class,
+			],
+			'fieldsGroupsFiles' => [
+				'index' => SpaceCatalogFieldsGroupParametersFile::class,
+				'related' => SpaceCatalogFieldsGroupParametersFile::class,
+			],
+			'relationshipsManagerClasses' => [
+				'show' => StructureRelationshipsManager::class,
+			],
+		],
+		'roomCategory' => [
+			'class' => RoomCategory::class,
+			'table' => 'warehouse__room_categories',
+			'controller' => RoomCategoryController::class,
+			'controllers' => array_fill_keys(
+				['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'],
+				RoomCategoryController::class
+			),
+			'parametersFiles' => [
+				'create' => SpaceCatalogFieldsetsParameters::class,
+				'store' => SpaceCatalogFieldsetsParameters::class,
+				'show' => SpaceCatalogFieldsetsParameters::class,
+				'edit' => SpaceCatalogFieldsetsParameters::class,
+				'update' => SpaceCatalogFieldsetsParameters::class,
+			],
+			'fieldsGroupsFiles' => [
+				'index' => SpaceCatalogFieldsGroupParametersFile::class,
+				'related' => SpaceCatalogFieldsGroupParametersFile::class,
+			],
+			'relationshipsManagerClasses' => [
+				'show' => RoomCategoryRelationshipsManager::class,
+			],
+		],
+		'roomType' => [
+			'class' => RoomType::class,
+			'table' => 'warehouse__room_types',
+			'controller' => RoomTypeController::class,
+			'controllers' => array_fill_keys(
+				['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'],
+				RoomTypeController::class
+			),
+			'parametersFiles' => [
+				'create' => RoomTypeFieldsetsParameters::class,
+				'store' => RoomTypeFieldsetsParameters::class,
+				'show' => RoomTypeFieldsetsParameters::class,
+				'edit' => RoomTypeFieldsetsParameters::class,
+				'update' => RoomTypeFieldsetsParameters::class,
+			],
+			'fieldsGroupsFiles' => [
+				'index' => RoomTypeFieldsGroupParametersFile::class,
+				'related' => RoomTypeFieldsGroupParametersFile::class,
+			],
+			'relationshipsManagerClasses' => [
+				'show' => RoomTypeRelationshipsManager::class,
+			],
+		],
+		'room' => [
+			'class' => Room::class,
+			'table' => 'warehouse__rooms',
+			'controller' => RoomController::class,
+			'controllers' => array_fill_keys(
+				['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'],
+				RoomController::class
+			),
+			'parametersFiles' => [
+				'create' => RoomFieldsetsParameters::class,
+				'store' => RoomFieldsetsParameters::class,
+				'show' => RoomFieldsetsParameters::class,
+				'edit' => RoomFieldsetsParameters::class,
+				'update' => RoomFieldsetsParameters::class,
+			],
+			'fieldsGroupsFiles' => [
+				'index' => RoomFieldsGroupParametersFile::class,
+				'related' => RoomFieldsGroupParametersFile::class,
+			],
+		],
 	    'delivery' => [
 		    'class' => Delivery::class,
 		    'table' => 'warehouse__deliveries',

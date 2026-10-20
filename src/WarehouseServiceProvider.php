@@ -3,6 +3,8 @@
 namespace IlBronza\Warehouse;
 
 use IlBronza\CRUD\Traits\IlBronzaPackages\IlBronzaServiceProviderPackagesTrait;
+use IlBronza\Clients\Models\Destination;
+use IlBronza\Warehouse\Models\Room\Room;
 use IlBronza\Warehouse\Console\Commands\CheckFullyDeliveredContentDeliveriesCommand;
 use IlBronza\Warehouse\Http\Middleware\WarehouseMiddlewareRolesPermissions;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +24,13 @@ class WarehouseServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/warehouse.php');
 
+        $destinationClass = config('clients.models.destination.class', Destination::class);
+        if (class_exists($destinationClass)) {
+            $destinationClass::resolveRelationUsing('rooms', function ($destination) {
+                return $destination->hasMany(Room::getProjectClassName(), 'destination_id');
+            });
+        }
+
         $this->app['router']->aliasMiddleware('warehouse.roles', WarehouseMiddlewareRolesPermissions::class);
 
         // Publishing is only necessary when using the CLI.
@@ -38,6 +47,15 @@ class WarehouseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/warehouse.php', 'warehouse');
+
+        // Published configurations may predate the structures and rooms catalogs.
+        $defaults = require __DIR__.'/../config/warehouse.php';
+        foreach (['structure', 'roomCategory', 'roomType', 'room'] as $model) {
+            $this->app['config']->set('warehouse.models.' . $model, array_replace_recursive(
+                $defaults['models'][$model],
+                $this->app['config']->get('warehouse.models.' . $model, [])
+            ));
+        }
 
         // Register the service the package provides.
         $this->app->singleton('warehouse', function ($app) {

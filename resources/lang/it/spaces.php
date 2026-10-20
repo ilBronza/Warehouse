@@ -1,0 +1,25 @@
+<?php
+
+return [
+	'general' => 'Dati generali',
+	'details' => 'Dettagli',
+	'name' => 'Nome',
+	'description' => 'Descrizione',
+	'code' => 'Codice / numero',
+	'structure_id' => 'Struttura',
+	'room_category_id' => 'Categoria',
+	'room_type_id' => 'Tipologia',
+	'destination_id' => 'Destinazione',
+	'structure.name' => 'Struttura',
+	'roomCategory.name' => 'Categoria',
+	'roomType.name' => 'Tipologia',
+	'roomType.roomCategory.name' => 'Categoria',
+	'destination.name' => 'Destinazione',
+	'floor' => 'Piano',
+	'surface_sqm' => 'Superficie (m²)',
+	'notes' => 'Note',
+	'mySelfSee' => 'Dettagli',
+	'mySelfEdit' => 'Modifica',
+	'mySelfDelete' => 'Elimina',
+	'inUse' => 'Impossibile eliminare questo elemento: sono presenti elementi collegati.',
+];

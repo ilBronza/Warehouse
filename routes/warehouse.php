@@ -11,6 +11,23 @@ Route::group([
 	],
 	function()
 	{
+		foreach ([
+			'structures' => 'structure',
+			'room-categories' => 'roomCategory',
+			'room-types' => 'roomType',
+			'rooms' => 'room',
+		] as $path => $model) {
+			$resource = Illuminate\Support\Str::plural($model);
+			Route::group(['prefix' => $path, 'as' => $resource . '.'], function () use ($model) {
+				Route::get('', [Warehouse::getController($model, 'index'), 'index'])->name('index');
+				Route::get('create', [Warehouse::getController($model, 'create'), 'create'])->name('create');
+				Route::post('', [Warehouse::getController($model, 'store'), 'store'])->name('store');
+				Route::get('{' . $model . '}', [Warehouse::getController($model, 'show'), 'show'])->name('show');
+				Route::get('{' . $model . '}/edit', [Warehouse::getController($model, 'edit'), 'edit'])->name('edit');
+				Route::put('{' . $model . '}', [Warehouse::getController($model, 'update'), 'update'])->name('update');
+				Route::delete('{' . $model . '}', [Warehouse::getController($model, 'destroy'), 'destroy'])->name('destroy');
+			});
+		}
 
 		Route::group([
 			'prefix' => 'grouped-content-deliveries',

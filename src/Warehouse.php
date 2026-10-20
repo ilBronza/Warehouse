@@ -148,6 +148,20 @@ class Warehouse implements RoutedObjectInterface
         $warehouseManagerButton->addChild($pallettypesButton);
         $warehouseManagerButton->addChild($deliveriesButton);
 
+        foreach ([
+            'structures' => 'building',
+            'rooms' => 'door-open',
+            'roomCategories' => 'folder',
+            'roomTypes' => 'tags',
+        ] as $resource => $icon) {
+            $warehouseManagerButton->addChild($menu->createButton([
+                'name' => 'warehouse' . ucfirst($resource),
+                'icon' => $icon,
+                'text' => 'warehouse::warehouse.' . $resource,
+                'href' => $this->route($resource . '.index'),
+            ]));
+        }
+
 
         // $productsButton = $menu->createButton([
         //     'name' => 'products.index',
