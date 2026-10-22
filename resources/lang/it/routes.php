@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'ibWarehousedeliveries.orderProducts.summary' => 'Riepilogo spedizioni del prodotto della commessa',
 	'ibWarehousestructures.index' => 'Elenco strutture',
 	'ibWarehousestructures.create' => 'Crea struttura',
 	'ibWarehousestructures.store' => 'Salva struttura',

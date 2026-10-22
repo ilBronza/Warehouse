@@ -78,6 +78,10 @@ Route::group([
 			'routeTranslationPrefix' => Warehouse::getRouteTranslationPrefix(),
 	], function()
 		{
+			// Also used by authenticated production/report screens outside warehouse roles.
+			Route::get('order-products/{orderProduct}/summary', [Warehouse::getController('delivery', 'orderProductDeliveriesSummary'), 'summary'])
+				->withoutMiddleware('warehouse.roles')->name('orderProducts.summary');
+
 			//DeliveryMapController
 			Route::get('{delivery}/map', [Warehouse::getController('delivery', 'renderMap'), 'renderMap'])->name('renderMap');
 

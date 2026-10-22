@@ -48,6 +48,7 @@ use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddOrdersIndexControl
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAddUnitloadsController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryAutomaticCreationController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryByOrderController;
+use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryByOrderProductSummaryController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryCreateStoreController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryDestroyController;
 use IlBronza\Warehouse\Http\Controllers\Deliveries\DeliveryEditUpdateController;
@@ -108,6 +109,7 @@ return [
     		'datatableFieldName' => '20em',
 		    'datatableFieldOrderDelivery' => '10em',
     		'datatableFieldOrderProductPhaseDelivery' => '9em',
+			'datatableFieldOrderProductDeliveriesSummary' => '5em',
     		'datatableFieldAddUnitloads' => '2em',
     		'datatableFieldAddOrders' => '2em',
 		    'datatableFieldOrderHasAllDeliveringUnitloads' => '2em',
@@ -286,6 +288,7 @@ return [
 				'addOrders' => DeliveryAddOrdersController::class,
 				'addOrdersIndex' => DeliveryAddOrdersIndexController::class,
 				'orderDeliveriesPopup' => DeliveryByOrderController::class,
+				'orderProductDeliveriesSummary' => DeliveryByOrderProductSummaryController::class,
 				'addUnitloads' => DeliveryAddUnitloadsController::class,
 
 

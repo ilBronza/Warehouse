@@ -1,8 +1,8 @@
 @php use IlBronza\Buttons\Icons\FaIcon; @endphp
 @php
-	$contentDeliveries = $subject->contentDeliveries ?? collect();
+	$contentDeliveries = $summaryContentDeliveries ?? $subject->contentDeliveries ?? collect();
 	if (!$contentDeliveries->isEmpty()) {
-		$contentDeliveries->load(['delivery', 'unitloads']);
+		$contentDeliveries->loadMissing(['delivery', 'unitloads']);
 	}
 @endphp
 
