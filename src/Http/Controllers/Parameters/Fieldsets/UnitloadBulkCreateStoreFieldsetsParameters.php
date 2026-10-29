@@ -293,14 +293,14 @@ class UnitloadBulkCreateStoreFieldsetsParameters extends FieldsetParametersFile
 
 		if(stripos($client->getName(), 'Psafe') === false)
 		{
-			unset($result['selection']['fields']['printClientCustomSonusUnitload']);
+			unset($result['unitloads']['fieldsets']['selection']['fields']['printClientCustomSonusUnitload']);
 		}
 
 
 		if (! $client->hasCustomUnitloadPdf())
 		{
-			unset($result['selection']['fields']['printClientCustomUnitload']);
-			unset($result['selection']['fields']['printTotalUnitloads']);
+			unset($result['unitloads']['fieldsets']['selection']['fields']['printClientCustomUnitload']);
+			unset($result['unitloads']['fieldsets']['selection']['fields']['printTotalUnitloads']);
 		}
 
 		return $result;
