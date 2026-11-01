@@ -48,6 +48,14 @@ class WarehouseServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/warehouse.php', 'warehouse');
 
+        // Optional: do not autoload integration classes when FileCabinet is absent.
+        if (class_exists(\IlBronza\FileCabinet\Providers\RowTypes\RowTypeRegistry::class)) {
+            $this->callAfterResolving(\IlBronza\FileCabinet\Providers\RowTypes\RowTypeRegistry::class, function ($registry) {
+                $registry->register('room', \IlBronza\Warehouse\FileCabinet\RowTypes\FormrowRoom::class, 'ilbronza/warehouse');
+                $registry->register('rooms', \IlBronza\Warehouse\FileCabinet\RowTypes\FormrowRooms::class, 'ilbronza/warehouse');
+            });
+        }
+
         // Published configurations may predate the structures and rooms catalogs.
         $defaults = require __DIR__.'/../config/warehouse.php';
         foreach (['structure', 'roomCategory', 'roomType', 'room'] as $model) {
