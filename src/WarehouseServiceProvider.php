@@ -53,6 +53,7 @@ class WarehouseServiceProvider extends ServiceProvider
             $this->callAfterResolving(\IlBronza\FileCabinet\Providers\RowTypes\RowTypeRegistry::class, function ($registry) {
                 $registry->register('room', \IlBronza\Warehouse\FileCabinet\RowTypes\FormrowRoom::class, 'ilbronza/warehouse');
                 $registry->register('rooms', \IlBronza\Warehouse\FileCabinet\RowTypes\FormrowRooms::class, 'ilbronza/warehouse');
+                $registry->register('roomType', \IlBronza\Warehouse\FileCabinet\RowTypes\FormrowRoomType::class, 'ilbronza/warehouse');
             });
         }
 
