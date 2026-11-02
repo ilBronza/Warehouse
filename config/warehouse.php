@@ -10,6 +10,7 @@ use IlBronza\Warehouse\Http\Controllers\Parameters\Fieldsets\RoomFieldsetsParame
 use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\SpaceCatalogFieldsGroupParametersFile;
 use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\RoomTypeFieldsGroupParametersFile;
 use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\RoomFieldsGroupParametersFile;
+use IlBronza\Warehouse\Http\Controllers\Parameters\Tables\RoomRelatedByOwnerFieldsGroupParametersFile;
 use IlBronza\Warehouse\Models\Structure\Structure;
 use IlBronza\Warehouse\Models\Room\RoomCategory;
 use IlBronza\Warehouse\Models\Room\RoomType;
@@ -248,6 +249,7 @@ return [
 			],
 			'fieldsGroupsFiles' => [
 				'index' => RoomFieldsGroupParametersFile::class,
+				'relatedByOwner' => RoomRelatedByOwnerFieldsGroupParametersFile::class,
 				'related' => RoomFieldsGroupParametersFile::class,
 			],
 		],
